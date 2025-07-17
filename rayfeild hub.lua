@@ -38,8 +38,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-  local Tab = Window:CreateTab("Visual Scripts", 4483362458) -- Title, Image
-local Section = Tab:CreateSection("Fun")
+  local Tab = Window:CreateTab("Visual Script", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -48,7 +47,19 @@ local Button = Tab:CreateButton({
    end,
 })
 
+local Button = Tab:CreateButton({
+   Name = "Player Esp",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
+   end,
+})
 
+local Button = Tab:CreateButton({
+   Name = "Fake Lag",
+   Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+   end,
+})
 
 
 
