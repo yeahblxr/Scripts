@@ -39,3 +39,15 @@ local Window = Rayfield:CreateWindow({
 })
 
   local Tab = Window:CreateTab("Visual Scripts", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Fun")
+
+
+
+
+
+
+
+
+
+
+  Rayfield:LoadConfiguration()
