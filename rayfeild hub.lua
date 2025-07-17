@@ -50,7 +50,6 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
- local Tab = Window:CreateTab("Player", 4483362458) -- Title, Image
 local Slider = Tab:CreateSlider({
    Name = "Jump Power",
    Range = {50, 500},
