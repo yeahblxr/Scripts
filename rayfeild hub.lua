@@ -20,7 +20,7 @@ local Window = Rayfield:CreateWindow({
    },
 
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
       Invite = "https://discord.gg/Yqak7y7DYT", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
       RememberJoins = true -- Set this to false to make them join the discord every time they load it up
    },
@@ -40,6 +40,7 @@ local Window = Rayfield:CreateWindow({
 
   local Tab = Window:CreateTab("Visual Scripts", 4483362458) -- Title, Image
 local Section = Tab:CreateSection("Fun")
+
 local Button = Tab:CreateButton({
    Name = "Dih Script",
    Callback = function()
