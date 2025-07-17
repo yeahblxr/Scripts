@@ -43,7 +43,7 @@ local Section = Tab:CreateSection("Fun")
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
-   Callback = loadstring()
+   Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
    end,
 })
