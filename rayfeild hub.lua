@@ -4,7 +4,7 @@ local Window = Rayfield:CreateWindow({
    Name = "Midnight Hub",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Midnight Hub loading",
-   LoadingSubtitle = "Made by Yeahblxr",
+   LoadingSubtitle = "By Yeahblxr",
    ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
