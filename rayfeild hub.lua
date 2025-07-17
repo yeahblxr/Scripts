@@ -37,6 +37,31 @@ local Window = Rayfield:CreateWindow({
     
    }
 })
+ local Tab = Window:CreateTab("Player", 4483362458) -- Title, Image
+local Slider = Tab:CreateSlider({
+   Name = "Walkspeed",
+   Range = {16, 250},
+   Increment = 10,
+   Suffix = "Speed",
+   CurrentValue = 10,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+   end,
+})
+
+ local Tab = Window:CreateTab("Player", 4483362458) -- Title, Image
+local Slider = Tab:CreateSlider({
+   Name = "Jump Power",
+   Range = {50, 500},
+   Increment = 10,
+   Suffix = "JumpPower",
+   CurrentValue = 10,
+   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+   end,
+})
 
   local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
 
