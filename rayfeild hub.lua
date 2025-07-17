@@ -62,6 +62,18 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
+local Toggle = Tab:CreateToggle({
+   Name = "Infinite Jump",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(InfiniteJumpEnabled)
+    local InfiniteJumpEnabled = true
+        game:GetService("UserInputService").JumpRequest:connect(function()
+            if InfiniteJumpEnabled then
+                game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+   end,
+})
+
   local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
@@ -105,13 +117,6 @@ local Button = Tab:CreateButton({
    Name = "Fling All (Needs Player Colisions)",
    Callback = function()
   loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Infinite Jump",
-   Callback = function()
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Inf%20Jump.lua"))()
    end,
 })
 
