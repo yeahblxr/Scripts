@@ -1,6 +1,6 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = Rayfield:CreateWindow({
+local MainWindow = Rayfield:CreateWindow({
    Name = "i hate my life",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Midnight Hub loading",
@@ -29,7 +29,7 @@ local Window = Rayfield:CreateWindow({
    KeySettings = {
       Title = "Midnight Hub Key",
       Subtitle = "Key System",
-      Note = "Join Discord For Key", -- Use this to tell the user how to get a key
+      Note = "Join Discord For Key https://discord.gg/Yqak7y7DYT", -- Use this to tell the user how to get a key
       FileName = "Midnight Hub Key90", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
@@ -38,12 +38,12 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-  local Tab = Window:CreateTab("Visual Scripts", 4483362458) -- Title, Image
+  local MainTab = MainWindow:CreateTab("Visual Scripts", 4483362458) -- Title, Image
 local Section = Tab:CreateSection("Fun")
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
-   Callback = function()
+   Callback = loadstring()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
    end,
 })
