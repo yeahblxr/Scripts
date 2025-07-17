@@ -150,7 +150,12 @@ local Button = Tab:CreateButton({
    end,
 })
 
-
+local Button = Tab:CreateButton({
+   Name = "Infinte Yeild",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+   end,
+})
 
 
 
