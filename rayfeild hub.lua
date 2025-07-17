@@ -62,17 +62,19 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
-local Toggle = Tab:CreateToggle({
-   Name = "Infinite Jump",
-   CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(InfiniteJumpEnabled)
-    local InfiniteJumpEnabled = true
+ local Toggle = Tab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(InfiniteJumpEnabled)
+        local InfiniteJumpEnabled = true
         game:GetService("UserInputService").JumpRequest:connect(function()
             if InfiniteJumpEnabled then
                 game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
-   end,
-})
+            end
+        end)
+    end,
+ })
 
   local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
 
