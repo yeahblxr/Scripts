@@ -2,38 +2,37 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Midnight Hub",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Icon = 0, 
    LoadingTitle = "Midnight Hub loading",
    LoadingSubtitle = "By Yeahblxr",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   ShowText = "Rayfield", 
+   Theme = "Default", 
 
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+   ToggleUIKeybind = "K", 
 
    DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
-
+   DisableBuildWarnings = false, 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      FolderName = nil, 
       FileName = "Midnight Hub"
    },
 
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "https://discord.gg/Yqak7y7DYT", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false, 
+      Invite = "https://discord.gg/Yqak7y7DYT", 
+      RememberJoins = true 
    },
 
-   KeySystem = true, -- Set this to true to use our key system
+   KeySystem = true, 
    KeySettings = {
       Title = "Midnight Hub Key",
       Subtitle = "Key System",
-      Note = "Join Discord For Key https://discord.gg/Yqak7y7DYT", -- Use this to tell the user how to get a key
-      FileName = "Midnight Hub Key90", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Midnight"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+      Note = "Join Discord For Key https://discord.gg/Yqak7y7DYT", 
+      FileName = "Midnight Hub Key90", 
+      SaveKey = true, 
+      GrabKeyFromSite = false, 
+      Key = {"Midnight"} 
     
    }
 })
@@ -44,7 +43,7 @@ local Slider = Tab:CreateSlider({
    Increment = 1,
    Suffix = "Speed",
    CurrentValue = 16,
-   Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "Slider1", 
    Callback = function(Value)
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
    end,
@@ -56,7 +55,7 @@ local Slider = Tab:CreateSlider({
    Increment = 10,
    Suffix = "JumpPower",
    CurrentValue = 50,
-   Flag = "Slider2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "Slider2", 
    Callback = function(Value)
         game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
    end,
@@ -65,7 +64,7 @@ local Slider = Tab:CreateSlider({
  local Toggle = Tab:CreateToggle({
     Name = "Infinite Jump",
     CurrentValue = false,
-    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Flag = "Toggle1",
     Callback = function(InfiniteJumpEnabled)
         local InfiniteJumpEnabled = true
         game:GetService("UserInputService").JumpRequest:connect(function()
@@ -76,7 +75,7 @@ local Slider = Tab:CreateSlider({
     end,
  })
 
-  local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
+  local Tab = Window:CreateTab("Fun Scripts", 4483362458) 
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -106,7 +105,7 @@ local Button = Tab:CreateButton({
    end,
 })
 
- local Tab = Window:CreateTab("Advantage Scripts", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("Advantage Scripts", 4483362458) 
 
 local Button = Tab:CreateButton({
    Name = "Player Esp",
@@ -143,8 +142,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs
    end,
 })
 
-local Tab = Window:CreateTab("Misc", 4483362458) -- Title, Image
-
+local Tab = Window:CreateTab("Misc", 4483362458)
 local Button = Tab:CreateButton({
    Name = "Keyboard",
    Callback = function()
