@@ -40,6 +40,12 @@ local Window = Rayfield:CreateWindow({
 
   local Tab = Window:CreateTab("Visual Scripts", 4483362458) -- Title, Image
 local Section = Tab:CreateSection("Fun")
+local Button = Tab:CreateButton({
+   Name = "Dih Script",
+   Callback = function()
+  loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
+   end,
+})
 
 
 
