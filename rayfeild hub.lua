@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local MainWindow = Rayfield:CreateWindow({
-   Name = "i hate my life",
+local Window = Rayfield:CreateWindow({
+   Name = "Midnight Hub",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Midnight Hub loading",
    LoadingSubtitle = "Join the discord",
@@ -38,7 +38,7 @@ local MainWindow = Rayfield:CreateWindow({
    }
 })
 
-  local MainTab = MainWindow:CreateTab("Visual Scripts", 4483362458) -- Title, Image
+  local Tab = Window:CreateTab("Visual Scripts", 4483362458) -- Title, Image
 local Section = Tab:CreateSection("Fun")
 
 local Button = Tab:CreateButton({
