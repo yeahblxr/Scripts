@@ -38,19 +38,12 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-  local Tab = Window:CreateTab("Visual Script", 4483362458) -- Title, Image
+  local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
    Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Player Esp",
-   Callback = function()
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
    end,
 })
 
@@ -61,7 +54,72 @@ local Button = Tab:CreateButton({
    end,
 })
 
+local Button = Tab:CreateButton({
+   Name = "Jerk Script",
+   Callback = function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Edge.lua"))()
+   end,
+})
 
+local Button = Tab:CreateButton({
+   Name = "Grab Knife V4",
+   Callback = function()
+ loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-knife-v4-24753"))()
+   end,
+})
+
+ local Tab = Window:CreateTab("Advantage Scripts", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Player Esp",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fling All (Needs Player Colisions)",
+   Callback = function()
+  loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Infinite Jump",
+   Callback = function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Inf%20Jump.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fly Gui",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fly%20script"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Noclip",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Noclip.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Hitbox Expander",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Hitbox%20Expander.lua"))()
+   end,
+})
+
+local Tab = Window:CreateTab("Misc", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Keyboard",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt", true))()
+   end,
+})
 
 
 
