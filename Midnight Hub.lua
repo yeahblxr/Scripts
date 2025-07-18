@@ -137,10 +137,10 @@ local Button = Tab:CreateButton({
 })
 
 local Slider = Tab:CreateSlider({
-   Name = "hitbox",
+   Name = "Hitbox",
    Range = {1, 50},
    Increment = 1,
-   Suffix = "hitbox size",
+   Suffix = "Hitbox size",
    CurrentValue = 1,
    Flag = "Slider3", 
    Callback = function(Value)
