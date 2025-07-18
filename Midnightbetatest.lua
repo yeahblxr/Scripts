@@ -121,7 +121,7 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
-  local Tab = Window:CreateTab("🕹️Fun Scripts", 4483362458) -- Title, Image
+  local Tab = Window:CreateTab("Fun Scripts", "joystick") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -151,7 +151,7 @@ local Button = Tab:CreateButton({
    end,
 })
 
- local Tab = Window:CreateTab("⚔️Advantage Scripts", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
 
 
 
@@ -215,7 +215,7 @@ end)
    end,
 })
 
-local Tab = Window:CreateTab("🌐Server", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Server", "server") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "FPS Booster",
@@ -314,7 +314,7 @@ end
    end,
 })
 
-local Tab = Window:CreateTab("</>Client", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Client", "usb") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Full Bright",
@@ -343,7 +343,7 @@ game:GetService("Lighting").Changed:Connect(removeFog)
    end,
 })
 
-local Tab = Window:CreateTab("🗂️Misc", "dices") -- Title, Image
+local Tab = Window:CreateTab("Misc", "dices") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Keyboard",
