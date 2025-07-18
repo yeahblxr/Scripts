@@ -2,7 +2,7 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "Midnight Hub",
-   Icon = 117617062603739, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Midnight Hub loading",
    LoadingSubtitle = "By Yeahblxr",
    ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
@@ -100,9 +100,9 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-   Name = "Grab Knife V4",
+   Name = "Fling All (Needs Player Colisions)",
    Callback = function()
- loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-knife-v4-24753"))()
+  loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
    end,
 })
 
@@ -112,13 +112,6 @@ local Button = Tab:CreateButton({
    Name = "Player Esp",
    Callback = function()
    loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Fling All (Needs Player Colisions)",
-   Callback = function()
-  loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
    end,
 })
 
@@ -137,10 +130,10 @@ local Button = Tab:CreateButton({
 })
 
 local Slider = Tab:CreateSlider({
-   Name = "hitbox",
+   Name = "Hitbox",
    Range = {1, 50},
    Increment = 1,
-   Suffix = "hitbox size",
+   Suffix = "Hitbox size",
    CurrentValue = 1,
    Flag = "Slider3", 
    Callback = function(Value)
@@ -182,4 +175,20 @@ local Button = Tab:CreateButton({
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
    end,
+})
+
+local Divider = Tab:CreateDivider()
+
+local Button = Tab:CreateButton({
+   Name = "Destroy Gui",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+   end,
+})
+
+Rayfield:Notify({
+   Title = "Loaded",
+   Content = "Midnight Hub has been loaded successfully!",
+   Duration = 4,
+   Image = 4483362458,
 })
