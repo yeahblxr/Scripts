@@ -285,6 +285,55 @@ local Button = Tab:CreateButton({
    end,
 })
 
+
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local deathPosition = nil
+local characterAddedConnection = nil
+
+local function onCharacterDied()
+    local character = player.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        deathPosition = character.HumanoidRootPart.Position
+    end
+end
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.Died:Connect(onCharacterDied)
+
+    if deathPosition then
+        local hrp = character:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
+    end
+end
+
+-- Your toggle
+local Toggle = Tab:CreateToggle({
+    Name = "Toggle Respawn at Death",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        -- Toggle ON
+        if Value then
+            characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+        -- Toggle OFF
+        else
+            if characterAddedConnection then
+                characterAddedConnection:Disconnect()
+                characterAddedConnection = nil
+            end
+        end
+    end,
+})
+
+
+
 Rayfield:Notify({
    Title = "Loaded",
    Content = "Midnight Hub has been loaded successfully!",
