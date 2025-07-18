@@ -1,24 +1,27 @@
-🌙 # Midnight Hub — The Ultimate Roblox Utility Tool
+🌙 
+# Midnight Hub — The Ultimate Roblox Utility Tool
 
  mobile-friendly UI and powerful toggles, Midnight Hub brings features like:
 
 🧍‍♂️ Player Enhancements
 
-Custom Walkspeed & Jump Power sliders
+- Custom Walkspeed & Jump Power sliders
 
-Infinite Jump toggle
+- Infinite Jump toggle
 
 
 🎮 Fun Scripts
 
-Fling All (with player collisions)
+- Fling All (with player collisions)
 
-Fake Lag, Jerk Script, and more chaos-driven tools
+- Fake Lag, Jerk Script, and more chaos-driven tools
 
 
 ⚙️ Advantage & Miscellaneous
 
-Keyboard utilities, FPS stats, and popular script injectors like Infinite Yield
+- Keyboard utilities
+- FPS stats
+- popular script injectors like Infinite Yield
 
 
 
