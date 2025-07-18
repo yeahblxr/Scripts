@@ -220,7 +220,7 @@ end)
    end,
 })
 
-local Tab = Window:CreateTab("🖧Server", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("🌐Server", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "FPS Booster",
