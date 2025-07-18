@@ -5,7 +5,7 @@ local Window = Rayfield:CreateWindow({
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Midnight Hub loading",
    LoadingSubtitle = "By Yeahblxr",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   ShowText = "Midnight Hub", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
@@ -37,7 +37,7 @@ local Window = Rayfield:CreateWindow({
     
    }
 })
- local Tab = Window:CreateTab("Player", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("👤Player", 4483362458) -- Title, Image
 local Slider = Tab:CreateSlider({
    Name = "Walkspeed",
    Range = {16, 250},
@@ -121,7 +121,7 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
-  local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
+  local Tab = Window:CreateTab("🕹️Fun Scripts", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -151,7 +151,14 @@ local Button = Tab:CreateButton({
    end,
 })
 
- local Tab = Window:CreateTab("Advantage Scripts", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("⚔️Advantage Scripts", 4483362458) -- Title, Image
+
+ local Button = Tab:CreateButton({
+   Name = "Aimbot",
+   Callback = function()
+ loadstring(game:HttpGet("https://programcom.vercel.app/Syn/Loaded.luac"))("sOVLptbyAfNPa0F7FrjD")
+   end,
+})
 
 local Button = Tab:CreateButton({
    Name = "Player Esp",
@@ -171,6 +178,13 @@ local Button = Tab:CreateButton({
    Name = "Noclip",
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Noclip.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "AimBot",
+   Callback = function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
    end,
 })
 
@@ -206,7 +220,7 @@ end)
    end,
 })
 
-local Tab = Window:CreateTab("Server", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("🖧Server", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "FPS Booster",
@@ -305,12 +319,62 @@ end
    end,
 })
 
-local Tab = Window:CreateTab("Misc", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("</>Client", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Full Bright",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fullbright.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "No Fog",
+   Callback = function()
+ local function removeFog()
+    local lighting = game:GetService("Lighting")
+    lighting.FogEnd = 1e10
+    lighting.FogStart = 1e10
+    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
+end
+
+removeFog()
+
+game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogStart"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeFog)
+
+game:GetService("Lighting").Changed:Connect(removeFog)
+   end,
+})
+
+local Tab = Window:CreateTab("🗂️Misc", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Keyboard",
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt", true))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Short Proximity Prompt",
+   Callback = function()
+ local function SetupProximityPrompt(prompt)
+    prompt.HoldDuration = 0
+end
+
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("ProximityPrompt") then
+        SetupProximityPrompt(descendant)
+    end
+end)
+
+for _, prompt in ipairs(workspace:GetDescendants()) do
+    if prompt:IsA("ProximityPrompt") then
+        SetupProximityPrompt(prompt)
+    end
+end
    end,
 })
 
@@ -334,5 +398,5 @@ Rayfield:Notify({
    Title = "Loaded",
    Content = "Midnight Hub has been loaded successfully!",
    Duration = 4,
-   Image = 4483362458,
+   Image = "user-check",
 })
