@@ -36,7 +36,7 @@ local Window = Rayfield:CreateWindow({
     
    }
 })
- local Tab = Window:CreateTab("Player", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("Player", "user-pen") -- Title, Image
 local Slider = Tab:CreateSlider({
    Name = "Walkspeed",
    Range = {16, 250},
@@ -107,7 +107,7 @@ end)
     end,
  })
 
-  local Tab = Window:CreateTab("Fun Scripts", 4483362458) 
+  local Tab = Window:CreateTab("Fun Scripts", "joystick") 
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -137,7 +137,7 @@ local Button = Tab:CreateButton({
    end,
 })
 
- local Tab = Window:CreateTab("Advantage Scripts", 4483362458) 
+ local Tab = Window:CreateTab("Advantage Scripts", "swords") 
 
 local Button = Tab:CreateButton({
    Name = "Player Esp",
