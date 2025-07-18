@@ -101,7 +101,7 @@ end
 
 -- Your toggle
 local Toggle = Tab:CreateToggle({
-    Name = "Toggle Respawn at Death",
+    Name = "Respawn Where You Die",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
