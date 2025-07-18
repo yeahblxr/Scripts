@@ -6,7 +6,7 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "Midnight Hub loading",
    LoadingSubtitle = "By Yeahblxr",
    ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
@@ -100,9 +100,9 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-   Name = "Grab Knife V4",
+   Name = "Fling All (Needs Player Colisions)",
    Callback = function()
- loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-knife-v4-24753"))()
+  loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
    end,
 })
 
@@ -112,13 +112,6 @@ local Button = Tab:CreateButton({
    Name = "Player Esp",
    Callback = function()
    loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Fling All (Needs Player Colisions)",
-   Callback = function()
-  loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
    end,
 })
 
@@ -182,4 +175,20 @@ local Button = Tab:CreateButton({
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
    end,
+})
+
+local Divider = Tab:CreateDivider()
+
+local Button = Tab:CreateButton({
+   Name = "Destroy Gui",
+   Callback = function()
+ Rayfield:Destroy()
+   end,
+})
+
+Rayfield:Notify({
+   Title = "Loaded",
+   Content = "Midnight Hub has been loaded successfully!",
+   Duration = 4,
+   Image = 4483362458,
 })
