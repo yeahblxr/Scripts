@@ -161,6 +161,105 @@ end)
    end,
 })
 
+local Tab = Window:CreateTab("Server", 4483362458) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "FPS Booster",
+   Callback = function()
+  _G.Settings = {
+    Players = {
+        ["Ignore Me"] = true, -- Ignore your Character
+        ["Ignore Others"] = true -- Ignore other Characters
+    },
+    Meshes = {
+        Destroy = false, -- Destroy Meshes
+        LowDetail = true -- Low detail meshes (NOT SURE IT DOES ANYTHING)
+    },
+    Images = {
+        Invisible = true, -- Invisible Images
+        LowDetail = false, -- Low detail images (NOT SURE IT DOES ANYTHING)
+        Destroy = false, -- Destroy Images
+    },
+    Other = {
+        ["No Particles"] = true, -- Disables all ParticleEmitter, Trail, Smoke, Fire and Sparkles
+        ["No Camera Effects"] = true, -- Disables all PostEffect's (Camera/Lighting Effects)
+        ["No Explosions"] = true, -- Makes Explosion's invisible
+        ["No Clothes"] = true, -- Removes Clothing from the game
+        ["Low Water Graphics"] = true, -- Removes Water Quality
+        ["No Shadows"] = true, -- Remove Shadows
+        ["Low Rendering"] = true, -- Lower Rendering
+        ["Low Quality Parts"] = true -- Lower quality parts
+    }
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "Rejoin Server",
+   Callback = function() 
+local ts = game:GetService("TeleportService")
+
+
+
+local p = game:GetService("Players").LocalPlayer
+
+
+
+
+
+
+
+ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, p)
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Server Hop",
+   Callback = function()
+  local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+
+local Servers = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+local Server, Next = nil, nil
+local function ListServers(cursor)
+    local Raw = game:HttpGet(Servers .. ((cursor and "&cursor=" .. cursor) or ""))
+    return HttpService:JSONDecode(Raw)
+end
+
+repeat
+    local Servers = ListServers(Next)
+    Server = Servers.data[math.random(1, (#Servers.data / 3))]
+    Next = Servers.nextPageCursor
+until Server
+
+if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
+    TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
+end
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Jobid Joiner",
+   CurrentValue = "",
+   PlaceholderText = "JobId",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+   local JobIdTextBoxValue = " Text " -- Store the textbox value i guess CHANGE THIS that is just an example
+local placeId = game.PlaceId -- Get the current place ID of the game 
+ 
+
+local jobId = JobIdTextBoxValue
+if jobId ~= "" then
+    local success, errorMessage = pcall(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, jobId, game.Players.LocalPlayer) -- teleports i hope nothing goes wrong
+    end)
+end
+   end,
+})
+
 local Tab = Window:CreateTab("Misc", 4483362458) -- Title, Image
 
 local Button = Tab:CreateButton({
