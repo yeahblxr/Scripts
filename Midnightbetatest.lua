@@ -182,7 +182,7 @@ local Divider = Tab:CreateDivider()
 local Button = Tab:CreateButton({
    Name = "Destroy Gui",
    Callback = function()
- loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+ Rayfield:Destroy()
    end,
 })
 
