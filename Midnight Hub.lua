@@ -5,7 +5,7 @@ local Window = Rayfield:CreateWindow({
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Midnight Hub loading",
    LoadingSubtitle = "By Yeahblxr",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   ShowText = "Midnight Hub", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
@@ -37,7 +37,7 @@ local Window = Rayfield:CreateWindow({
     
    }
 })
- local Tab = Window:CreateTab("Player", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("Player", "user") -- Title, Image
 local Slider = Tab:CreateSlider({
    Name = "Walkspeed",
    Range = {16, 250},
@@ -76,7 +76,52 @@ local Slider = Tab:CreateSlider({
     end,
  })
 
-  local Tab = Window:CreateTab("Fun Scripts", 4483362458) -- Title, Image
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local deathPosition = nil
+local characterAddedConnection = nil
+
+local function onCharacterDied()
+    local character = player.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        deathPosition = character.HumanoidRootPart.Position
+    end
+end
+
+local function onCharacterAdded(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.Died:Connect(onCharacterDied)
+
+    if deathPosition then
+        local hrp = character:WaitForChild("HumanoidRootPart")
+        hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
+    end
+end
+
+-- Your toggle
+local Toggle = Tab:CreateToggle({
+    Name = "Respawn Where You Die",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        -- Toggle ON
+        if Value then
+            characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+        -- Toggle OFF
+        else
+            if characterAddedConnection then
+                characterAddedConnection:Disconnect()
+                characterAddedConnection = nil
+            end
+        end
+    end,
+})
+
+  local Tab = Window:CreateTab("Fun Scripts", "joystick") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -106,7 +151,9 @@ local Button = Tab:CreateButton({
    end,
 })
 
- local Tab = Window:CreateTab("Advantage Scripts", 4483362458) -- Title, Image
+ local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
+
+
 
 local Button = Tab:CreateButton({
    Name = "Player Esp",
@@ -126,6 +173,13 @@ local Button = Tab:CreateButton({
    Name = "Noclip",
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Noclip.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "AimBot",
+   Callback = function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
    end,
 })
 
@@ -161,12 +215,169 @@ end)
    end,
 })
 
-local Tab = Window:CreateTab("Misc", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Client", "usb") -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Full Bright",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fullbright.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "No Fog",
+   Callback = function()
+ local function removeFog()
+    local lighting = game:GetService("Lighting")
+    lighting.FogEnd = 1e10
+    lighting.FogStart = 1e10
+    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
+end
+
+removeFog()
+
+game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogStart"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeFog)
+
+game:GetService("Lighting").Changed:Connect(removeFog)
+   end,
+})
+
+local Tab = Window:CreateTab("Server", "server") -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "FPS Booster",
+   Callback = function()
+  _G.Settings = {
+    Players = {
+        ["Ignore Me"] = true, -- Ignore your Character
+        ["Ignore Others"] = true -- Ignore other Characters
+    },
+    Meshes = {
+        Destroy = false, -- Destroy Meshes
+        LowDetail = true -- Low detail meshes (NOT SURE IT DOES ANYTHING)
+    },
+    Images = {
+        Invisible = true, -- Invisible Images
+        LowDetail = false, -- Low detail images (NOT SURE IT DOES ANYTHING)
+        Destroy = false, -- Destroy Images
+    },
+    Other = {
+        ["No Particles"] = true, -- Disables all ParticleEmitter, Trail, Smoke, Fire and Sparkles
+        ["No Camera Effects"] = true, -- Disables all PostEffect's (Camera/Lighting Effects)
+        ["No Explosions"] = true, -- Makes Explosion's invisible
+        ["No Clothes"] = true, -- Removes Clothing from the game
+        ["Low Water Graphics"] = true, -- Removes Water Quality
+        ["No Shadows"] = true, -- Remove Shadows
+        ["Low Rendering"] = true, -- Lower Rendering
+        ["Low Quality Parts"] = true -- Lower quality parts
+    }
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "Rejoin Server",
+   Callback = function() 
+local ts = game:GetService("TeleportService")
+
+
+
+local p = game:GetService("Players").LocalPlayer
+
+
+
+
+
+
+
+ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, p)
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Server Hop",
+   Callback = function()
+  local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+
+local Servers = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+local Server, Next = nil, nil
+local function ListServers(cursor)
+    local Raw = game:HttpGet(Servers .. ((cursor and "&cursor=" .. cursor) or ""))
+    return HttpService:JSONDecode(Raw)
+end
+
+repeat
+    local Servers = ListServers(Next)
+    Server = Servers.data[math.random(1, (#Servers.data / 3))]
+    Next = Servers.nextPageCursor
+until Server
+
+if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
+    TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
+end
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Jobid Joiner",
+   CurrentValue = "",
+   PlaceholderText = "JobId",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+   local JobIdTextBoxValue = " Text " -- Store the textbox value i guess CHANGE THIS that is just an example
+local placeId = game.PlaceId -- Get the current place ID of the game 
+ 
+
+local jobId = JobIdTextBoxValue
+if jobId ~= "" then
+    local success, errorMessage = pcall(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, jobId, game.Players.LocalPlayer) -- teleports i hope nothing goes wrong
+    end)
+end
+   end,
+})
+
+
+local Tab = Window:CreateTab("Misc", "dices") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Keyboard",
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt", true))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Short Proximity Prompt",
+   Callback = function()
+ local function SetupProximityPrompt(prompt)
+    prompt.HoldDuration = 0
+end
+
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("ProximityPrompt") then
+        SetupProximityPrompt(descendant)
+    end
+end)
+
+for _, prompt in ipairs(workspace:GetDescendants()) do
+    if prompt:IsA("ProximityPrompt") then
+        SetupProximityPrompt(prompt)
+    end
+end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fps Stats",
+   Callback = function()
+ loadstring(game:HttpGet("https://programcom.vercel.app/Syn/Loaded.luac"))("sOVLptbyAfNPa0F7FrjD")
    end,
 })
 
@@ -190,5 +401,5 @@ Rayfield:Notify({
    Title = "Loaded",
    Content = "Midnight Hub has been loaded successfully!",
    Duration = 4,
-   Image = 4483362458,
+   Image = "user-check",
 })
