@@ -215,6 +215,35 @@ end)
    end,
 })
 
+local Tab = Window:CreateTab("Client", "usb") -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Full Bright",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fullbright.lua"))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "No Fog",
+   Callback = function()
+ local function removeFog()
+    local lighting = game:GetService("Lighting")
+    lighting.FogEnd = 1e10
+    lighting.FogStart = 1e10
+    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
+end
+
+removeFog()
+
+game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogStart"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeFog)
+
+game:GetService("Lighting").Changed:Connect(removeFog)
+   end,
+})
+
 local Tab = Window:CreateTab("Server", "server") -- Title, Image
 
 local Button = Tab:CreateButton({
@@ -314,34 +343,6 @@ end
    end,
 })
 
-local Tab = Window:CreateTab("Client", "usb") -- Title, Image
-
-local Button = Tab:CreateButton({
-   Name = "Full Bright",
-   Callback = function()
- loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fullbright.lua"))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "No Fog",
-   Callback = function()
- local function removeFog()
-    local lighting = game:GetService("Lighting")
-    lighting.FogEnd = 1e10
-    lighting.FogStart = 1e10
-    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
-end
-
-removeFog()
-
-game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
-game:GetService("Lighting"):GetPropertyChangedSignal("FogStart"):Connect(removeFog)
-game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeFog)
-
-game:GetService("Lighting").Changed:Connect(removeFog)
-   end,
-})
 
 local Tab = Window:CreateTab("Misc", "dices") -- Title, Image
 
