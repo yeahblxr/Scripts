@@ -39,6 +39,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 local Tab = Window:CreateTab("Home", 4483362458) -- Title, Image
+
 local Button = Tab:CreateButton({
    Name = "Discord",
    Callback = function()
@@ -52,14 +53,25 @@ local Button = Tab:CreateButton({
    end,
 })
 
+local Divider = Tab:CreateDivider()
+
 local Button = Tab:CreateButton({
-   Name = "Run UNC Test",
+   Name = "UNC Test",
    Callback = function()
-  loadstring(game:HttpGet("https://github.com/ltseverydayyou/uuuuuuu/blob/main/UNC%20test?raw=true"))()
+   loadstring(game:HttpGet("https://github.com/ltseverydayyou/uuuuuuu/blob/main/UNC%20test?raw=true"))()
+ Rayfield:Notify({
+         Title = "UNC Test",
+         Content = "Type /console or press F9 to veiw results",
+         Duration = 3,
+         Image = "check"
+      })
    end,
 })
 
+local Divider = Tab:CreateDivider()
+
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
+
 
 
  local Tab = Window:CreateTab("Player", "user") -- Title, Image
