@@ -38,7 +38,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Home", 4483362458) -- Title, Image
+local Tab = Window:CreateTab("Home", "house") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Discord",
@@ -62,7 +62,7 @@ local Button = Tab:CreateButton({
  Rayfield:Notify({
          Title = "UNC Test",
          Content = "Type /console or press F9 to veiw results",
-         Duration = 3,
+         Duration = 5,
          Image = "check"
       })
    end,
