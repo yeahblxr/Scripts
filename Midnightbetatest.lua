@@ -38,7 +38,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Home", 4483362458)
+local Tab = Window:CreateTab("Home", "building")
 
 local Button = Tab:CreateButton({
    Name = "Discord",
