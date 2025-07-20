@@ -38,7 +38,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Home", 4483362458)
+local Tab = Window:CreateTab("Home", "house")
 
 local Button = Tab:CreateButton({
    Name = "Discord",
@@ -59,19 +59,6 @@ local Button = Tab:CreateButton({
    loadstring(game:HttpGet("https://github.com/ltseverydayyou/uuuuuuu/blob/main/UNC%20test?raw=true"))()
  Rayfield:Notify({
          Title = "UNC Test",
-         Content = "Type /console or press F9 to veiw results",
-         Duration = 5,
-         Image = "check"
-      })
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "sUNC Test",
-   Callback = function()
-  loadstring(game:HttpGet("https://gitlab.com/sens3/nebunu/-/raw/main/HummingBird8's_sUNC_yes_i_moved_to_gitlab_because_my_github_acc_got_brickedd/sUNCm0m3n7.lua"))()
- Rayfield:Notify({
-         Title = "sUNC Test",
          Content = "Type /console or press F9 to veiw results",
          Duration = 5,
          Image = "check"
