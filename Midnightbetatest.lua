@@ -66,6 +66,19 @@ local Button = Tab:CreateButton({
    end,
 })
 
+local Button = Tab:CreateButton({
+   Name = "sUNC Test",
+   Callback = function()
+  loadstring(game:HttpGet("https://gitlab.com/sens3/nebunu/-/raw/main/HummingBird8's_sUNC_yes_i_moved_to_gitlab_because_my_github_acc_got_brickedd/sUNCm0m3n7.lua"))()
+ Rayfield:Notify({
+         Title = "sUNC Test",
+         Content = "Type /console or press F9 to veiw results",
+         Duration = 5,
+         Image = "check"
+      })
+   end,
+})
+
 local Divider = Tab:CreateDivider()
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
