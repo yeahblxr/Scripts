@@ -39,7 +39,6 @@ local Window = Rayfield:CreateWindow({
 })
 
 local Tab = Window:CreateTab("Home", "house") -- Title, Image
-
 local Button = Tab:CreateButton({
    Name = "Discord",
    Callback = function()
@@ -54,19 +53,13 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
-   Name = "UNC Test",
+   Name = "Run UNC Test",
    Callback = function()
-   loadstring(game:HttpGet("https://github.com/ltseverydayyou/uuuuuuu/blob/main/UNC%20test?raw=true"))()
-   local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ChatEvent = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
-
--- Make the local player send "/console" into chat
-ChatEvent:FireServer("/console", "All")
+  loadstring(game:HttpGet("https://github.com/ltseverydayyou/uuuuuuu/blob/main/UNC%20test?raw=true"))()
    end,
 })
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
-
 
 
  local Tab = Window:CreateTab("Player", "user") -- Title, Image
