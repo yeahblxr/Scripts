@@ -38,7 +38,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Home", "house") -- Title, Image
+local Tab = Window:CreateTab("Home", "house")
 
 local Button = Tab:CreateButton({
    Name = "Discord",
@@ -52,8 +52,6 @@ local Button = Tab:CreateButton({
       })
    end,
 })
-
-local Divider = Tab:CreateDivider()
 
 local Button = Tab:CreateButton({
    Name = "UNC Test",
