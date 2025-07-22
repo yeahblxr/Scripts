@@ -269,6 +269,8 @@ local Button = Tab:CreateButton({
     lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
 end
 
+
+
 removeFog()
 
 game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
@@ -278,8 +280,6 @@ game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeF
 game:GetService("Lighting").Changed:Connect(removeFog)
    end,
 })
-
-local Tab = Window:CreateTab("Server", "server") -- Title, Image
 
 local Input = Tab:CreateInput({
    Name = "Set Fps Cap",
@@ -291,13 +291,12 @@ local Input = Tab:CreateInput({
  setfpscap(Text)
   Rayfield:Notify({
    Title = "Fps Cap Set",
-   Content = "Fps Cap has been set to (Text)",
-   Duration = 6.5,
+   Content = "Fps Cap has been set",
+   Duration = 2,
    Image = "check"
 })
    end,
 })
-
 
 local Button = Tab:CreateButton({
    Name = "FPS Booster",
@@ -330,6 +329,9 @@ local Button = Tab:CreateButton({
 loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
    end,
 })
+
+local Tab = Window:CreateTab("Server", "server") -- Title, Image
+
 
 
 local Button = Tab:CreateButton({
