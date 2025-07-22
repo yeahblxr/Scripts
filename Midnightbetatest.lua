@@ -38,7 +38,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Home", "home")
+local Tab = Window:CreateTab("Home", "home") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Discord",
@@ -280,6 +280,24 @@ game:GetService("Lighting").Changed:Connect(removeFog)
 })
 
 local Tab = Window:CreateTab("Server", "server") -- Title, Image
+
+local Input = Tab:CreateInput({
+   Name = "Set Fps Cap",
+   CurrentValue = "60",
+   PlaceholderText = "Fps Cap",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input2",
+   Callback = function(Text)
+ setfpscap(Text)
+  Rayfield:Notify({
+   Title = "Fps Cap Set",
+   Content = "Fps Cap has been set to (Text)",
+   Duration = 6.5,
+   Image = "check"
+})
+   end,
+})
+
 
 local Button = Tab:CreateButton({
    Name = "FPS Booster",
