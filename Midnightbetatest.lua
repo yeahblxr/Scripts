@@ -68,7 +68,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *7/22/25", Content = "Added set fps cap, Moved Fps boost to different section"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *7/22/25", Content = "Added Moon Gravity located in fun scripts, Added Invisibility located in advantage scripts"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -186,6 +186,42 @@ local Button = Tab:CreateButton({
    Callback = function()
   loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
    end,
+})
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local humanoid = nil
+
+local originalJumpPower
+local originalGravity = workspace.Gravity
+
+-- Function to enable or disable moon gravity
+local function toggleMoonGravity(state)
+    local character = player.Character or player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    if state then
+        -- Save original jump power
+        originalJumpPower = humanoid.JumpPower
+
+        -- Apply moon gravity
+        workspace.Gravity = 50 -- Default is 196.2; 50 is like low gravity
+        humanoid.JumpPower = 100 -- Make jumping feel floaty
+    else
+        -- Reset to default
+        workspace.Gravity = originalGravity
+        humanoid.JumpPower = originalJumpPower or 50
+    end
+end
+
+-- Rayfield Toggle
+local Toggle = Tab:CreateToggle({
+    Name = "Moon Gravity",
+    CurrentValue = false,
+    Flag = "ToggleMoonGravity",
+    Callback = function(Value)
+        toggleMoonGravity(Value)
+    end,
 })
 
  local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
