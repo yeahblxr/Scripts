@@ -206,7 +206,6 @@ local function toggleMoonGravity(state)
 
         -- Apply moon gravity
         workspace.Gravity = 50 -- Default is 196.2; 50 is like low gravity
-        humanoid.JumpPower = 100 -- Make jumping feel floaty
     else
         -- Reset to default
         workspace.Gravity = originalGravity
