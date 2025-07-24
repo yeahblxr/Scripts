@@ -68,7 +68,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *7/24/25", Content = "Added invisibility toggle in advantage scripts"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *7/22/25", Content = "Added set fps cap, Moved Fps boost to different section"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -277,13 +277,10 @@ local function setInvisibility(state)
     end
 end
 
--- Rayfield Toggle Setup
-local Toggle = Tab:CreateToggle({
+local Button = Tab:CreateButton({
    Name = "Invisibility",
-   CurrentValue = false,
-   Flag = "ToggleInvis",
-   Callback = function(Value)
-       setInvisibility(Value)
+   Callback = function()
+ loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
    end,
 })
 
