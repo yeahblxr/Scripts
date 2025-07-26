@@ -77,7 +77,7 @@ local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "
  local Tab = Window:CreateTab("Player", "user") -- Title, Image
 local Slider = Tab:CreateSlider({
    Name = "Walkspeed",
-   Range = {16, 250},
+   Range = {1, 500},
    Increment = 2,
    Suffix = "Speed",
    CurrentValue = 16,
@@ -89,7 +89,7 @@ local Slider = Tab:CreateSlider({
 
 local Slider = Tab:CreateSlider({
    Name = "Jump Power",
-   Range = {50, 500},
+   Range = {1, 1000},
    Increment = 10,
    Suffix = "JumpPower",
    CurrentValue = 50,
@@ -257,7 +257,7 @@ local Button = Tab:CreateButton({
 
 local Slider = Tab:CreateSlider({
    Name = "Hitbox",
-   Range = {1, 50},
+   Range = {1, 250},
    Increment = 1,
    Suffix = "Hitbox size",
    CurrentValue = 1,
