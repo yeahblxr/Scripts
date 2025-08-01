@@ -225,6 +225,39 @@ local Toggle = Tab:CreateToggle({
 
  local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
 
+local Players = game:GetService("Players")
+
+-- Utility to get all player names
+local function getPlayerNames()
+    local names = {}
+    for _, plr in pairs(Players:GetPlayers()) do
+        table.insert(names, plr.Name)
+    end
+    return names
+end
+
+-- Create the dropdown (example using your snippet)
+local Dropdown = Tab:CreateDropdown({
+    Name = "Teleport to Player",
+    Options = getPlayerNames(),  -- initial list
+    CurrentOption = {""},
+    MultipleOptions = false,
+    Flag = "TeleportDropdown",
+    Callback = function(selection)
+        -- when a player is selected, attempt teleport
+        if selection[1] then
+            teleportToPlayer(selection[1])
+        end
+    end,
+})
+
+-- Keep dropdown updated as players join/leave
+Players.PlayerAdded:Connect(function()
+    Dropdown:Refresh(getPlayerNames())  -- assuming Rayfield has a Refresh or similar method
+end)
+Players.PlayerRemoving:Connect(function()
+    Dropdown:Refresh(getPlayerNames())
+end)
 
 
 local Button = Tab:CreateButton({
