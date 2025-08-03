@@ -288,9 +288,9 @@ end
 
 -- Rayfield toggle
 local Toggle = Tab:CreateToggle({
-    Name = "Fling on Touch",
+    Name = "Touch to fling",
     CurrentValue = false,
-    Flag = "Toggle1",
+    Flag = "FlingTouche",
     Callback = function(Value)
         enabled = Value
     end,
