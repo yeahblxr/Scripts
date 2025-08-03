@@ -325,7 +325,7 @@ end
 -- Slider controlling spin speed and fling force
 local Slider = Tab:CreateSlider({
     Name = "Spin Speed",
-    Range = {0, 720}, -- degrees per second, up to 2 spins per second
+    Range = {0, 18000}, -- degrees per second, up to 2 spins per second
     Increment = 10,
     Suffix = "°/s",
     CurrentValue = 0,
