@@ -1,5 +1,3 @@
--- Midnight Fly GUI final working version
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -17,7 +15,7 @@ local attachment
 local linearVelocity
 local descending = false
 
--- Colors (Rayfield-like)
+-- Theme
 local BG           = Color3.fromRGB(34, 27, 53)
 local HEADER       = Color3.fromRGB(75, 59, 110)
 local ACCENT       = Color3.fromRGB(145, 115, 210)
@@ -43,7 +41,7 @@ local function enableFly()
         linearVelocity.Parent = hrp
     end
     linearVelocity.Enabled = true
-    -- glow effect
+    -- glow effect when you fly
     if not hrp:FindFirstChild("MidnightFlyGlow") then
         local adorn = Instance.new("SelectionBox")
         adorn.Name = "MidnightFlyGlow"
@@ -81,7 +79,7 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- GUI setup
+-- GUI 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "MidnightFlyGUI"
 if syn and syn.protect_gui then syn.protect_gui(screenGui) end
@@ -154,7 +152,6 @@ minimizeBtn.BorderSizePixel = 0
 minimizeBtn.Parent = header
 roundize(minimizeBtn, 6)
 
--- Author credit
 local author = Instance.new("TextLabel")
 author.Size = UDim2.new(0, 160, 0, 16)
 author.Position = UDim2.new(0, 14, 0, 48)
@@ -166,7 +163,7 @@ author.TextColor3 = Color3.fromRGB(200, 190, 235)
 author.TextXAlignment = Enum.TextXAlignment.Left
 author.Parent = frame
 
--- Controls: toggle / - / speed / +
+-- Controls
 local toggleBtn = Instance.new("TextButton")
 toggleBtn.Size = UDim2.new(0, 170, 0, 42)
 toggleBtn.Position = UDim2.new(0, 16, 0, 75)
@@ -240,7 +237,7 @@ instr.TextWrapped = true
 instr.TextXAlignment = Enum.TextXAlignment.Left
 instr.Parent = frame
 
--- Minimized pill
+-- Minimized gui
 local mini = Instance.new("TextButton")
 mini.Size = UDim2.new(0, 60, 0, 28)
 mini.BackgroundColor3 = HEADER
