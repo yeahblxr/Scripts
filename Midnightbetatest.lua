@@ -667,7 +667,7 @@ local nameToShow = player.DisplayName
 
 Rayfield:Notify({
     Title = "Midnight Hub Loaded",
-    Content = ("Greetings! %s,"):format(nameToShow),
+    Content = ("Greetings, %s!"):format(nameToShow),
     Duration = 4,
     Image = "user-check",
 })
