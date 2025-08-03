@@ -68,7 +68,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/1/25", Content = "Added teleport to player dropdown loacated in Advantage Scripts"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *7/24/25", Content = "Added Moon Gravity located in fun scripts, Added Invisibility located in advantage scripts"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -225,98 +225,6 @@ local Toggle = Tab:CreateToggle({
 
  local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
 
-local Button = Tab:CreateButton({
-   Name = "Player Esp",
-   Callback = function()
-   loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Fly Gui",
-   Callback = function()
- loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fly%20script"))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "Noclip",
-   Callback = function()
- loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Noclip.lua"))()
-   end,
-})
-
-local Button = Tab:CreateButton({
-   Name = "AimBot",
-   Callback = function()
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
-   end,
-})
-
-local Slider = Tab:CreateSlider({
-   Name = "Hitbox",
-   Range = {1, 250},
-   Increment = 1,
-   Suffix = "Hitbox size",
-   CurrentValue = 1,
-   Flag = "Slider3", 
-   Callback = function(Value)
-        _G.HeadSize = Value
-_G.Disabled = true
- 
-
---Don't Touch
-game:GetService('RunService').RenderStepped:connect(function()
-if _G.Disabled then
-for i,v in next, game:GetService('Players'):GetPlayers() do
-if v.Name ~= game:GetService('Players').LocalPlayer.Name then
-pcall(function()
-v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
---TRANSPARENCY of the HITBOX
-v.Character.HumanoidRootPart.Transparency = 0.5
-v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
-v.Character.HumanoidRootPart.Material = "Neon"
-v.Character.HumanoidRootPart.CanCollide = false
-end)
-end
-end
-end
-end)
-   end,
-})
-
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local function setInvisibility(state)
-    local char = player.Character or player.CharacterAdded:Wait()
-
-    for _, part in ipairs(char:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.Transparency = state and 1 or 0
-            part.CanCollide = not state
-        elseif part:IsA("Decal") then
-            part.Transparency = state and 1 or 0
-        end
-    end
-
-    -- Hide or show name tag (optional)
-    local head = char:FindFirstChild("Head")
-    if head then
-        local nameTag = head:FindFirstChildWhichIsA("BillboardGui")
-        if nameTag then
-            nameTag.Enabled = not state
-        end
-    end
-end
-
-local Button = Tab:CreateButton({
-   Name = "Invisibility Gui",
-   Callback = function()
- loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
-   end,
-})
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
@@ -407,6 +315,140 @@ end)
 Players.PlayerRemoving:Connect(function()
     refreshDropdown()
 end)
+
+local Button = Tab:CreateButton({
+   Name = "Player Esp",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fly Gui",
+   Callback = function()
+ loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/-Midnight-hub/refs/heads/main/Midnighthub_Fly.lua"))()
+   end,
+})
+
+local floatName = nil -- or set to a string to exclude that part, e.g. "FloatPart"
+
+local Toggle = Tab:CreateToggle({
+    Name = "Noclip",
+    CurrentValue = false,
+    Flag = "Toggle5",
+    Callback = function(Value)
+        -- persistent connection for this toggle
+        if not _G._noclipConnection then _G._noclipConnection = nil end
+
+        local function enableNoclip()
+            -- disconnect existing if any
+            if _G._noclipConnection then
+                _G._noclipConnection:Disconnect()
+                _G._noclipConnection = nil
+            end
+
+            _G._noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                local player = game.Players.LocalPlayer
+                if not player then return end
+                local character = player.Character
+                if not character then return end
+
+                for _, v in pairs(character:GetDescendants()) do
+                    if v:IsA("BasePart") and v.CanCollide then
+                        if not floatName or v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        end
+
+        local function disableNoclip()
+            if _G._noclipConnection then
+                _G._noclipConnection:Disconnect()
+                _G._noclipConnection = nil
+            end
+        end
+
+        if Value then
+            enableNoclip()
+        else
+            disableNoclip()
+        end
+    end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "AimBot",
+   Callback = function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Hitbox",
+   Range = {1, 250},
+   Increment = 1,
+   Suffix = "Hitbox size",
+   CurrentValue = 1,
+   Flag = "Slider3", 
+   Callback = function(Value)
+        _G.HeadSize = Value
+_G.Disabled = true
+ 
+
+--Don't Touch
+game:GetService('RunService').RenderStepped:connect(function()
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+--TRANSPARENCY of the HITBOX
+v.Character.HumanoidRootPart.Transparency = 0.5
+v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+v.Character.HumanoidRootPart.Material = "Neon"
+v.Character.HumanoidRootPart.CanCollide = false
+end)
+end
+end
+end
+end)
+   end,
+})
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function setInvisibility(state)
+    local char = player.Character or player.CharacterAdded:Wait()
+
+    for _, part in ipairs(char:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Transparency = state and 1 or 0
+            part.CanCollide = not state
+        elseif part:IsA("Decal") then
+            part.Transparency = state and 1 or 0
+        end
+    end
+
+    -- Hide or show name tag (optional)
+    local head = char:FindFirstChild("Head")
+    if head then
+        local nameTag = head:FindFirstChildWhichIsA("BillboardGui")
+        if nameTag then
+            nameTag.Enabled = not state
+        end
+    end
+end
+
+local Button = Tab:CreateButton({
+   Name = "Invisibility",
+   Callback = function()
+ loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
+   end,
+})
 
 local Tab = Window:CreateTab("Client", "usb") -- Title, Image
 
