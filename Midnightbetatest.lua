@@ -223,47 +223,30 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local spinObject
-local currentSpinSpeed = 0 -- degrees per second
+local flingForce = 100 -- tweak this for stronger/weaker flings
 
-local function getRootPart()
-    return player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-end
+-- Keep track of all connections so we can clean up
+local partConnections = {}
 
--- Enable spinning using BodyAngularVelocity
-local function enableSpin(degreesPerSecond)
-    local root = getRootPart()
-    if not root then return end
-
-    local radPerSec = math.rad(degreesPerSecond)
-
-    if not spinObject or not spinObject.Parent then
-        spinObject = Instance.new("BodyAngularVelocity")
-        spinObject.Name = "PersistentSpin"
-        spinObject.MaxTorque = Vector3.new(0, math.huge, 0)
-        spinObject.P = 1000
-        spinObject.Parent = root
+local function clearFlingConnections()
+    for _, con in pairs(partConnections) do
+        if con and con.Disconnect then
+            con:Disconnect()
+        end
     end
-
-    spinObject.AngularVelocity = Vector3.new(0, radPerSec, 0)
-    currentSpinSpeed = degreesPerSecond
+    partConnections = {}
 end
 
-local function disableSpin()
-    if spinObject then
-        spinObject:Destroy()
-        spinObject = nil
-    end
-    currentSpinSpeed = 0
-end
+local function setupFlingForPart(part)
+    if not part:IsA("BasePart") then return end
 
--- Fling impulse on touch, scaled by spin speed
-local function flingPart(part)
-    part.Touched:Connect(function(other)
+    -- Avoid double-connecting
+    if partConnections[part] then return end
+
+    partConnections[part] = part.Touched:Connect(function(other)
         local character = other:FindFirstAncestorOfClass("Model")
         if not character then return end
         local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -271,70 +254,58 @@ local function flingPart(part)
         local root = character:FindFirstChild("HumanoidRootPart")
         if not root then return end
 
-        local myRoot = getRootPart()
+        local myRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
         if not myRoot then return end
 
-        -- Calculate fling force based on spin speed
-        -- Base multiplier; tweak to adjust fling strength sensitivity
-        local baseForce = 50
-        local forceMagnitude = baseForce * (currentSpinSpeed / 360) -- scales with spin speed (360° = baseForce)
+        -- Direction from you to them
+        local direction = (root.Position - myRoot.Position).Unit
 
-        -- Clamp minimum fling force so very slow spins don't fling
-        if forceMagnitude < 10 then
-            forceMagnitude = 0
-        end
-
-        if forceMagnitude > 0 then
-            local direction = (root.Position - myRoot.Position).Unit
-            -- Apply velocity impulse with some upward boost
-            root.Velocity = direction * forceMagnitude + Vector3.new(0, forceMagnitude / 2, 0)
-        end
+        -- Apply fling velocity
+        root.Velocity = direction * flingForce + Vector3.new(0, flingForce / 2, 0)
     end)
 end
 
--- Setup fling on all current and new character parts
-local function setupFling()
+local function enableFling()
+    clearFlingConnections()
     local character = player.Character
     if not character then return end
+
+    -- Hook existing parts
     for _, part in ipairs(character:GetDescendants()) do
         if part:IsA("BasePart") then
-            flingPart(part)
+            setupFlingForPart(part)
         end
     end
-    character.DescendantAdded:Connect(function(desc)
+
+    -- Hook newly added parts
+    partConnections["descendantAdded"] = character.DescendantAdded:Connect(function(desc)
         if desc:IsA("BasePart") then
-            flingPart(desc)
+            setupFlingForPart(desc)
         end
     end)
 end
 
-player.CharacterAdded:Connect(function()
-    -- Delay so HumanoidRootPart exists
-    local char = player.Character or player.CharacterAdded:Wait()
-    char:WaitForChild("HumanoidRootPart", 5)
-    setupFling()
-    if currentSpinSpeed > 0 then
-        enableSpin(currentSpinSpeed)
-    end
-end)
-
-if player.Character then
-    setupFling()
+local function disableFling()
+    clearFlingConnections()
 end
 
--- Slider controlling spin speed and fling force
-local Slider = Tab:CreateSlider({
-    Name = "Spin Speed",
-    Range = {0, 18000}, -- degrees per second, up to 2 spins per second
-    Increment = 10,
-    Suffix = "°/s",
-    CurrentValue = 0,
-    Flag = "SpinSlider",
+-- Reapply if character respawns
+player.CharacterAdded:Connect(function()
+    -- small wait for parts
+    wait(0.5)
+    -- If toggle is on, reenable (you can track state externally if needed)
+end)
+
+-- Toggle hookup
+local Toggle = Tab:CreateToggle({
+    Name = "Fling on Touch",
+    CurrentValue = false,
+    Flag = "Toggle1",
     Callback = function(Value)
-        if Value > 0 then
-            enableSpin(Value)
+        if Value then
+            enableFling()
         else
-            disableSpin()
+            disableFling()
         end
     end,
 })
