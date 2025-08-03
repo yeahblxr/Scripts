@@ -533,6 +533,44 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord
 
 local Tab = Window:CreateTab("Server", "server") -- Title, Image
 
+-- Get the server JobId (a unique GUID for this server instance)
+local jobId = game.JobId or "Unknown"
+
+-- Create the label (you can replace the icon ID and color as desired)
+local Label = Tab:CreateLabel(("Server Job ID: %s"):format(jobId), "server", Color3.fromRGB(46, 30, 59), false)
+
+-- Optional: if you want a separate button to copy it to clipboard (using Roblox's SetClipboard, works in Studio/Client)
+local CopyButton = Tab:CreateButton({
+    Name = "Copy JobId",
+    Callback = function()
+        if setclipboard then
+            setclipboard(jobId)
+        end
+        -- You could also notify the user if you're using your notification system:
+         Rayfield:Notify({ Title = "Copied", Content = "JobId copied to clipboard.", Duration = 2, Image = "check" })
+    end,
+})
+
+
+local Input = Tab:CreateInput({
+   Name = "Jobid Joiner",
+   CurrentValue = "",
+   PlaceholderText = "JobId",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+   local JobIdTextBoxValue = " Text " -- Store the textbox value i guess CHANGE THIS that is just an example
+local placeId = game.PlaceId -- Get the current place ID of the game 
+ 
+
+local jobId = JobIdTextBoxValue
+if jobId ~= "" then
+    local success, errorMessage = pcall(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, jobId, game.Players.LocalPlayer) -- teleports i hope nothing goes wrong
+    end)
+end
+   end,
+})
 
 
 local Button = Tab:CreateButton({
@@ -575,45 +613,6 @@ until Server
 
 if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
     TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
-end
-   end,
-})
-
--- Get the server JobId (a unique GUID for this server instance)
-local jobId = game.JobId or "Unknown"
-
--- Create the label (you can replace the icon ID and color as desired)
-local Label = Tab:CreateLabel(("Server Job ID: %s"):format(jobId), "server", Color3.fromRGB(46, 30, 59), false)
-
--- Optional: if you want a separate button to copy it to clipboard (using Roblox's SetClipboard, works in Studio/Client)
-local CopyButton = Tab:CreateButton({
-    Name = "Copy JobId",
-    Callback = function()
-        if setclipboard then
-            setclipboard(jobId)
-        end
-        -- You could also notify the user if you're using your notification system:
-         Rayfield:Notify({ Title = "Copied", Content = "JobId copied to clipboard.", Duration = 2, Image = "check" })
-    end,
-})
-
-
-local Input = Tab:CreateInput({
-   Name = "Jobid Joiner",
-   CurrentValue = "",
-   PlaceholderText = "JobId",
-   RemoveTextAfterFocusLost = false,
-   Flag = "Input1",
-   Callback = function(Text)
-   local JobIdTextBoxValue = " Text " -- Store the textbox value i guess CHANGE THIS that is just an example
-local placeId = game.PlaceId -- Get the current place ID of the game 
- 
-
-local jobId = JobIdTextBoxValue
-if jobId ~= "" then
-    local success, errorMessage = pcall(function()
-        game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, jobId, game.Players.LocalPlayer) -- teleports i hope nothing goes wrong
-    end)
 end
    end,
 })
