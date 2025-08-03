@@ -656,6 +656,13 @@ local Button = Tab:CreateButton({
 })
 
 local Button = Tab:CreateButton({
+   Name = "ShiftLock",
+   Callback = function()
+loadstring(game:HttpGet('https://pastebin.com/raw/WQ9NPeDS'))()
+   end,
+})
+
+local Button = Tab:CreateButton({
    Name = "Infinte Yeild",
    Callback = function()
  loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
