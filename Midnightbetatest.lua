@@ -583,7 +583,7 @@ end
 local jobId = game.JobId or "Unknown"
 
 -- Create the label (you can replace the icon ID and color as desired)
-local Label = Tab:CreateLabel(("Server Job ID: %s"):format(jobId), 4483362458, Color3.fromRGB(255, 255, 255), false)
+local Label = Tab:CreateLabel(("Server Job ID: %s"):format(jobId), "server", Color3.fromRGB(46, 30, 59), false)
 
 -- Optional: if you want a separate button to copy it to clipboard (using Roblox's SetClipboard, works in Studio/Client)
 local CopyButton = Tab:CreateButton({
