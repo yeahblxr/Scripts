@@ -579,6 +579,25 @@ end
    end,
 })
 
+-- Get the server JobId (a unique GUID for this server instance)
+local jobId = game.JobId or "Unknown"
+
+-- Create the label (you can replace the icon ID and color as desired)
+local Label = Tab:CreateLabel(("Server Job ID: %s"):format(jobId), 4483362458, Color3.fromRGB(255, 255, 255), false)
+
+-- Optional: if you want a separate button to copy it to clipboard (using Roblox's SetClipboard, works in Studio/Client)
+local CopyButton = Tab:CreateButton({
+    Name = "Copy JobId",
+    Callback = function()
+        if setclipboard then
+            setclipboard(jobId)
+        end
+        -- You could also notify the user if you're using your notification system:
+         Rayfield:Notify({ Title = "Copied", Content = "JobId copied to clipboard.", Duration = 2, Image = "check" })
+    end,
+})
+
+
 local Input = Tab:CreateInput({
    Name = "Jobid Joiner",
    CurrentValue = "",
