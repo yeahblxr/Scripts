@@ -224,91 +224,78 @@ local Toggle = Tab:CreateToggle({
 })
 
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
-local flingForce = 100 -- tweak this for stronger/weaker flings
+local lp = Players.LocalPlayer
+local flingPower = 20000
+local enabled = false
+local recentFling = {} -- [otherPlayer] = timestamp
 
--- Keep track of all connections so we can clean up
-local partConnections = {}
+-- cooldown in seconds per target
+local COOLDOWN = 0.5
 
-local function clearFlingConnections()
-    for _, con in pairs(partConnections) do
-        if con and con.Disconnect then
-            con:Disconnect()
-        end
-    end
-    partConnections = {}
+local function canFling(target)
+    return not recentFling[target] or (os.clock() - recentFling[target]) >= COOLDOWN
 end
 
-local function setupFlingForPart(part)
-    if not part:IsA("BasePart") then return end
-
-    -- Avoid double-connecting
-    if partConnections[part] then return end
-
-    partConnections[part] = part.Touched:Connect(function(other)
-        local character = other:FindFirstAncestorOfClass("Model")
-        if not character then return end
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if not humanoid then return end
-        local root = character:FindFirstChild("HumanoidRootPart")
-        if not root then return end
-
-        local myRoot = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        if not myRoot then return end
-
-        -- Direction from you to them
-        local direction = (root.Position - myRoot.Position).Unit
-
-        -- Apply fling velocity
-        root.Velocity = direction * flingForce + Vector3.new(0, flingForce / 2, 0)
-    end)
+local function recordFling(target)
+    recentFling[target] = os.clock()
 end
 
-local function enableFling()
-    clearFlingConnections()
-    local character = player.Character
+local function setupFlingOnCharacter()
+    local character = lp.Character
     if not character then return end
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
 
-    -- Hook existing parts
+    -- Connect to all baseparts for touch detection
     for _, part in ipairs(character:GetDescendants()) do
         if part:IsA("BasePart") then
-            setupFlingForPart(part)
+            part.Touched:Connect(function(other)
+                if not enabled then return end
+
+                local otherChar = other:FindFirstAncestorOfClass("Model")
+                if not otherChar or otherChar == character then return end
+                local humanoid = otherChar:FindFirstChildOfClass("Humanoid")
+                local otherRoot = otherChar:FindFirstChild("HumanoidRootPart")
+                if not humanoid or not otherRoot then return end
+
+                local otherPlayer = Players:GetPlayerFromCharacter(otherChar)
+                if not otherPlayer then return end
+
+                if not canFling(otherPlayer) then return end
+                recordFling(otherPlayer)
+
+                local direction = (otherRoot.Position - hrp.Position)
+                if direction.Magnitude == 0 then return end
+                direction = direction.Unit
+
+                otherRoot.Velocity = direction * flingPower + Vector3.new(0, flingPower * 0.5, 0)
+            end)
         end
     end
-
-    -- Hook newly added parts
-    partConnections["descendantAdded"] = character.DescendantAdded:Connect(function(desc)
-        if desc:IsA("BasePart") then
-            setupFlingForPart(desc)
-        end
-    end)
 end
 
-local function disableFling()
-    clearFlingConnections()
-end
-
--- Reapply if character respawns
-player.CharacterAdded:Connect(function()
-    -- small wait for parts
+-- Reapply on respawn
+lp.CharacterAdded:Connect(function()
     wait(0.5)
-    -- If toggle is on, reenable (you can track state externally if needed)
+    setupFlingOnCharacter()
 end)
 
--- Toggle hookup
+if lp.Character then
+    setupFlingOnCharacter()
+end
+
+-- Rayfield toggle
 local Toggle = Tab:CreateToggle({
     Name = "Fling on Touch",
     CurrentValue = false,
     Flag = "Toggle1",
     Callback = function(Value)
-        if Value then
-            enableFling()
-        else
-            disableFling()
-        end
+        enabled = Value
     end,
 })
+
 
 
 local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
