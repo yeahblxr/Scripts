@@ -193,7 +193,7 @@ roundize(minusBtn, 6)
 
 local speedLabel = Instance.new("TextLabel")
 speedLabel.Size = UDim2.new(0, 140, 0, 42)
-speedLabel.Position = UDim2.new(0, 235, 0, 75)
+speedLabel.Position = UDim2.new(0, 230, 0, 75)
 speedLabel.BackgroundTransparency = 1
 speedLabel.Text = "Speed: " .. math.floor(flySpeed)
 speedLabel.Font = Enum.Font.Gotham
