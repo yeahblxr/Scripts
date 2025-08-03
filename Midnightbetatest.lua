@@ -66,6 +66,46 @@ local Button = Tab:CreateButton({
    end,
 })
 
+local Button = Tab:CreateButton({
+   Name = "Tiktok",
+   Callback = function()
+      setclipboard("https://www.tiktok.com/@yeahblxr")
+      Rayfield:Notify({
+         Title = "Copied",
+         Content = "Tiktok link copied to clipboard!",
+         Duration = 3,
+         Image = "check"
+      })
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Github",
+   Callback = function()
+      setclipboard("https://github.com/yeahblxr/-Midnight-hub/blob/main/Midnight%20Hub")
+      Rayfield:Notify({
+         Title = "Copied",
+         Content = "Github link copied to clipboard!",
+         Duration = 3,
+         Image = "check"
+      })
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "Copy Script",
+   Callback = function()
+      setclipboard("loadstring(game:HttpGet(\"https://raw.githubusercontent.com/yeahblxr/-Midnight-hub/refs/heads/main/Midnight%20Hub\"))()")
+      Rayfield:Notify({
+         Title = "Copied",
+         Content = "Script copied to clipboard!",
+         Duration = 3,
+         Image = "check"
+      })
+   end,
+})
+
 local Divider = Tab:CreateDivider()
 
 local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/3/25", Content = "Changed the fly gui to my own gui change the noclips script from a gui to a toggle"})
