@@ -223,7 +223,73 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
- local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function getRootPart()
+    return player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+end
+
+-- Keeps track of the angular velocity object
+local spinObject
+
+local function enableSpin(degreesPerSecond)
+    local root = getRootPart()
+    if not root then return end
+
+    -- Convert to radians/sec
+    local radPerSec = math.rad(degreesPerSecond)
+
+    -- Create if missing
+    if not spinObject or not spinObject.Parent then
+        spinObject = Instance.new("BodyAngularVelocity")
+        spinObject.Name = "PersistentSpin"
+        spinObject.MaxTorque = Vector3.new(0, math.huge, 0) -- only spin around Y
+        spinObject.P = 1000 -- responsiveness
+        spinObject.Parent = root
+    end
+
+    spinObject.AngularVelocity = Vector3.new(0, radPerSec, 0)
+end
+
+local function disableSpin()
+    if spinObject then
+        spinObject:Destroy()
+        spinObject = nil
+    end
+end
+
+-- Reapply if character respawns
+player.CharacterAdded:Connect(function(char)
+    -- small delay so HumanoidRootPart exists
+    char:WaitForChild("HumanoidRootPart", 5)
+    -- if slider had nonzero value, re-enable with previous speed
+    if spinObject and spinObject.Parent == nil then
+        -- grab last set speed from stored variable if you want to persist; for simplicity, disable
+        disableSpin()
+    end
+end)
+
+-- Slider controlling spin speed
+local Slider = Tab:CreateSlider({
+    Name = "Spin Speed",
+    Range = {0, 360}, -- degrees per second
+    Increment = 5,
+    Suffix = "°/s",
+    CurrentValue = 0,
+    Flag = "SpinSlider",
+    Callback = function(Value)
+        if Value > 0 then
+            enableSpin(Value)
+        else
+            disableSpin()
+        end
+    end,
+})
+
+
+local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
