@@ -1,4 +1,3 @@
--- Midnight Fly GUI with author credit
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -15,7 +14,7 @@ local attachment
 local linearVelocity
 local descending = false
 
--- Colors (Amethyst)
+-- Colors 
 local BG = Color3.fromRGB(45, 25, 85)
 local HEADER = Color3.fromRGB(110, 65, 200)
 local ACCENT = Color3.fromRGB(170, 120, 230)
@@ -96,13 +95,13 @@ titleBar.Parent = frame
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 1, 0)
 title.BackgroundTransparency = 1
-title.Text = "Midnight Fly"  -- Renamed title here
+title.Text = "Midnight Hub Fly"  
 title.Font = Enum.Font.GothamBold
 title.TextSize = 16
 title.TextColor3 = TEXT
 title.Parent = titleBar
 
--- Author label top-left corner
+-- Author 
 local authorLabel = Instance.new("TextLabel")
 authorLabel.Size = UDim2.new(0, 80, 0, 16)
 authorLabel.Position = UDim2.new(0, 6, 0, 6)
@@ -175,7 +174,7 @@ plusBtn.TextColor3 = TEXT
 plusBtn.BorderSizePixel = 0
 plusBtn.Parent = frame
 
--- Descend button (smaller height)
+-- Descend button 
 local downBtn = Instance.new("TextButton")
 downBtn.Size = UDim2.new(1, -24, 0, 50)
 downBtn.Position = UDim2.new(0, 12, 0, 100)
