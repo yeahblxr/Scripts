@@ -225,97 +225,6 @@ local Toggle = Tab:CreateToggle({
 
  local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
--- Debounce
-local teleporting = false
-
--- Utility: get all other player names
-local function getOtherPlayerNames()
-    local names = {}
-    for _, plr in pairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer then
-            table.insert(names, plr.Name)
-        end
-    end
-    return names
-end
-
--- Teleport function: moves you near the target player
-local function teleportToPlayer(targetName)
-    if teleporting then return end
-    teleporting = true
-
-    local target = Players:FindFirstChild(targetName)
-    if not target then
-        warn("[Teleport] Target not found:", targetName)
-        teleporting = false
-        return
-    end
-
-    -- Wait for characters and parts to exist
-    local targetChar = target.Character or target.CharacterAdded:Wait()
-    local targetHRP = targetChar:WaitForChild("HumanoidRootPart", 5)
-    if not targetHRP then
-        warn("[Teleport] Target HumanoidRootPart missing")
-        teleporting = false
-        return
-    end
-
-    local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local myHRP = myChar:WaitForChild("HumanoidRootPart", 5)
-    if not myHRP then
-        warn("[Teleport] My HumanoidRootPart missing")
-        teleporting = false
-        return
-    end
-
-    -- Teleport slightly above to reduce getting stuck; uses CFrame as recommended. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
-    myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
-    print("[Teleport] Done to:", targetName)
-
-    task.delay(0.5, function()
-        teleporting = false
-    end)
-end
-
--- Rayfield dropdown setup (assumes you have already initialized Rayfield and have a Tab)
-local Dropdown = Tab:CreateDropdown({
-    Name = "Teleport to Player",
-    Options = getOtherPlayerNames(),
-    CurrentOption = {""},
-    MultipleOptions = false,
-    Flag = "TeleportDropdown",
-    Callback = function(selection)
-        if selection and selection[1] and selection[1] ~= "" then
-            print("Dropdown selected:", selection[1])  -- debug to ensure callback fires
-            teleportToPlayer(selection[1])
-        end
-    end,
-})
-
--- Helper to refresh dropdown when player list changes
-local function refreshDropdown()
-    local names = getOtherPlayerNames()
-    -- Rayfield dropdowns typically support something like :Refresh or recreating; if no API exists, recreate:
-    -- If Refresh method exists:
-    if Dropdown.Refresh then
-        Dropdown:Refresh(names)
-    else
-        -- fallback: destroy and recreate (simplified)
-        -- Note: adapt this depending on how your Rayfield version wants dynamic updates
-        -- For example, you might store the previous selection and rebuild the dropdown
-    end
-end
-
-Players.PlayerAdded:Connect(function()
-    refreshDropdown()
-end)
-Players.PlayerRemoving:Connect(function()
-    refreshDropdown()
-end)
-
 local Button = Tab:CreateButton({
    Name = "Player Esp",
    Callback = function()
@@ -449,6 +358,97 @@ local Button = Tab:CreateButton({
  loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
    end,
 })
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Debounce
+local teleporting = false
+
+-- Utility: get all other player names
+local function getOtherPlayerNames()
+    local names = {}
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            table.insert(names, plr.Name)
+        end
+    end
+    return names
+end
+
+-- Teleport function: moves you near the target player
+local function teleportToPlayer(targetName)
+    if teleporting then return end
+    teleporting = true
+
+    local target = Players:FindFirstChild(targetName)
+    if not target then
+        warn("[Teleport] Target not found:", targetName)
+        teleporting = false
+        return
+    end
+
+    -- Wait for characters and parts to exist
+    local targetChar = target.Character or target.CharacterAdded:Wait()
+    local targetHRP = targetChar:WaitForChild("HumanoidRootPart", 5)
+    if not targetHRP then
+        warn("[Teleport] Target HumanoidRootPart missing")
+        teleporting = false
+        return
+    end
+
+    local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local myHRP = myChar:WaitForChild("HumanoidRootPart", 5)
+    if not myHRP then
+        warn("[Teleport] My HumanoidRootPart missing")
+        teleporting = false
+        return
+    end
+
+    -- Teleport slightly above to reduce getting stuck; uses CFrame as recommended. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+    myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
+    print("[Teleport] Done to:", targetName)
+
+    task.delay(0.5, function()
+        teleporting = false
+    end)
+end
+
+-- Rayfield dropdown setup (assumes you have already initialized Rayfield and have a Tab)
+local Dropdown = Tab:CreateDropdown({
+    Name = "Teleport to Player",
+    Options = getOtherPlayerNames(),
+    CurrentOption = {""},
+    MultipleOptions = false,
+    Flag = "TeleportDropdown",
+    Callback = function(selection)
+        if selection and selection[1] and selection[1] ~= "" then
+            print("Dropdown selected:", selection[1])  -- debug to ensure callback fires
+            teleportToPlayer(selection[1])
+        end
+    end,
+})
+
+-- Helper to refresh dropdown when player list changes
+local function refreshDropdown()
+    local names = getOtherPlayerNames()
+    -- Rayfield dropdowns typically support something like :Refresh or recreating; if no API exists, recreate:
+    -- If Refresh method exists:
+    if Dropdown.Refresh then
+        Dropdown:Refresh(names)
+    else
+        -- fallback: destroy and recreate (simplified)
+        -- Note: adapt this depending on how your Rayfield version wants dynamic updates
+        -- For example, you might store the previous selection and rebuild the dropdown
+    end
+end
+
+Players.PlayerAdded:Connect(function()
+    refreshDropdown()
+end)
+Players.PlayerRemoving:Connect(function()
+    refreshDropdown()
+end)
 
 local Tab = Window:CreateTab("Client", "usb") -- Title, Image
 
