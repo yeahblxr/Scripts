@@ -227,30 +227,30 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
+local spinObject
+local currentSpinSpeed = 0 -- degrees per second
+
 local function getRootPart()
     return player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 end
 
--- Keeps track of the angular velocity object
-local spinObject
-
+-- Enable spinning using BodyAngularVelocity
 local function enableSpin(degreesPerSecond)
     local root = getRootPart()
     if not root then return end
 
-    -- Convert to radians/sec
     local radPerSec = math.rad(degreesPerSecond)
 
-    -- Create if missing
     if not spinObject or not spinObject.Parent then
         spinObject = Instance.new("BodyAngularVelocity")
         spinObject.Name = "PersistentSpin"
-        spinObject.MaxTorque = Vector3.new(0, math.huge, 0) -- only spin around Y
-        spinObject.P = 1000 -- responsiveness
+        spinObject.MaxTorque = Vector3.new(0, math.huge, 0)
+        spinObject.P = 1000
         spinObject.Parent = root
     end
 
     spinObject.AngularVelocity = Vector3.new(0, radPerSec, 0)
+    currentSpinSpeed = degreesPerSecond
 end
 
 local function disableSpin()
@@ -258,24 +258,75 @@ local function disableSpin()
         spinObject:Destroy()
         spinObject = nil
     end
+    currentSpinSpeed = 0
 end
 
--- Reapply if character respawns
-player.CharacterAdded:Connect(function(char)
-    -- small delay so HumanoidRootPart exists
+-- Fling impulse on touch, scaled by spin speed
+local function flingPart(part)
+    part.Touched:Connect(function(other)
+        local character = other:FindFirstAncestorOfClass("Model")
+        if not character then return end
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+        local root = character:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+
+        local myRoot = getRootPart()
+        if not myRoot then return end
+
+        -- Calculate fling force based on spin speed
+        -- Base multiplier; tweak to adjust fling strength sensitivity
+        local baseForce = 50
+        local forceMagnitude = baseForce * (currentSpinSpeed / 360) -- scales with spin speed (360° = baseForce)
+
+        -- Clamp minimum fling force so very slow spins don't fling
+        if forceMagnitude < 10 then
+            forceMagnitude = 0
+        end
+
+        if forceMagnitude > 0 then
+            local direction = (root.Position - myRoot.Position).Unit
+            -- Apply velocity impulse with some upward boost
+            root.Velocity = direction * forceMagnitude + Vector3.new(0, forceMagnitude / 2, 0)
+        end
+    end)
+end
+
+-- Setup fling on all current and new character parts
+local function setupFling()
+    local character = player.Character
+    if not character then return end
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            flingPart(part)
+        end
+    end
+    character.DescendantAdded:Connect(function(desc)
+        if desc:IsA("BasePart") then
+            flingPart(desc)
+        end
+    end)
+end
+
+player.CharacterAdded:Connect(function()
+    -- Delay so HumanoidRootPart exists
+    local char = player.Character or player.CharacterAdded:Wait()
     char:WaitForChild("HumanoidRootPart", 5)
-    -- if slider had nonzero value, re-enable with previous speed
-    if spinObject and spinObject.Parent == nil then
-        -- grab last set speed from stored variable if you want to persist; for simplicity, disable
-        disableSpin()
+    setupFling()
+    if currentSpinSpeed > 0 then
+        enableSpin(currentSpinSpeed)
     end
 end)
 
--- Slider controlling spin speed
+if player.Character then
+    setupFling()
+end
+
+-- Slider controlling spin speed and fling force
 local Slider = Tab:CreateSlider({
     Name = "Spin Speed",
-    Range = {0, 360}, -- degrees per second
-    Increment = 5,
+    Range = {0, 720}, -- degrees per second, up to 2 spins per second
+    Increment = 10,
     Suffix = "°/s",
     CurrentValue = 0,
     Flag = "SpinSlider",
