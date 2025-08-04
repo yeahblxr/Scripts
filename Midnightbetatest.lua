@@ -108,7 +108,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added tiktok link, Added discord link, Added github link, Added copy script button, Added ShiftLock Script Added Fov Slider Added Inf Zoom,"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added tiktok link, Added discord link, Added github link, Added copy script button, Added ShiftLock Script Added Fov Slider Added Inf Zoom, Added reset charater, Fixed inf jump not disabling Fixed Respawn at death point not disabling"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -139,64 +139,121 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
- local Toggle = Tab:CreateToggle({
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+-- keep track of the connection so we can disconnect it
+local infiniteJumpConnection
+
+local Toggle = Tab:CreateToggle({
     Name = "Infinite Jump",
     CurrentValue = false,
-    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-    Callback = function(InfiniteJumpEnabled)
-        local InfiniteJumpEnabled = true
-        game:GetService("UserInputService").JumpRequest:connect(function()
-            if InfiniteJumpEnabled then
-                game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+    Flag = "InfiniteJumpToggle",
+    Callback = function(enabled)
+        if enabled then
+            -- if already connected, avoid double-connecting
+            if infiniteJumpConnection then return end
+
+            infiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
+                local character = localPlayer.Character
+                if not character then return end
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        else
+            -- disable: disconnect the listener
+            if infiniteJumpConnection then
+                infiniteJumpConnection:Disconnect()
+                infiniteJumpConnection = nil
             end
-        end)
+        end
     end,
- })
+})
+
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local deathPosition = nil
 local characterAddedConnection = nil
+local deathConnections = {} -- track humanoid.Died connections per character
 
-local function onCharacterDied()
-    local character = player.Character
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        deathPosition = character.HumanoidRootPart.Position
+local function onCharacterDied(character)
+    if not character then return end
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        deathPosition = hrp.Position
+    end
+end
+
+local function cleanupCharacterConnections(character)
+    if deathConnections[character] then
+        deathConnections[character]:Disconnect()
+        deathConnections[character] = nil
     end
 end
 
 local function onCharacterAdded(character)
-    local humanoid = character:WaitForChild("Humanoid")
-    humanoid.Died:Connect(onCharacterDied)
+    -- ensure previous connections for this character are cleaned (safety)
+    cleanupCharacterConnections(character)
 
+    local humanoid = character:WaitForChild("Humanoid")
+    -- connect death listener and store it
+    deathConnections[character] = humanoid.Died:Connect(function()
+        onCharacterDied(character)
+    end)
+
+    -- if we have a stored deathPosition (and toggle is still on), teleport
     if deathPosition then
         local hrp = character:WaitForChild("HumanoidRootPart")
-        hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
+        if hrp then
+            -- small upward offset so they don't get stuck
+            hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
+        end
     end
+
+    -- clean up when character is removed/replaced
+    character.AncestryChanged:Connect(function(_, parent)
+        if not parent then
+            cleanupCharacterConnections(character)
+        end
+    end)
 end
 
--- Your toggle
+-- Toggle
 local Toggle = Tab:CreateToggle({
     Name = "Respawn Where You Die",
     CurrentValue = false,
-    Flag = "Toggle1",
-    Callback = function(Value)
-        -- Toggle ON
-        if Value then
+    Flag = "RespawnWhereYouDie",
+    Callback = function(enabled)
+        if enabled then
+            -- start tracking
+            deathPosition = nil -- reset any old death position
             characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
             if player.Character then
                 onCharacterAdded(player.Character)
             end
-        -- Toggle OFF
         else
+            -- stop tracking and clear state
             if characterAddedConnection then
                 characterAddedConnection:Disconnect()
                 characterAddedConnection = nil
             end
+            deathPosition = nil
+            -- clean up any existing per-character death listeners
+            for character, conn in pairs(deathConnections) do
+                if conn then
+                    conn:Disconnect()
+                end
+                deathConnections[character] = nil
+            end
         end
     end,
 })
+
 
 local Button = Tab:CreateButton({
    Name = "Reset Character",
@@ -208,31 +265,58 @@ local Button = Tab:CreateButton({
    end,
 })
 
-local lastFov = workspace.CurrentCamera.FieldOfView
+-- helper clamp in case Rayfield or environment doesn't have one
+local function clamp(val, min, max)
+    if val < min then return min end
+    if val > max then return max end
+    return val
+end
 
-local Slider = Tab:CreateSlider({
-    Name = "Fov Changer",
-    Range = {70, 120},
-    Increment = 10,
-    Suffix = "FOV",
-    CurrentValue = lastFov,
-    Flag = "Fovslider",
-    Callback = function(Value)
-        -- apply FOV
-        workspace.CurrentCamera.FieldOfView = Value
+-- initialize with current FOV (clamped to allowed range)
+local initialFov = clamp(tonumber(workspace.CurrentCamera.FieldOfView) or 70, 70, 120)
 
-        -- only notify if it actually changed (optional throttling)
-        if Value ~= lastFov then
+local Input = Tab:CreateInput({
+    Name = "FOV Input",
+    CurrentValue = tostring(initialFov),
+    PlaceholderText = "Enter FOV (70–120)",
+    RemoveTextAfterFocusLost = false,
+    Flag = "FovInput",
+    Callback = function(Text)
+        local num = tonumber(Text)
+        if not num then
+            Rayfield:Notify({
+                Title = "Invalid Value",
+                Content = "Please enter a number between 70 and 120.",
+                Duration = 3.5,
+                Image = "ban"
+            })
+            return
+        end
+
+        local newFov = clamp(num, 70, 120)
+        workspace.CurrentCamera.FieldOfView = newFov
+
+        -- if the user entered out-of-range, you can reflect the clamped value back
+        if newFov ~= num then
+            -- optional: update the input display if API supports it
+            -- e.g., if there's a SetValue method: Input:SetValue(tostring(newFov))
+            Rayfield:Notify({
+                Title = "FOV Adjusted",
+                Content = string.format("FOV was clamped to %d (range is 70–120).", newFov),
+                Duration = 3.5,
+                Image = "check",
+            })
+        else
             Rayfield:Notify({
                 Title = "FOV Changed",
-                Content = string.format("FOV has been changed to %d", Value),
-                Duration = 3,
+                Content = string.format("FOV has been changed to %d", newFov),
+                Duration = 3.5,
                 Image = "check"
             })
-            lastFov = Value
         end
     end,
 })
+
 
 
 local Tab = Window:CreateTab("Fun Scripts", "joystick") -- Title, Image
