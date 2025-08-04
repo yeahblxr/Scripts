@@ -823,56 +823,73 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/MiniNoobie/ShiftLockx
    end,
 })
 
--- Services
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
+-- state for pinch detection
+local ongoingTouches = {}
+local function getDistance(t1, t2)
+    return (t1.Position - t2.Position).Magnitude
+end
 
-local player = Players.LocalPlayer
-local camera = workspace.CurrentCamera
-
--- State
-local isEnabled = false
-local currentMaxZoom = player.CameraMaxZoomDistance or 100
-local defaultMaxZoom = 100
-local zoomMultiplier = 1.5
-local zoomThresholdFraction = 0.9
-
--- Mouse wheel handler: only expands max zoom when enabled and scrolling out
-local function onMouseWheel(input, gameProcessed)
+local function onInputChanged(input, gameProcessed)
     if not isEnabled or gameProcessed then return end
 
     if input.UserInputType == Enum.UserInputType.MouseWheel then
-        local currentZoomDist = (camera.CFrame.Position - camera.Focus.Position).Magnitude
-
-        if input.Position.Z < 0 then
+        -- existing desktop logic (kept if platform has mouse wheel)
+        local delta = input.Position.Z
+        if delta < 0 then
+            local currentZoomDist = (camera.CFrame.Position - camera.Focus.Position).Magnitude
             if currentZoomDist >= currentMaxZoom * zoomThresholdFraction then
                 currentMaxZoom = currentMaxZoom * zoomMultiplier
                 player.CameraMaxZoomDistance = currentMaxZoom
             end
         end
+    elseif input.UserInputType == Enum.UserInputType.Touch then
+        -- update or add touch
+        ongoingTouches[input.UserInputState == Enum.UserInputState.End and "ended" or input.UserInputState.Name] = input
+    end
+
+    -- handle pinch if two touches active
+    local touches = {}
+    for _, v in pairs(ongoingTouches) do
+        if typeof(v) == "userdata" and v.UserInputType == Enum.UserInputType.Touch then
+            table.insert(touches, v)
+        end
+    end
+
+    if #touches == 2 then
+        local distNow = getDistance(touches[1], touches[2])
+        -- store previous distance on the touches themselves
+        if not touches[1].PreviousDistance or not touches[2].PreviousDistance then
+            -- initialize
+            touches[1].PreviousDistance = distNow
+            touches[2].PreviousDistance = distNow
+            return
+        end
+
+        local prevDist = touches[1].PreviousDistance
+        -- outward pinch if distance increased
+        if distNow > prevDist then
+            local currentZoomDist = (camera.CFrame.Position - camera.Focus.Position).Magnitude
+            if currentZoomDist >= currentMaxZoom * zoomThresholdFraction then
+                currentMaxZoom = currentMaxZoom * zoomMultiplier
+                player.CameraMaxZoomDistance = currentMaxZoom
+            end
+        end
+
+        -- update saved previous distance
+        touches[1].PreviousDistance = distNow
+        touches[2].PreviousDistance = distNow
     end
 end
 
--- Toggle UI
-local Toggle = Tab:CreateToggle({
-    Name = "Infinite Zoom",
-    CurrentValue = false,
-    Flag = "InfiniteZoomToggle",
-    Callback = function(Value)
-        isEnabled = Value
-        if isEnabled then
-            -- Keep the growing zoom distance
-            player.CameraMaxZoomDistance = currentMaxZoom
-        else
-            -- Reset to default
-            currentMaxZoom = defaultMaxZoom
-            player.CameraMaxZoomDistance = defaultMaxZoom
-        end
-    end,
-})
+-- cleanup on touch end
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        ongoingTouches[input.UserInputState == Enum.UserInputState.End and "ended" or input.UserInputState.Name] = nil
+    end
+end)
 
--- Connect input changed
-UserInputService.InputChanged:Connect(onMouseWheel)
+-- hook original connection
+UserInputService.InputChanged:Connect(onInputChanged)
 
 local Button = Tab:CreateButton({
    Name = "Infinte Yeild",
