@@ -108,7 +108,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added tiktok link, Added discord link, Added github link, Added copy script button, Added ShiftLock Script Added Fov Slider Added Inf Zoom, Added reset charater, Fixed inf jump not disabling Fixed Respawn at death point not disabling"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added tiktok link, Added discord link, Added github link, Added copy script button, Added ShiftLock Script Added Fov Slider, Added reset charater, Fixed inf jump not disabling Fixed Respawn at death point not disabling"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -822,124 +822,6 @@ local Button = Tab:CreateButton({
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MiniNoobie/ShiftLockx/main/Shiftlock-MiniNoobie",true))()
    end,
 })
-
--- Services
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-
-local player = Players.LocalPlayer
-local camera = workspace.CurrentCamera
-
--- State
-local isEnabled = false
-local defaultMaxZoom = 100
-local currentMaxZoom = defaultMaxZoom
-local zoomMultiplier = 1.5
-local zoomThresholdFraction = 0.9
-local lastZoomExpand = 0
-local zoomCooldown = 0.05 -- seconds between expansions
-
--- Touch tracking for pinch
-local activeTouches = {}  -- map from input.UserInputState .. tostring(input) to input
-local previousPinchDistance
-
-local function getCurrentZoomDistance()
-    if camera.Focus and camera.Focus.Position then
-        return (camera.CFrame.Position - camera.Focus.Position).Magnitude
-    else
-        return 0
-    end
-end
-
-local function tryExpandZoom()
-    local now = tick()
-    if now - lastZoomExpand < zoomCooldown then
-        return
-    end
-    local currentZoomDist = getCurrentZoomDistance()
-    if currentZoomDist >= currentMaxZoom * zoomThresholdFraction then
-        currentMaxZoom = currentMaxZoom * zoomMultiplier
-        if player and player.CameraMaxZoomDistance ~= nil then
-            player.CameraMaxZoomDistance = currentMaxZoom
-        end
-        lastZoomExpand = now
-    end
-end
-
-local function onInputChanged(input, gameProcessed)
-    if not isEnabled or gameProcessed then return end
-
-    -- Desktop mouse wheel
-    if input.UserInputType == Enum.UserInputType.MouseWheel then
-        local delta = input.Position.Z -- negative when scrolling out
-        if delta < 0 then
-            tryExpandZoom()
-        end
-    end
-
-    -- Touch for pinch (mobile)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        -- store/update active touch
-        activeTouches[input] = input
-
-        -- if exactly two touches, check distance change
-        local touches = {}
-        for k, v in pairs(activeTouches) do
-            if v.UserInputType == Enum.UserInputType.Touch then
-                table.insert(touches, v)
-            end
-        end
-
-        if #touches == 2 then
-            local dist = (touches[1].Position - touches[2].Position).Magnitude
-            if previousPinchDistance then
-                if dist > previousPinchDistance + 2 then -- simple threshold to avoid jitter
-                    tryExpandZoom()
-                end
-            end
-            previousPinchDistance = dist
-        end
-    end
-end
-
--- Clean up touches on end
-UserInputService.InputEnded:Connect(function(input, gameProcessed)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        activeTouches[input] = nil
-        previousPinchDistance = nil
-    end
-end)
-
--- Rayfield toggle for Infinite Zoom
-local Toggle = Tab:CreateToggle({
-    Name = "Infinite Zoom",
-    CurrentValue = false,
-    Flag = "InfiniteZoomToggle",
-    Callback = function(enabled)
-        isEnabled = enabled
-        if isEnabled then
-            -- apply current cap
-            if player and player.CameraMaxZoomDistance ~= nil then
-                player.CameraMaxZoomDistance = currentMaxZoom
-            end
-        else
-            -- reset everything
-            currentMaxZoom = defaultMaxZoom
-            if player and player.CameraMaxZoomDistance ~= nil then
-                player.CameraMaxZoomDistance = defaultMaxZoom
-            end
-            previousPinchDistance = nil
-            -- clear active touches
-            activeTouches = {}
-        end
-    end,
-})
-
--- Connect input listener once
-UserInputService.InputChanged:Connect(onInputChanged)
-
--- hook original connection
-UserInputService.InputChanged:Connect(onInputChanged)
 
 local Button = Tab:CreateButton({
    Name = "Infinte Yeild",
