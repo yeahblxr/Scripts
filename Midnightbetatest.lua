@@ -108,7 +108,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/3/25", Content = "Changed the fly gui to my own gui change the noclips script from a gui to a toggle"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added tiktok link, Added discord link, Added github link, Added copy script button, Added ShiftLock Script Added Fov Slider Added Inf Zoom,"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -198,7 +198,44 @@ local Toggle = Tab:CreateToggle({
     end,
 })
 
-  local Tab = Window:CreateTab("Fun Scripts", "joystick") -- Title, Image
+local Button = Tab:CreateButton({
+   Name = "Reset Character",
+   Callback = function()
+        local character = player.Character
+        if character then
+            character:BreakJoints() -- This will reset the character
+        end
+   end,
+})
+
+local lastFov = workspace.CurrentCamera.FieldOfView
+
+local Slider = Tab:CreateSlider({
+    Name = "Fov Changer",
+    Range = {70, 120},
+    Increment = 10,
+    Suffix = "FOV",
+    CurrentValue = lastFov,
+    Flag = "Fovslider",
+    Callback = function(Value)
+        -- apply FOV
+        workspace.CurrentCamera.FieldOfView = Value
+
+        -- only notify if it actually changed (optional throttling)
+        if Value ~= lastFov then
+            Rayfield:Notify({
+                Title = "FOV Changed",
+                Content = string.format("FOV has been changed to %d", Value),
+                Duration = 3,
+                Image = "check"
+            })
+            lastFov = Value
+        end
+    end,
+})
+
+
+local Tab = Window:CreateTab("Fun Scripts", "joystick") -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Dih Script",
@@ -698,9 +735,60 @@ local Button = Tab:CreateButton({
 local Button = Tab:CreateButton({
    Name = "ShiftLock",
    Callback = function()
-loadstring(game:HttpGet('https://pastebin.com/raw/WQ9NPeDS'))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MiniNoobie/ShiftLockx/main/Shiftlock-MiniNoobie",true))()
    end,
 })
+
+-- Services
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+-- State
+local isEnabled = false
+local currentMaxZoom = player.CameraMaxZoomDistance or 100
+local defaultMaxZoom = 100
+local zoomMultiplier = 1.5
+local zoomThresholdFraction = 0.9
+
+-- Mouse wheel handler: only expands max zoom when enabled and scrolling out
+local function onMouseWheel(input, gameProcessed)
+    if not isEnabled or gameProcessed then return end
+
+    if input.UserInputType == Enum.UserInputType.MouseWheel then
+        local currentZoomDist = (camera.CFrame.Position - camera.Focus.Position).Magnitude
+
+        if input.Position.Z < 0 then
+            if currentZoomDist >= currentMaxZoom * zoomThresholdFraction then
+                currentMaxZoom = currentMaxZoom * zoomMultiplier
+                player.CameraMaxZoomDistance = currentMaxZoom
+            end
+        end
+    end
+end
+
+-- Toggle UI
+local Toggle = Tab:CreateToggle({
+    Name = "Infinite Zoom",
+    CurrentValue = false,
+    Flag = "InfiniteZoomToggle",
+    Callback = function(Value)
+        isEnabled = Value
+        if isEnabled then
+            -- Keep the growing zoom distance
+            player.CameraMaxZoomDistance = currentMaxZoom
+        else
+            -- Reset to default
+            currentMaxZoom = defaultMaxZoom
+            player.CameraMaxZoomDistance = defaultMaxZoom
+        end
+    end,
+})
+
+-- Connect input changed
+UserInputService.InputChanged:Connect(onMouseWheel)
 
 local Button = Tab:CreateButton({
    Name = "Infinte Yeild",
