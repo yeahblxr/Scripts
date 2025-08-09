@@ -1,478 +1,161 @@
-local main = Instance.new("ScreenGui")
+-- Create ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Main Frame
 local Frame = Instance.new("Frame")
-local up = Instance.new("TextButton")
-local down = Instance.new("TextButton")
-local onof = Instance.new("TextButton")
-local TextLabel = Instance.new("TextLabel")
-local plus = Instance.new("TextButton")
-local speed = Instance.new("TextLabel")
-local mine = Instance.new("TextButton")
-local closebutton = Instance.new("TextButton")
-local mini = Instance.new("TextButton")
-local mini2 = Instance.new("TextButton")
-
-main.Name = "main"
-main.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-main.ResetOnSpawn = false
-
-Frame.Parent = main
-Frame.BackgroundColor3 = Color3.fromRGB(100, 100, 100) -- Gray color
-Frame.Position = UDim2.new(0.1, 0, 0.38, 0)
-Frame.Size = UDim2.new(0, 220, 0, 75)
+Frame.Size = UDim2.new(0, 200, 0, 150)
+Frame.Position = UDim2.new(0.4, 0, 0.4, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(40, 30, 60) -- Dark purple base
+Frame.BackgroundTransparency = 0.2
+Frame.BorderSizePixel = 0
+Frame.Parent = ScreenGui
 Frame.Active = true
 Frame.Draggable = true
-Frame.BorderSizePixel = 0
-local UICorner = Instance.new("UICorner", Frame)
-UICorner.CornerRadius = UDim.new(0, 15)
 
-local buttonSize = UDim2.new(0, 40, 0, 28)
-local smallButtonSize = UDim2.new(0, 30, 0, 28)
-local padding = 8
+-- UICorner for rounded edges
+local FrameCorner = Instance.new("UICorner", Frame)
+FrameCorner.CornerRadius = UDim.new(0, 10)
 
--- Fly Label
-TextLabel.Parent = Frame
-TextLabel.BackgroundTransparency = 1
-TextLabel.Position = UDim2.new(0.35, 0, 0, 5)
-TextLabel.Size = UDim2.new(0, 120, 0, 28)
-TextLabel.Font = Enum.Font.SourceSansBold
-TextLabel.Text = "FLY GUI V3"
-TextLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-TextLabel.TextScaled = true
-TextLabel.TextWrapped = true
+-- Minimize Button (text "-")
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
+MinimizeButton.Position = UDim2.new(0, 5, 0, 5) -- Top left corner with padding
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(75, 60, 110) -- Medium purple
+MinimizeButton.BackgroundTransparency = 0.3
+MinimizeButton.Text = "-"
+MinimizeButton.TextColor3 = Color3.fromRGB(230, 230, 250) -- Light lavender
+MinimizeButton.Font = Enum.Font.GothamBold
+MinimizeButton.TextSize = 24
+MinimizeButton.Parent = Frame
+Instance.new("UICorner", MinimizeButton).CornerRadius = UDim.new(0, 6)
 
--- On/Off button
-onof.Name = "onof"
-onof.Parent = Frame
-onof.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
-onof.Position = UDim2.new(0.7, 0, 0.45, 0)
-onof.Size = buttonSize
-onof.Font = Enum.Font.SourceSans
-onof.Text = "Fly"
-onof.TextColor3 = Color3.fromRGB(0, 0, 0)
-onof.TextSize = 16
-local onofCorner = Instance.new("UICorner", onof)
-onofCorner.CornerRadius = UDim.new(0, 8)
+-- Close Button (X) at top right corner
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -35, 0, 5)
+CloseButton.BackgroundColor3 = Color3.fromRGB(180, 50, 80) -- Slightly reddish purple
+CloseButton.BackgroundTransparency = 0.3
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(240, 240, 240)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 18
+CloseButton.Parent = Frame
+Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 6)
 
--- Speed display
-speed.Name = "speed"
-speed.Parent = Frame
-speed.BackgroundTransparency = 1
-speed.Position = UDim2.new(0.48, 0, 0.45, 0)
-speed.Size = UDim2.new(0, 40, 0, 28)
-speed.Font = Enum.Font.SourceSansBold
-speed.Text = "1"
-speed.TextColor3 = Color3.fromRGB(230, 230, 230)
-speed.TextScaled = true
-
--- Plus button
-plus.Name = "plus"
-plus.Parent = Frame
-plus.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
-plus.Position = UDim2.new(0.25, 0, 0, 5)
-plus.Size = smallButtonSize
-plus.Font = Enum.Font.SourceSansBold
-plus.Text = "+"
-plus.TextColor3 = Color3.fromRGB(0, 0, 0)
-plus.TextScaled = true
-local plusCorner = Instance.new("UICorner", plus)
-plusCorner.CornerRadius = UDim.new(0, 8)
-
--- Minus button
-mine.Name = "mine"
-mine.Parent = Frame
-mine.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
-mine.Position = UDim2.new(0.05, 0, 0.45, 0)
-mine.Size = smallButtonSize
-mine.Font = Enum.Font.SourceSansBold
-mine.Text = "-"
-mine.TextColor3 = Color3.fromRGB(0, 0, 0)
-mine.TextScaled = true
-local mineCorner = Instance.new("UICorner", mine)
-mineCorner.CornerRadius = UDim.new(0, 8)
-
--- Close button
-closebutton.Name = "Close"
-closebutton.Parent = Frame
-closebutton.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
-closebutton.Font = Enum.Font.SourceSansBold
-closebutton.Size = smallButtonSize
-closebutton.Text = "X"
-closebutton.TextSize = 18
-closebutton.Position = UDim2.new(1, -smallButtonSize.X.Offset - padding, 0, padding)
-local closeCorner = Instance.new("UICorner", closebutton)
-closeCorner.CornerRadius = UDim.new(0, 8)
-
--- Minimize button
-mini.Name = "minimize"
-mini.Parent = Frame
-mini.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-mini.Font = Enum.Font.SourceSansBold
-mini.Size = smallButtonSize
-mini.Text = "-"
-mini.TextSize = 24
-mini.TextColor3 = Color3.fromRGB(230, 230, 230)
-mini.Position = UDim2.new(1, -2*smallButtonSize.X.Offset - padding*2, 0, padding)
-local miniCorner = Instance.new("UICorner", mini)
-miniCorner.CornerRadius = UDim.new(0, 8)
-
--- Maximize button (hidden initially)
-mini2.Name = "minimize2"
-mini2.Parent = Frame
-mini2.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-mini2.Font = Enum.Font.SourceSansBold
-mini2.Size = smallButtonSize
-mini2.Text = "+"
-mini2.TextSize = 24
-mini2.TextColor3 = Color3.fromRGB(230, 230, 230)
-mini2.Position = mini.Position
-mini2.Visible = false
-local mini2Corner = Instance.new("UICorner", mini2)
-mini2Corner.CornerRadius = UDim.new(0, 8)
-
-speeds = 1
-
-local speaker = game:GetService("Players").LocalPlayer
-
-local chr = game.Players.LocalPlayer.Character
-local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
-
-nowe = false
-
-game:GetService("StarterGui"):SetCore("SendNotification", { 
-	Title = "FLY GUI V3";
-	Text = "BY XNEO";
-	Icon = "rbxthumb://type=Asset&id=5107182114&w=150&h=150"})
-Duration = 5;
-
-Frame.Active = true -- main = gui
-Frame.Draggable = true
-
-onof.MouseButton1Down:connect(function()
-
-	if nowe == true then
-		nowe = false
-
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Flying,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Landed,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.RunningNoPhysics,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.StrafingNoPhysics,true)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming,true)
-		speaker.Character.Humanoid:ChangeState(Enum.HumanoidStateType.RunningNoPhysics)
-	else 
-		nowe = true
-
-
-
-		for i = 1, speeds do
-			spawn(function()
-
-				local hb = game:GetService("RunService").Heartbeat	
-
-
-				tpwalking = true
-				local chr = game.Players.LocalPlayer.Character
-				local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
-				while tpwalking and hb:Wait() and chr and hum and hum.Parent do
-					if hum.MoveDirection.Magnitude > 0 then
-						chr:TranslateBy(hum.MoveDirection)
-					end
-				end
-
-			end)
-		end
-		game.Players.LocalPlayer.Character.Animate.Disabled = true
-		local Char = game.Players.LocalPlayer.Character
-		local Hum = Char:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
-
-		for i,v in next, Hum:GetPlayingAnimationTracks() do
-			v:AdjustSpeed(0)
-		end
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Flying,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.GettingUp,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Landed,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.PlatformStanding,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Running,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.RunningNoPhysics,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.StrafingNoPhysics,false)
-		speaker.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Swimming,false)
-		speaker.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Swimming)
-	end
-
-
-
-
-	if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-
-
-
-		local plr = game.Players.LocalPlayer
-		local torso = plr.Character.Torso
-		local flying = true
-		local deb = true
-		local ctrl = {f = 0, b = 0, l = 0, r = 0}
-		local lastctrl = {f = 0, b = 0, l = 0, r = 0}
-		local maxspeed = 50
-		local speed = 0
-
-
-		local bg = Instance.new("BodyGyro", torso)
-		bg.P = 9e4
-		bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-		bg.cframe = torso.CFrame
-		local bv = Instance.new("BodyVelocity", torso)
-		bv.velocity = Vector3.new(0,0.1,0)
-		bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
-		if nowe == true then
-			plr.Character.Humanoid.PlatformStand = true
-		end
-		while nowe == true or game:GetService("Players").LocalPlayer.Character.Humanoid.Health == 0 do
-			game:GetService("RunService").RenderStepped:Wait()
-
-			if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
-				speed = speed+.5+(speed/maxspeed)
-				if speed > maxspeed then
-					speed = maxspeed
-				end
-			elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
-				speed = speed-1
-				if speed < 0 then
-					speed = 0
-				end
-			end
-			if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
-				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
-				lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
-			elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
-				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
-			else
-				bv.velocity = Vector3.new(0,0,0)
-			end
-			--	game.Players.LocalPlayer.Character.Animate.Disabled = true
-			bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0)
-		end
-		ctrl = {f = 0, b = 0, l = 0, r = 0}
-		lastctrl = {f = 0, b = 0, l = 0, r = 0}
-		speed = 0
-		bg:Destroy()
-		bv:Destroy()
-		plr.Character.Humanoid.PlatformStand = false
-		game.Players.LocalPlayer.Character.Animate.Disabled = false
-		tpwalking = false
-
-
-
-
-	else
-		local plr = game.Players.LocalPlayer
-		local UpperTorso = plr.Character.UpperTorso
-		local flying = true
-		local deb = true
-		local ctrl = {f = 0, b = 0, l = 0, r = 0}
-		local lastctrl = {f = 0, b = 0, l = 0, r = 0}
-		local maxspeed = 50
-		local speed = 0
-
-
-		local bg = Instance.new("BodyGyro", UpperTorso)
-		bg.P = 9e4
-		bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-		bg.cframe = UpperTorso.CFrame
-		local bv = Instance.new("BodyVelocity", UpperTorso)
-		bv.velocity = Vector3.new(0,0.1,0)
-		bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
-		if nowe == true then
-			plr.Character.Humanoid.PlatformStand = true
-		end
-		while nowe == true or game:GetService("Players").LocalPlayer.Character.Humanoid.Health == 0 do
-			wait()
-
-			if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
-				speed = speed+.5+(speed/maxspeed)
-				if speed > maxspeed then
-					speed = maxspeed
-				end
-			elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
-				speed = speed-1
-				if speed < 0 then
-					speed = 0
-				end
-			end
-			if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
-				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
-				lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
-			elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
-				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed
-			else
-				bv.velocity = Vector3.new(0,0,0)
-			end
-
-			bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0)
-		end
-		ctrl = {f = 0, b = 0, l = 0, r = 0}
-		lastctrl = {f = 0, b = 0, l = 0, r = 0}
-		speed = 0
-		bg:Destroy()
-		bv:Destroy()
-		plr.Character.Humanoid.PlatformStand = false
-		game.Players.LocalPlayer.Character.Animate.Disabled = false
-		tpwalking = false
-
-
-
-	end
-
-
-
-
-
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
 end)
 
-local tis
+-- Title Label "MDNT Fly" centered top
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(0, 120, 0, 30)
+TitleLabel.Position = UDim2.new(0.5, -60, 0, 5)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "MDNT Fly"
+TitleLabel.TextColor3 = Color3.fromRGB(220, 220, 240) -- Soft off-white
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 20
+TitleLabel.Parent = Frame
 
-up.MouseButton1Down:connect(function()
-	tis = up.MouseEnter:connect(function()
-		while tis do
-			wait()
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,1,0)
-		end
-	end)
+-- Fly Button (Full width)
+local FlyButton = Instance.new("TextButton")
+FlyButton.Size = UDim2.new(1, -10, 0, 40)
+FlyButton.Position = UDim2.new(0, 5, 0, 50)
+FlyButton.BackgroundColor3 = Color3.fromRGB(95, 70, 140) -- Medium purple
+FlyButton.BackgroundTransparency = 0.3
+FlyButton.Text = "Fly"
+FlyButton.TextColor3 = Color3.fromRGB(220, 220, 240)
+FlyButton.Font = Enum.Font.GothamBold
+FlyButton.TextSize = 18
+FlyButton.Parent = Frame
+Instance.new("UICorner", FlyButton).CornerRadius = UDim.new(0, 8)
+
+-- Number Display + and - (Minus on left, Plus on right)
+local NumberValue = 3
+
+local Minus = Instance.new("TextButton")
+Minus.Size = UDim2.new(0, 50, 0, 40)
+Minus.Position = UDim2.new(0, 5, 0, 100)
+Minus.BackgroundColor3 = Color3.fromRGB(95, 70, 140)
+Minus.BackgroundTransparency = 0.3
+Minus.Text = "-"
+Minus.TextColor3 = Color3.fromRGB(220, 220, 240)
+Minus.Font = Enum.Font.GothamBold
+Minus.TextSize = 20
+Minus.Parent = Frame
+Instance.new("UICorner", Minus).CornerRadius = UDim.new(0, 8)
+
+local NumberLabel = Instance.new("TextLabel")
+NumberLabel.Size = UDim2.new(0, 50, 0, 40)
+NumberLabel.Position = UDim2.new(0.5, -25, 0, 100)
+NumberLabel.BackgroundTransparency = 1
+NumberLabel.Text = tostring(NumberValue)
+NumberLabel.TextColor3 = Color3.fromRGB(220, 220, 240)
+NumberLabel.Font = Enum.Font.GothamBold
+NumberLabel.TextSize = 20
+NumberLabel.Parent = Frame
+
+local Plus = Instance.new("TextButton")
+Plus.Size = UDim2.new(0, 50, 0, 40)
+Plus.Position = UDim2.new(1, -55, 0, 100)
+Plus.BackgroundColor3 = Color3.fromRGB(95, 70, 140)
+Plus.BackgroundTransparency = 0.3
+Plus.Text = "+"
+Plus.TextColor3 = Color3.fromRGB(220, 220, 240)
+Plus.Font = Enum.Font.GothamBold
+Plus.TextSize = 20
+Plus.Parent = Frame
+Instance.new("UICorner", Plus).CornerRadius = UDim.new(0, 8)
+
+-- Plus/Minus logic (number won't go below 1)
+Plus.MouseButton1Click:Connect(function()
+    NumberValue = NumberValue + 1
+    NumberLabel.Text = tostring(NumberValue)
 end)
 
-up.MouseLeave:connect(function()
-	if tis then
-		tis:Disconnect()
-		tis = nil
-	end
+Minus.MouseButton1Click:Connect(function()
+    if NumberValue > 1 then
+        NumberValue = NumberValue - 1
+        NumberLabel.Text = tostring(NumberValue)
+    end
 end)
 
-local dis
+-- MH Minimized Button (initially hidden)
+local MHButton = Instance.new("TextButton")
+MHButton.Size = UDim2.new(0, 40, 0, 40)
+MHButton.Position = Frame.Position -- Start at same position as Frame
+MHButton.BackgroundColor3 = Color3.fromRGB(75, 60, 110)
+MHButton.BackgroundTransparency = 0.3
+MHButton.Text = "MH"
+MHButton.TextColor3 = Color3.fromRGB(220, 220, 240)
+MHButton.Font = Enum.Font.GothamBold
+MHButton.TextSize = 18
+MHButton.Parent = ScreenGui
+MHButton.Visible = false
+MHButton.Active = true
+MHButton.Draggable = true
+Instance.new("UICorner", MHButton).CornerRadius = UDim.new(0, 10)
 
-down.MouseButton1Down:connect(function()
-	dis = down.MouseEnter:connect(function()
-		while dis do
-			wait()
-			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,-1,0)
-		end
-	end)
+local minimized = false
+MinimizeButton.MouseButton1Click:Connect(function()
+    if not minimized then
+        Frame.Visible = false
+        MHButton.Position = Frame.Position
+        MHButton.Visible = true
+        minimized = true
+    end
 end)
 
-down.MouseLeave:connect(function()
-	if dis then
-		dis:Disconnect()
-		dis = nil
-	end
+MHButton.MouseButton1Click:Connect(function()
+    if minimized then
+        Frame.Visible = true
+        MHButton.Visible = false
+        minimized = false
+    end
 end)
 
-
-game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(char)
-	wait(0.7)
-	game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
-	game.Players.LocalPlayer.Character.Animate.Disabled = false
-
-end)
-
-
-plus.MouseButton1Down:connect(function()
-	speeds = speeds + 1
-	speed.Text = speeds
-	if nowe == true then
-
-
-		tpwalking = false
-		for i = 1, speeds do
-			spawn(function()
-
-				local hb = game:GetService("RunService").Heartbeat	
-
-
-				tpwalking = true
-				local chr = game.Players.LocalPlayer.Character
-				local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
-				while tpwalking and hb:Wait() and chr and hum and hum.Parent do
-					if hum.MoveDirection.Magnitude > 0 then
-						chr:TranslateBy(hum.MoveDirection)
-					end
-				end
-
-			end)
-		end
-	end
-end)
-mine.MouseButton1Down:connect(function()
-	if speeds == 1 then
-		speed.Text = 'cannot be less than 1'
-		wait(1)
-		speed.Text = speeds
-	else
-		speeds = speeds - 1
-		speed.Text = speeds
-		if nowe == true then
-			tpwalking = false
-			for i = 1, speeds do
-				spawn(function()
-
-					local hb = game:GetService("RunService").Heartbeat	
-
-
-					tpwalking = true
-					local chr = game.Players.LocalPlayer.Character
-					local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
-					while tpwalking and hb:Wait() and chr and hum and hum.Parent do
-						if hum.MoveDirection.Magnitude > 0 then
-							chr:TranslateBy(hum.MoveDirection)
-						end
-					end
-
-				end)
-			end
-		end
-	end
-end)
-
-closebutton.MouseButton1Click:Connect(function()
-	main:Destroy()
-end)
-
-mini.MouseButton1Click:Connect(function()
-	up.Visible = false
-	down.Visible = false
-	onof.Visible = false
-	plus.Visible = false
-	speed.Visible = false
-	mine.Visible = false
-	mini.Visible = false
-	mini2.Visible = true
-	main.Frame.BackgroundTransparency = 1
-	closebutton.Position =  UDim2.new(0, 0, -1, 57)
-end)
-
-mini2.MouseButton1Click:Connect(function()
-	up.Visible = true
-	down.Visible = true
-	onof.Visible = true
-	plus.Visible = true
-	speed.Visible = true
-	mine.Visible = true
-	mini.Visible = true
-	mini2.Visible = false
-	main.Frame.BackgroundTransparency = 0 
-	closebutton.Position =  UDim2.new(0, 0, -1, 27)
+-- Fly button action placeholder
+FlyButton.MouseButton1Click:Connect(function()
+    print("Fly pressed")
 end)
