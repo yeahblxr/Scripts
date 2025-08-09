@@ -1,0 +1,421 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+-- UI Colors (from first script)
+local BG           = Color3.fromRGB(34, 27, 53)
+local HEADER       = Color3.fromRGB(75, 59, 110)
+local ACCENT       = Color3.fromRGB(145, 115, 210)
+local TEXT         = Color3.fromRGB(230, 225, 245)
+local BUTTON       = Color3.fromRGB(100, 80, 160)
+local BUTTON_HOVER = Color3.fromRGB(125, 100, 190)
+local BUTTON_ACTIVE= Color3.fromRGB(165, 135, 230)
+local BUTTON_DARK  = Color3.fromRGB(55, 45, 90)
+
+-- Flight state and control
+local flying = false
+local flySpeed = 50
+
+local ctrl = {f = 0, b = 0, l = 0, r = 0}
+local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+local maxspeed = 50
+local speed = 0
+local bodyGyro, bodyVelocity
+local platformStand = false
+local tpwalking = false
+
+-- Helpers
+local function roundize(obj, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius)
+    c.Parent = obj
+end
+
+-- Build UI (from your first script, minus "Hold to Descend" button)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MidnightFlyGUI"
+if syn and syn.protect_gui then syn.protect_gui(screenGui) end
+if pcall(function() screenGui.Parent = game:GetService("CoreGui") end) == false then
+    screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+local fullSize = UDim2.new(0, 440, 0, 250)
+local fullPos = UDim2.new(0.5, -220, 0.4, -125)
+local isMinimized = false
+local savedProps = {}
+
+local frame = Instance.new("Frame")
+frame.Size = fullSize
+frame.Position = fullPos
+frame.BackgroundColor3 = BG
+frame.Active = true
+frame.Draggable = true
+frame.Parent = screenGui
+roundize(frame, 16)
+
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, 40)
+header.Position = UDim2.new(0, 0, 0, 0)
+header.BackgroundColor3 = HEADER
+header.Parent = frame
+roundize(header, 12)
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -160, 1, 0)
+title.Position = UDim2.new(0, 12, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Midnight Fly"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 17
+title.TextColor3 = TEXT
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = header
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0,32,0,32)
+closeBtn.Position = UDim2.new(1, -44, 0, 4)
+closeBtn.BackgroundColor3 = BUTTON_DARK
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 16
+closeBtn.TextColor3 = TEXT
+closeBtn.BorderSizePixel = 0
+closeBtn.Parent = header
+roundize(closeBtn, 6)
+
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Size = UDim2.new(0,32,0,32)
+minimizeBtn.Position = UDim2.new(1, -84, 0, 4)
+minimizeBtn.BackgroundColor3 = BUTTON_DARK
+minimizeBtn.Text = "-"
+minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.TextSize = 24
+minimizeBtn.TextColor3 = TEXT
+minimizeBtn.BorderSizePixel = 0
+minimizeBtn.Parent = header
+roundize(minimizeBtn, 6)
+
+local author = Instance.new("TextLabel")
+author.Size = UDim2.new(0, 160, 0, 16)
+author.Position = UDim2.new(0, 14, 0, 48)
+author.BackgroundTransparency = 1
+author.Text = "by yeahblxr"
+author.Font = Enum.Font.Gotham
+author.TextSize = 12
+author.TextColor3 = Color3.fromRGB(200, 190, 235)
+author.TextXAlignment = Enum.TextXAlignment.Left
+author.Parent = frame
+
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Size = UDim2.new(0, 170, 0, 42)
+toggleBtn.Position = UDim2.new(0, 16, 0, 75)
+toggleBtn.BackgroundColor3 = BUTTON
+toggleBtn.Text = "Enable Fly"
+toggleBtn.Font = Enum.Font.GothamSemibold
+toggleBtn.TextSize = 14
+toggleBtn.TextColor3 = Color3.fromRGB(25,25,40)
+toggleBtn.BorderSizePixel = 0
+toggleBtn.Parent = frame
+roundize(toggleBtn, 8)
+
+local minusBtn = Instance.new("TextButton")
+minusBtn.Size = UDim2.new(0, 44, 0, 42)
+minusBtn.Position = UDim2.new(0, 200, 0, 75)
+minusBtn.BackgroundColor3 = BUTTON_DARK
+minusBtn.Text = "-"
+minusBtn.Font = Enum.Font.GothamBold
+minusBtn.TextSize = 20
+minusBtn.TextColor3 = TEXT
+minusBtn.BorderSizePixel = 0
+minusBtn.Parent = frame
+roundize(minusBtn, 6)
+
+local speedLabel = Instance.new("TextLabel")
+speedLabel.Size = UDim2.new(0, 140, 0, 42)
+speedLabel.Position = UDim2.new(0, 230, 0, 75)
+speedLabel.BackgroundTransparency = 1
+speedLabel.Text = "Speed: " .. flySpeed
+speedLabel.Font = Enum.Font.Gotham
+speedLabel.TextSize = 16
+speedLabel.TextColor3 = TEXT
+speedLabel.TextXAlignment = Enum.TextXAlignment.Center
+speedLabel.Parent = frame
+
+local plusBtn = Instance.new("TextButton")
+plusBtn.Size = UDim2.new(0, 44, 0, 42)
+plusBtn.Position = UDim2.new(1, -80, 0, 75)
+plusBtn.BackgroundColor3 = BUTTON_DARK
+plusBtn.Text = "+"
+plusBtn.Font = Enum.Font.GothamBold
+plusBtn.TextSize = 20
+plusBtn.TextColor3 = TEXT
+plusBtn.BorderSizePixel = 0
+plusBtn.Parent = frame
+roundize(plusBtn, 6)
+
+local instr = Instance.new("TextLabel")
+instr.Size = UDim2.new(1, -32, 0, 24)
+instr.Position = UDim2.new(0, 16, 1, -30)
+instr.BackgroundTransparency = 1
+instr.Text = "Use joystick/WASD to move, jump ↑, F to toggle."
+instr.Font = Enum.Font.Gotham
+instr.TextSize = 11
+instr.TextColor3 = TEXT
+instr.TextWrapped = true
+instr.TextXAlignment = Enum.TextXAlignment.Left
+instr.Parent = frame
+
+local mini = Instance.new("TextButton")
+mini.Size = UDim2.new(0, 60, 0, 28)
+mini.BackgroundColor3 = HEADER
+mini.Text = "MH"
+mini.Font = Enum.Font.GothamBold
+mini.TextSize = 14
+mini.TextColor3 = TEXT
+mini.BorderSizePixel = 0
+mini.Visible = false
+mini.Parent = screenGui
+roundize(mini, 12)
+
+local tooltip = Instance.new("TextLabel")
+tooltip.Size = UDim2.new(0, 100, 0, 24)
+tooltip.AnchorPoint = Vector2.new(0, 1)
+tooltip.Position = UDim2.new(0, 0, 0, -4)
+tooltip.BackgroundColor3 = Color3.fromRGB(20, 15, 40)
+tooltip.TextColor3 = TEXT
+tooltip.Font = Enum.Font.Gotham
+tooltip.TextSize = 12
+tooltip.Text = "Midnight Fly"
+tooltip.Visible = false
+tooltip.Parent = mini
+roundize(tooltip, 6)
+
+-- UI helpers
+local function refreshSpeedUI()
+    speedLabel.Text = ("Speed: %.0f"):format(flySpeed)
+end
+
+local function updateToggleText()
+    if flying then
+        toggleBtn.Text = "Disable Fly"
+        toggleBtn.BackgroundColor3 = BUTTON_ACTIVE
+    else
+        toggleBtn.Text = "Enable Fly"
+        toggleBtn.BackgroundColor3 = BUTTON
+    end
+end
+
+local function addHover(btn, base)
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = BUTTON_HOVER
+    end)
+    btn.MouseLeave:Connect(function()
+        if btn == toggleBtn then
+            updateToggleText()
+        else
+            btn.BackgroundColor3 = base
+        end
+    end)
+end
+
+addHover(toggleBtn, BUTTON)
+addHover(minusBtn, BUTTON_DARK)
+addHover(plusBtn, BUTTON_DARK)
+addHover(closeBtn, BUTTON_DARK)
+addHover(minimizeBtn, BUTTON_DARK)
+addHover(mini, HEADER)
+
+-- Flying control logic from second script adapted:
+
+local function enableFly()
+    if flying then return end
+    flying = true
+    humanoid.PlatformStand = true
+
+    -- Create BodyGyro and BodyVelocity
+    if bodyGyro then bodyGyro:Destroy() end
+    if bodyVelocity then bodyVelocity:Destroy() end
+
+    local rigType = humanoid.RigType
+    local torsoPart = rigType == Enum.HumanoidRigType.R6 and character:WaitForChild("Torso") or character:WaitForChild("UpperTorso")
+
+    bodyGyro = Instance.new("BodyGyro")
+    bodyGyro.P = 9e4
+    bodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+    bodyGyro.cframe = torsoPart.CFrame
+    bodyGyro.Parent = torsoPart
+
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.velocity = Vector3.new(0, 0.1, 0)
+    bodyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
+    bodyVelocity.Parent = torsoPart
+
+    -- Reset control states
+    ctrl = {f=0, b=0, l=0, r=0}
+    lastctrl = {f=0, b=0, l=0, r=0}
+    speed = 0
+end
+
+local function disableFly()
+    if not flying then return end
+    flying = false
+    humanoid.PlatformStand = false
+
+    if bodyGyro then
+        bodyGyro:Destroy()
+        bodyGyro = nil
+    end
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+end
+
+-- Connect input for movement control:
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.Keyboard then
+        if input.KeyCode == Enum.KeyCode.W then ctrl.f = 1 end
+        if input.KeyCode == Enum.KeyCode.S then ctrl.b = -1 end
+        if input.KeyCode == Enum.KeyCode.A then ctrl.l = -1 end
+        if input.KeyCode == Enum.KeyCode.D then ctrl.r = 1 end
+        if input.KeyCode == Enum.KeyCode.Space then ctrl.u = 1 end
+        if input.KeyCode == Enum.KeyCode.LeftShift then ctrl.d = -1 end
+        if input.KeyCode == Enum.KeyCode.F then
+            if flying then disableFly() else enableFly() end
+            updateToggleText()
+        end
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Keyboard then
+        if input.KeyCode == Enum.KeyCode.W then ctrl.f = 0 end
+        if input.KeyCode == Enum.KeyCode.S then ctrl.b = 0 end
+        if input.KeyCode == Enum.KeyCode.A then ctrl.l = 0 end
+        if input.KeyCode == Enum.KeyCode.D then ctrl.r = 0 end
+        if input.KeyCode == Enum.KeyCode.Space then ctrl.u = 0 end
+        if input.KeyCode == Enum.KeyCode.LeftShift then ctrl.d = 0 end
+    end
+end)
+
+-- Update movement on RenderStepped
+RunService.RenderStepped:Connect(function()
+    if not flying or not bodyGyro or not bodyVelocity then return end
+    local rigType = humanoid.RigType
+    local torsoPart = rigType == Enum.HumanoidRigType.R6 and character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso")
+    if not torsoPart then return end
+
+    -- Adjust speed
+    if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
+        speed = speed + 0.5 + (speed / maxspeed)
+        if speed > maxspeed then speed = maxspeed end
+    elseif speed > 0 then
+        speed = speed - 1
+        if speed < 0 then speed = 0 end
+    end
+
+    local moveVector = Vector3.new(ctrl.l + ctrl.r, 0, ctrl.f + ctrl.b)
+    local cameraCFrame = workspace.CurrentCamera.CFrame
+    local lookVector = cameraCFrame.LookVector
+    local rightVector = cameraCFrame.RightVector
+
+    -- Vertical movement (space = up, shift = down)
+    local vertical = 0
+    if ctrl.u and ctrl.u ~= 0 then vertical = vertical + 1 end
+    if ctrl.d and ctrl.d ~= 0 then vertical = vertical - 1 end
+
+    local velocity = Vector3.new()
+    if moveVector.Magnitude > 0 then
+        velocity = (lookVector * (ctrl.f + ctrl.b) + rightVector * (ctrl.l + ctrl.r)).Unit * speed
+    elseif speed > 0 then
+        velocity = (lookVector * (lastctrl.f + lastctrl.b) + rightVector * (lastctrl.l + lastctrl.r)).Unit * speed
+    else
+        velocity = Vector3.new()
+    end
+
+    velocity = Vector3.new(velocity.X, vertical * speed * 0.5, velocity.Z)
+
+    bodyVelocity.velocity = velocity
+    bodyGyro.cframe = workspace.CurrentCamera.CFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed), 0, 0)
+
+    if moveVector.Magnitude > 0 then
+        lastctrl = {f=ctrl.f, b=ctrl.b, l=ctrl.l, r=ctrl.r}
+    end
+end)
+
+-- UI Button Events
+
+toggleBtn.MouseButton1Click:Connect(function()
+    if flying then disableFly() else enableFly() end
+    updateToggleText()
+end)
+
+plusBtn.MouseButton1Click:Connect(function()
+    flySpeed = flySpeed + 10
+    maxspeed = flySpeed
+    refreshSpeedUI()
+end)
+
+minusBtn.MouseButton1Click:Connect(function()
+    flySpeed = math.max(1, flySpeed - 10)
+    maxspeed = flySpeed
+    refreshSpeedUI()
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+    disableFly()
+    screenGui:Destroy()
+end)
+
+minimizeBtn.MouseButton1Click:Connect(function()
+    if not isMinimized then
+        isMinimized = true
+        savedProps.Size = frame.Size
+        savedProps.Position = frame.Position
+        frame.Visible = false
+        mini.Position = UDim2.new(0, frame.AbsolutePosition.X, 0, frame.AbsolutePosition.Y)
+        mini.Visible = true
+    else
+        isMinimized = false
+        frame.Size = savedProps.Size
+        frame.Position = savedProps.Position
+        frame.Visible = true
+        mini.Visible = false
+    end
+end)
+
+mini.MouseButton1Click:Connect(function()
+    if isMinimized then
+        isMinimized = false
+        frame.Size = savedProps.Size
+        frame.Position = savedProps.Position
+        frame.Visible = true
+        mini.Visible = false
+    end
+end)
+
+mini.MouseEnter:Connect(function()
+    tooltip.Visible = true
+end)
+mini.MouseLeave:Connect(function()
+    tooltip.Visible = false
+end)
+
+-- Respawn handling
+LocalPlayer.CharacterAdded:Connect(function(char)
+    character = char
+    hrp = character:WaitForChild("HumanoidRootPart")
+    humanoid = character:WaitForChild("Humanoid")
+    disableFly()
+end)
+
+-- Init display
+refreshSpeedUI()
+updateToggleText()
