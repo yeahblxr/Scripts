@@ -27,168 +27,168 @@ main.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 main.ResetOnSpawn = false
 
--- Main Frame with amethyst theme and transparency
+-- Main Frame with amethyst theme and transparency (reduced size)
 Frame.Parent = main
 Frame.BackgroundColor3 = Color3.fromRGB(102, 51, 153) -- Amethyst color
 Frame.BackgroundTransparency = 0.15 -- Slight transparency
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.100320168, 0, 0.379746825, 0)
-Frame.Size = UDim2.new(0, 220, 0, 120)
+Frame.Size = UDim2.new(0, 200, 0, 110) -- Reduced from 220x120
 
 -- Rounded corners for main frame
 UICorner.Parent = Frame
 UICorner.CornerRadius = UDim.new(0, 12)
 
--- UP Button
-up.Name = "up"
-up.Parent = Frame
-up.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
-up.BackgroundTransparency = 0.1
-up.BorderSizePixel = 0
-up.Position = UDim2.new(0.05, 0, 0.25, 0)
-up.Size = UDim2.new(0, 50, 0, 30)
-up.Font = Enum.Font.GothamBold
-up.Text = "UP"
-up.TextColor3 = Color3.fromRGB(255, 255, 255)
-up.TextSize = 12.000
-
-upCorner.Parent = up
-upCorner.CornerRadius = UDim.new(0, 6)
-
--- DOWN Button
-down.Name = "down"
-down.Parent = Frame
-down.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
-down.BackgroundTransparency = 0.1
-down.BorderSizePixel = 0
-down.Position = UDim2.new(0.05, 0, 0.65, 0)
-down.Size = UDim2.new(0, 50, 0, 30)
-down.Font = Enum.Font.GothamBold
-down.Text = "DOWN"
-down.TextColor3 = Color3.fromRGB(255, 255, 255)
-down.TextSize = 12.000
-
-downCorner.Parent = down
-downCorner.CornerRadius = UDim.new(0, 6)
-
--- FLY Toggle Button
-onof.Name = "onof"
-onof.Parent = Frame
-onof.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
-onof.BackgroundTransparency = 0.1
-onof.BorderSizePixel = 0
-onof.Position = UDim2.new(0.75, 0, 0.65, 0)
-onof.Size = UDim2.new(0, 50, 0, 30)
-onof.Font = Enum.Font.GothamBold
-onof.Text = "FLY"
-onof.TextColor3 = Color3.fromRGB(255, 255, 255)
-onof.TextSize = 12.000
-
-onofCorner.Parent = onof
-onofCorner.CornerRadius = UDim.new(0, 6)
-
--- Title Label
+-- Title Label (moved up and made smaller)
 TextLabel.Parent = Frame
 TextLabel.BackgroundColor3 = Color3.fromRGB(186, 85, 211) -- Medium orchid amethyst
 TextLabel.BackgroundTransparency = 0.1
 TextLabel.BorderSizePixel = 0
-TextLabel.Position = UDim2.new(0.3, 0, 0.05, 0)
-TextLabel.Size = UDim2.new(0, 90, 0, 25)
+TextLabel.Position = UDim2.new(0.05, 0, 0.05, 0) -- Moved to top-left
+TextLabel.Size = UDim2.new(0, 80, 0, 20) -- Made smaller
 TextLabel.Font = Enum.Font.GothamBold
 TextLabel.Text = "FLY GUI V3"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextScaled = true
-TextLabel.TextSize = 14.000
+TextLabel.TextSize = 12.000
 TextLabel.TextWrapped = true
 
 labelCorner.Parent = TextLabel
 labelCorner.CornerRadius = UDim.new(0, 6)
 
--- Plus Button
+-- Close Button (inside frame, top-right)
+closebutton.Name = "Close"
+closebutton.Parent = Frame
+closebutton.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Purple amethyst
+closebutton.BackgroundTransparency = 0.1
+closebutton.BorderSizePixel = 0
+closebutton.Font = Enum.Font.GothamBold
+closebutton.Size = UDim2.new(0, 20, 0, 20) -- Made smaller
+closebutton.Text = "×"
+closebutton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closebutton.TextSize = 14
+closebutton.Position = UDim2.new(1, -25, 0, 5) -- Inside frame
+
+closeCorner.Parent = closebutton
+closeCorner.CornerRadius = UDim.new(0, 4)
+
+-- Minimize Button (inside frame, next to close)
+mini.Name = "minimize"
+mini.Parent = Frame
+mini.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
+mini.BackgroundTransparency = 0.1
+mini.BorderSizePixel = 0
+mini.Font = Enum.Font.GothamBold
+mini.Size = UDim2.new(0, 20, 0, 20) -- Made smaller
+mini.Text = "−"
+mini.TextColor3 = Color3.fromRGB(255, 255, 255)
+mini.TextSize = 14
+mini.Position = UDim2.new(1, -50, 0, 5) -- Inside frame, next to close
+
+miniCorner.Parent = mini
+miniCorner.CornerRadius = UDim.new(0, 4)
+
+-- UP Button (repositioned)
+up.Name = "up"
+up.Parent = Frame
+up.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
+up.BackgroundTransparency = 0.1
+up.BorderSizePixel = 0
+up.Position = UDim2.new(0.05, 0, 0.35, 0) -- Moved down
+up.Size = UDim2.new(0, 45, 0, 25) -- Made smaller
+up.Font = Enum.Font.GothamBold
+up.Text = "UP"
+up.TextColor3 = Color3.fromRGB(255, 255, 255)
+up.TextSize = 11.000
+
+upCorner.Parent = up
+upCorner.CornerRadius = UDim.new(0, 6)
+
+-- Plus Button (repositioned)
 plus.Name = "plus"
 plus.Parent = Frame
 plus.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
 plus.BackgroundTransparency = 0.1
 plus.BorderSizePixel = 0
-plus.Position = UDim2.new(0.3, 0, 0.25, 0)
-plus.Size = UDim2.new(0, 40, 0, 30)
+plus.Position = UDim2.new(0.3, 0, 0.35, 0) -- Moved down
+plus.Size = UDim2.new(0, 35, 0, 25) -- Made smaller
 plus.Font = Enum.Font.GothamBold
 plus.Text = "+"
 plus.TextColor3 = Color3.fromRGB(255, 255, 255)
 plus.TextScaled = true
-plus.TextSize = 14.000
+plus.TextSize = 12.000
 plus.TextWrapped = true
 
 plusCorner.Parent = plus
 plusCorner.CornerRadius = UDim.new(0, 6)
 
--- Speed Display
+-- Speed Display (repositioned)
 speed.Name = "speed"
 speed.Parent = Frame
 speed.BackgroundColor3 = Color3.fromRGB(153, 50, 204) -- Dark orchid amethyst
 speed.BackgroundTransparency = 0.1
 speed.BorderSizePixel = 0
-speed.Position = UDim2.new(0.5, 0, 0.65, 0)
-speed.Size = UDim2.new(0, 40, 0, 30)
+speed.Position = UDim2.new(0.55, 0, 0.35, 0) -- Moved down
+speed.Size = UDim2.new(0, 35, 0, 25) -- Made smaller
 speed.Font = Enum.Font.GothamBold
 speed.Text = "1"
 speed.TextColor3 = Color3.fromRGB(255, 255, 255)
 speed.TextScaled = true
-speed.TextSize = 14.000
+speed.TextSize = 12.000
 speed.TextWrapped = true
 
 speedCorner.Parent = speed
 speedCorner.CornerRadius = UDim.new(0, 6)
 
--- Minus Button
+-- FLY Toggle Button (repositioned)
+onof.Name = "onof"
+onof.Parent = Frame
+onof.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
+onof.BackgroundTransparency = 0.1
+onof.BorderSizePixel = 0
+onof.Position = UDim2.new(0.75, 0, 0.35, 0) -- Moved down
+onof.Size = UDim2.new(0, 40, 0, 25) -- Made smaller
+onof.Font = Enum.Font.GothamBold
+onof.Text = "FLY"
+onof.TextColor3 = Color3.fromRGB(255, 255, 255)
+onof.TextSize = 10.000
+
+onofCorner.Parent = onof
+onofCorner.CornerRadius = UDim.new(0, 6)
+
+-- DOWN Button (repositioned)
+down.Name = "down"
+down.Parent = Frame
+down.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
+down.BackgroundTransparency = 0.1
+down.BorderSizePixel = 0
+down.Position = UDim2.new(0.05, 0, 0.7, 0) -- Bottom row
+down.Size = UDim2.new(0, 45, 0, 25) -- Made smaller
+down.Font = Enum.Font.GothamBold
+down.Text = "DOWN"
+down.TextColor3 = Color3.fromRGB(255, 255, 255)
+down.TextSize = 10.000
+
+downCorner.Parent = down
+downCorner.CornerRadius = UDim.new(0, 6)
+
+-- Minus Button (repositioned)
 mine.Name = "mine"
 mine.Parent = Frame
 mine.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
 mine.BackgroundTransparency = 0.1
 mine.BorderSizePixel = 0
-mine.Position = UDim2.new(0.3, 0, 0.65, 0)
-mine.Size = UDim2.new(0, 40, 0, 30)
+mine.Position = UDim2.new(0.3, 0, 0.7, 0) -- Bottom row
+mine.Size = UDim2.new(0, 35, 0, 25) -- Made smaller
 mine.Font = Enum.Font.GothamBold
 mine.Text = "-"
 mine.TextColor3 = Color3.fromRGB(255, 255, 255)
 mine.TextScaled = true
-mine.TextSize = 14.000
+mine.TextSize = 12.000
 mine.TextWrapped = true
 
 mineCorner.Parent = mine
 mineCorner.CornerRadius = UDim.new(0, 6)
-
--- Close Button
-closebutton.Name = "Close"
-closebutton.Parent = main.Frame
-closebutton.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Purple amethyst
-closebutton.BackgroundTransparency = 0.1
-closebutton.BorderSizePixel = 0
-closebutton.Font = Enum.Font.GothamBold
-closebutton.Size = UDim2.new(0, 30, 0, 25)
-closebutton.Text = "×"
-closebutton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closebutton.TextSize = 18
-closebutton.Position = UDim2.new(1, -35, 0, -30)
-
-closeCorner.Parent = closebutton
-closeCorner.CornerRadius = UDim.new(0, 6)
-
--- Minimize Button
-mini.Name = "minimize"
-mini.Parent = main.Frame
-mini.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
-mini.BackgroundTransparency = 0.1
-mini.BorderSizePixel = 0
-mini.Font = Enum.Font.GothamBold
-mini.Size = UDim2.new(0, 30, 0, 25)
-mini.Text = "−"
-mini.TextColor3 = Color3.fromRGB(255, 255, 255)
-mini.TextSize = 16
-mini.Position = UDim2.new(1, -70, 0, -30)
-
-miniCorner.Parent = mini
-miniCorner.CornerRadius = UDim.new(0, 6)
 
 -- Minimized Box (MH)
 miniBox.Name = "miniBox"
