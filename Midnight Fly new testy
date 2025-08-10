@@ -29,8 +29,8 @@ main.ResetOnSpawn = false
 
 -- Main Frame with amethyst theme and transparency (reduced size)
 Frame.Parent = main
-Frame.BackgroundColor3 = Color3.fromRGB(102, 51, 153) -- Amethyst color
-Frame.BackgroundTransparency = 0.15 -- Slight transparency
+Frame.BackgroundColor3 = Color3.fromRGB(40, 30, 60) -- Amethyst color
+Frame.BackgroundTransparency = 0.2 -- Slight transparency
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.100320168, 0, 0.379746825, 0)
 Frame.Size = UDim2.new(0, 200, 0, 110) -- Reduced from 220x120
