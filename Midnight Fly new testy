@@ -1,163 +1,202 @@
--- Create ScreenGui
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
--- Main Frame
+local main = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
-Frame.Size = UDim2.new(0, 200, 0, 150)
-Frame.Position = UDim2.new(0.4, 0, 0.4, 0)
-Frame.BackgroundColor3 = Color3.fromRGB(40, 30, 60) -- Dark purple base
-Frame.BackgroundTransparency = 0.2
+local UICorner = Instance.new("UICorner")
+local up = Instance.new("TextButton")
+local upCorner = Instance.new("UICorner")
+local down = Instance.new("TextButton")
+local downCorner = Instance.new("UICorner")
+local onof = Instance.new("TextButton")
+local onofCorner = Instance.new("UICorner")
+local TextLabel = Instance.new("TextLabel")
+local labelCorner = Instance.new("UICorner")
+local plus = Instance.new("TextButton")
+local plusCorner = Instance.new("UICorner")
+local speed = Instance.new("TextLabel")
+local speedCorner = Instance.new("UICorner")
+local mine = Instance.new("TextButton")
+local mineCorner = Instance.new("UICorner")
+local closebutton = Instance.new("TextButton")
+local closeCorner = Instance.new("UICorner")
+local mini = Instance.new("TextButton")
+local miniCorner = Instance.new("UICorner")
+local mini2 = Instance.new("TextButton")
+local mini2Corner = Instance.new("UICorner")
+
+main.Name = "main"
+main.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+main.ResetOnSpawn = false
+
+-- Main Frame with modern styling
+Frame.Parent = main
+Frame.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
 Frame.BorderSizePixel = 0
-Frame.Parent = ScreenGui
-Frame.Active = true
-Frame.Draggable = true
+Frame.Position = UDim2.new(0.100320168, 0, 0.379746825, 0)
+Frame.Size = UDim2.new(0, 220, 0, 120)
 
--- UICorner for rounded edges
-local FrameCorner = Instance.new("UICorner", Frame)
-FrameCorner.CornerRadius = UDim.new(0, 10)
+-- Rounded corners for main frame
+UICorner.Parent = Frame
+UICorner.CornerRadius = UDim.new(0, 12)
 
--- Minimize Button (text "-")
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
-MinimizeButton.Position = UDim2.new(0, 5, 0, 5) -- Top left corner with padding
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(75, 60, 110) -- Medium purple
-MinimizeButton.BackgroundTransparency = 0.3
-MinimizeButton.Text = "-"
-MinimizeButton.TextColor3 = Color3.fromRGB(230, 230, 250) -- Light lavender
-MinimizeButton.Font = Enum.Font.GothamBold
-MinimizeButton.TextSize = 24
-MinimizeButton.Parent = Frame
-Instance.new("UICorner", MinimizeButton).CornerRadius = UDim.new(0, 6)
+-- UP Button
+up.Name = "up"
+up.Parent = Frame
+up.BackgroundColor3 = Color3.fromRGB(76, 175, 80)
+up.BorderSizePixel = 0
+up.Position = UDim2.new(0.05, 0, 0.25, 0)
+up.Size = UDim2.new(0, 50, 0, 30)
+up.Font = Enum.Font.GothamBold
+up.Text = "UP"
+up.TextColor3 = Color3.fromRGB(255, 255, 255)
+up.TextSize = 12.000
 
--- Close Button (X) at top right corner
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -35, 0, 5)
-CloseButton.BackgroundColor3 = Color3.fromRGB(180, 50, 80) -- Slightly reddish purple
-CloseButton.BackgroundTransparency = 0.3
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(240, 240, 240)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 18
-CloseButton.Parent = Frame
-Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 6)
+upCorner.Parent = up
+upCorner.CornerRadius = UDim.new(0, 6)
 
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
+-- DOWN Button
+down.Name = "down"
+down.Parent = Frame
+down.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+down.BorderSizePixel = 0
+down.Position = UDim2.new(0.05, 0, 0.65, 0)
+down.Size = UDim2.new(0, 50, 0, 30)
+down.Font = Enum.Font.GothamBold
+down.Text = "DOWN"
+down.TextColor3 = Color3.fromRGB(255, 255, 255)
+down.TextSize = 12.000
 
--- Title Label "MDNT Fly" centered top
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(0, 120, 0, 30)
-TitleLabel.Position = UDim2.new(0.5, -60, 0, 5)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "MDNT Fly"
-TitleLabel.TextColor3 = Color3.fromRGB(220, 220, 240) -- Soft off-white
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextSize = 20
-TitleLabel.Parent = Frame
+downCorner.Parent = down
+downCorner.CornerRadius = UDim.new(0, 6)
 
--- Fly Button (Full width)
-local FlyButton = Instance.new("TextButton")
-FlyButton.Size = UDim2.new(1, -10, 0, 40)
-FlyButton.Position = UDim2.new(0, 5, 0, 50)
-FlyButton.BackgroundColor3 = Color3.fromRGB(95, 70, 140) -- Medium purple
-FlyButton.BackgroundTransparency = 0.3
-FlyButton.Text = "Fly"
-FlyButton.TextColor3 = Color3.fromRGB(220, 220, 240)
-FlyButton.Font = Enum.Font.GothamBold
-FlyButton.TextSize = 18
-FlyButton.Parent = Frame
-Instance.new("UICorner", FlyButton).CornerRadius = UDim.new(0, 8)
+-- FLY Toggle Button
+onof.Name = "onof"
+onof.Parent = Frame
+onof.BackgroundColor3 = Color3.fromRGB(33, 150, 243)
+onof.BorderSizePixel = 0
+onof.Position = UDim2.new(0.75, 0, 0.65, 0)
+onof.Size = UDim2.new(0, 50, 0, 30)
+onof.Font = Enum.Font.GothamBold
+onof.Text = "FLY"
+onof.TextColor3 = Color3.fromRGB(255, 255, 255)
+onof.TextSize = 12.000
 
--- Number Display + and - (Minus on left, Plus on right)
-local NumberValue = 3
+onofCorner.Parent = onof
+onofCorner.CornerRadius = UDim.new(0, 6)
 
-local Minus = Instance.new("TextButton")
-Minus.Size = UDim2.new(0, 50, 0, 40)
-Minus.Position = UDim2.new(0, 5, 0, 100)
-Minus.BackgroundColor3 = Color3.fromRGB(95, 70, 140)
-Minus.BackgroundTransparency = 0.3
-Minus.Text = "-"
-Minus.TextColor3 = Color3.fromRGB(220, 220, 240)
-Minus.Font = Enum.Font.GothamBold
-Minus.TextSize = 20
-Minus.Parent = Frame
-Instance.new("UICorner", Minus).CornerRadius = UDim.new(0, 8)
+-- Title Label
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(156, 39, 176)
+TextLabel.BorderSizePixel = 0
+TextLabel.Position = UDim2.new(0.3, 0, 0.05, 0)
+TextLabel.Size = UDim2.new(0, 90, 0, 25)
+TextLabel.Font = Enum.Font.GothamBold
+TextLabel.Text = "FLY GUI V3"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextScaled = true
+TextLabel.TextSize = 14.000
+TextLabel.TextWrapped = true
 
-local NumberLabel = Instance.new("TextLabel")
-NumberLabel.Size = UDim2.new(0, 50, 0, 40)
-NumberLabel.Position = UDim2.new(0.5, -25, 0, 100)
-NumberLabel.BackgroundTransparency = 1
-NumberLabel.Text = tostring(NumberValue)
-NumberLabel.TextColor3 = Color3.fromRGB(220, 220, 240)
-NumberLabel.Font = Enum.Font.GothamBold
-NumberLabel.TextSize = 20
-NumberLabel.Parent = Frame
+labelCorner.Parent = TextLabel
+labelCorner.CornerRadius = UDim.new(0, 6)
 
-local Plus = Instance.new("TextButton")
-Plus.Size = UDim2.new(0, 50, 0, 40)
-Plus.Position = UDim2.new(1, -55, 0, 100)
-Plus.BackgroundColor3 = Color3.fromRGB(95, 70, 140)
-Plus.BackgroundTransparency = 0.3
-Plus.Text = "+"
-Plus.TextColor3 = Color3.fromRGB(220, 220, 240)
-Plus.Font = Enum.Font.GothamBold
-Plus.TextSize = 20
-Plus.Parent = Frame
-Instance.new("UICorner", Plus).CornerRadius = UDim.new(0, 8)
+-- Plus Button
+plus.Name = "plus"
+plus.Parent = Frame
+plus.BackgroundColor3 = Color3.fromRGB(76, 175, 80)
+plus.BorderSizePixel = 0
+plus.Position = UDim2.new(0.3, 0, 0.25, 0)
+plus.Size = UDim2.new(0, 40, 0, 30)
+plus.Font = Enum.Font.GothamBold
+plus.Text = "+"
+plus.TextColor3 = Color3.fromRGB(255, 255, 255)
+plus.TextScaled = true
+plus.TextSize = 14.000
+plus.TextWrapped = true
 
--- Plus/Minus logic (number won't go below 1)
-Plus.MouseButton1Click:Connect(function()
-    NumberValue = NumberValue + 1
-    NumberLabel.Text = tostring(NumberValue)
-end)
+plusCorner.Parent = plus
+plusCorner.CornerRadius = UDim.new(0, 6)
 
-Minus.MouseButton1Click:Connect(function()
-    if NumberValue > 1 then
-        NumberValue = NumberValue - 1
-        NumberLabel.Text = tostring(NumberValue)
-    end
-end)
+-- Speed Display
+speed.Name = "speed"
+speed.Parent = Frame
+speed.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
+speed.BorderSizePixel = 0
+speed.Position = UDim2.new(0.5, 0, 0.65, 0)
+speed.Size = UDim2.new(0, 40, 0, 30)
+speed.Font = Enum.Font.GothamBold
+speed.Text = "1"
+speed.TextColor3 = Color3.fromRGB(255, 255, 255)
+speed.TextScaled = true
+speed.TextSize = 14.000
+speed.TextWrapped = true
 
--- MH Minimized Button (initially hidden)
-local MHButton = Instance.new("TextButton")
-MHButton.Size = UDim2.new(0, 40, 0, 40)
-MHButton.Position = Frame.Position -- Start at same position as Frame
-MHButton.BackgroundColor3 = Color3.fromRGB(75, 60, 110)
-MHButton.BackgroundTransparency = 0.3
-MHButton.Text = "MH"
-MHButton.TextColor3 = Color3.fromRGB(220, 220, 240)
-MHButton.Font = Enum.Font.GothamBold
-MHButton.TextSize = 18
-MHButton.Parent = ScreenGui
-MHButton.Visible = false
-MHButton.Active = true
-MHButton.Draggable = true
-Instance.new("UICorner", MHButton).CornerRadius = UDim.new(0, 10)
+speedCorner.Parent = speed
+speedCorner.CornerRadius = UDim.new(0, 6)
 
-local minimized = false
-MinimizeButton.MouseButton1Click:Connect(function()
-    if not minimized then
-        Frame.Visible = false
-        MHButton.Position = Frame.Position
-        MHButton.Visible = true
-        minimized = true
-    end
-end)
+-- Minus Button
+mine.Name = "mine"
+mine.Parent = Frame
+mine.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+mine.BorderSizePixel = 0
+mine.Position = UDim2.new(0.3, 0, 0.65, 0)
+mine.Size = UDim2.new(0, 40, 0, 30)
+mine.Font = Enum.Font.GothamBold
+mine.Text = "-"
+mine.TextColor3 = Color3.fromRGB(255, 255, 255)
+mine.TextScaled = true
+mine.TextSize = 14.000
+mine.TextWrapped = true
 
-MHButton.MouseButton1Click:Connect(function()
-    if minimized then
-        Frame.Visible = true
-        MHButton.Visible = false
-        minimized = false
-    end
-end)
+mineCorner.Parent = mine
+mineCorner.CornerRadius = UDim.new(0, 6)
 
--- Fly button action placeholder
-FlyButton.MouseButton1Click:Connect(function()
-    speeds = 1
+-- Close Button
+closebutton.Name = "Close"
+closebutton.Parent = main.Frame
+closebutton.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+closebutton.BorderSizePixel = 0
+closebutton.Font = Enum.Font.GothamBold
+closebutton.Size = UDim2.new(0, 30, 0, 25)
+closebutton.Text = "×"
+closebutton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closebutton.TextSize = 18
+closebutton.Position = UDim2.new(1, -35, 0, -30)
+
+closeCorner.Parent = closebutton
+closeCorner.CornerRadius = UDim.new(0, 6)
+
+-- Minimize Button
+mini.Name = "minimize"
+mini.Parent = main.Frame
+mini.BackgroundColor3 = Color3.fromRGB(96, 125, 139)
+mini.BorderSizePixel = 0
+mini.Font = Enum.Font.GothamBold
+mini.Size = UDim2.new(0, 30, 0, 25)
+mini.Text = "−"
+mini.TextColor3 = Color3.fromRGB(255, 255, 255)
+mini.TextSize = 16
+mini.Position = UDim2.new(1, -70, 0, -30)
+
+miniCorner.Parent = mini
+miniCorner.CornerRadius = UDim.new(0, 6)
+
+-- Restore Button
+mini2.Name = "minimize2"
+mini2.Parent = main.Frame
+mini2.BackgroundColor3 = Color3.fromRGB(96, 125, 139)
+mini2.BorderSizePixel = 0
+mini2.Font = Enum.Font.GothamBold
+mini2.Size = UDim2.new(0, 30, 0, 25)
+mini2.Text = "+"
+mini2.TextColor3 = Color3.fromRGB(255, 255, 255)
+mini2.TextSize = 16
+mini2.Position = UDim2.new(1, -70, 0, -30)
+mini2.Visible = false
+
+mini2Corner.Parent = mini2
+mini2Corner.CornerRadius = UDim.new(0, 6)
+
+speeds = 1
 
 local speaker = game:GetService("Players").LocalPlayer
 
@@ -174,6 +213,8 @@ Duration = 5;
 
 Frame.Active = true -- main = gui
 Frame.Draggable = true
+
+-- [Rest of your original functionality code remains exactly the same from here...]
 
 onof.MouseButton1Down:connect(function()
 
@@ -487,8 +528,8 @@ mini.MouseButton1Click:Connect(function()
 	mine.Visible = false
 	mini.Visible = false
 	mini2.Visible = true
+	TextLabel.Visible = false
 	main.Frame.BackgroundTransparency = 1
-	closebutton.Position =  UDim2.new(0, 0, -1, 57)
 end)
 
 mini2.MouseButton1Click:Connect(function()
@@ -500,7 +541,6 @@ mini2.MouseButton1Click:Connect(function()
 	mine.Visible = true
 	mini.Visible = true
 	mini2.Visible = false
+	TextLabel.Visible = true
 	main.Frame.BackgroundTransparency = 0 
-	closebutton.Position =  UDim2.new(0, 0, -1, 27)
-end)
 end)
