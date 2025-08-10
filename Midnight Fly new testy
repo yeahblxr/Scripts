@@ -47,7 +47,7 @@ TextLabel.BorderSizePixel = 0
 TextLabel.Position = UDim2.new(0.05, 0, 0.05, 0) -- Moved to top-left
 TextLabel.Size = UDim2.new(0, 80, 0, 20) -- Made smaller
 TextLabel.Font = Enum.Font.GothamBold
-TextLabel.Text = "FLY GUI V3"
+TextLabel.Text = "Midnight Fly"
 TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextScaled = true
 TextLabel.TextSize = 12.000
@@ -216,11 +216,6 @@ local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
 
 nowe = false
 
-game:GetService("StarterGui"):SetCore("SendNotification", { 
-	Title = "FLY GUI V3";
-	Text = "BY XNEO";
-	Icon = "rbxthumb://type=Asset&id=5107182114&w=150&h=150"})
-Duration = 5;
 
 Frame.Active = true -- main = gui
 Frame.Draggable = true
