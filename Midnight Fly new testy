@@ -19,17 +19,18 @@ local closebutton = Instance.new("TextButton")
 local closeCorner = Instance.new("UICorner")
 local mini = Instance.new("TextButton")
 local miniCorner = Instance.new("UICorner")
-local mini2 = Instance.new("TextButton")
-local mini2Corner = Instance.new("UICorner")
+local miniBox = Instance.new("TextButton")
+local miniBoxCorner = Instance.new("UICorner")
 
 main.Name = "main"
 main.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 main.ResetOnSpawn = false
 
--- Main Frame with modern styling
+-- Main Frame with amethyst theme and transparency
 Frame.Parent = main
-Frame.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
+Frame.BackgroundColor3 = Color3.fromRGB(102, 51, 153) -- Amethyst color
+Frame.BackgroundTransparency = 0.15 -- Slight transparency
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.100320168, 0, 0.379746825, 0)
 Frame.Size = UDim2.new(0, 220, 0, 120)
@@ -41,7 +42,8 @@ UICorner.CornerRadius = UDim.new(0, 12)
 -- UP Button
 up.Name = "up"
 up.Parent = Frame
-up.BackgroundColor3 = Color3.fromRGB(76, 175, 80)
+up.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
+up.BackgroundTransparency = 0.1
 up.BorderSizePixel = 0
 up.Position = UDim2.new(0.05, 0, 0.25, 0)
 up.Size = UDim2.new(0, 50, 0, 30)
@@ -56,7 +58,8 @@ upCorner.CornerRadius = UDim.new(0, 6)
 -- DOWN Button
 down.Name = "down"
 down.Parent = Frame
-down.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+down.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
+down.BackgroundTransparency = 0.1
 down.BorderSizePixel = 0
 down.Position = UDim2.new(0.05, 0, 0.65, 0)
 down.Size = UDim2.new(0, 50, 0, 30)
@@ -71,7 +74,8 @@ downCorner.CornerRadius = UDim.new(0, 6)
 -- FLY Toggle Button
 onof.Name = "onof"
 onof.Parent = Frame
-onof.BackgroundColor3 = Color3.fromRGB(33, 150, 243)
+onof.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
+onof.BackgroundTransparency = 0.1
 onof.BorderSizePixel = 0
 onof.Position = UDim2.new(0.75, 0, 0.65, 0)
 onof.Size = UDim2.new(0, 50, 0, 30)
@@ -85,7 +89,8 @@ onofCorner.CornerRadius = UDim.new(0, 6)
 
 -- Title Label
 TextLabel.Parent = Frame
-TextLabel.BackgroundColor3 = Color3.fromRGB(156, 39, 176)
+TextLabel.BackgroundColor3 = Color3.fromRGB(186, 85, 211) -- Medium orchid amethyst
+TextLabel.BackgroundTransparency = 0.1
 TextLabel.BorderSizePixel = 0
 TextLabel.Position = UDim2.new(0.3, 0, 0.05, 0)
 TextLabel.Size = UDim2.new(0, 90, 0, 25)
@@ -102,7 +107,8 @@ labelCorner.CornerRadius = UDim.new(0, 6)
 -- Plus Button
 plus.Name = "plus"
 plus.Parent = Frame
-plus.BackgroundColor3 = Color3.fromRGB(76, 175, 80)
+plus.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
+plus.BackgroundTransparency = 0.1
 plus.BorderSizePixel = 0
 plus.Position = UDim2.new(0.3, 0, 0.25, 0)
 plus.Size = UDim2.new(0, 40, 0, 30)
@@ -119,7 +125,8 @@ plusCorner.CornerRadius = UDim.new(0, 6)
 -- Speed Display
 speed.Name = "speed"
 speed.Parent = Frame
-speed.BackgroundColor3 = Color3.fromRGB(255, 152, 0)
+speed.BackgroundColor3 = Color3.fromRGB(153, 50, 204) -- Dark orchid amethyst
+speed.BackgroundTransparency = 0.1
 speed.BorderSizePixel = 0
 speed.Position = UDim2.new(0.5, 0, 0.65, 0)
 speed.Size = UDim2.new(0, 40, 0, 30)
@@ -136,7 +143,8 @@ speedCorner.CornerRadius = UDim.new(0, 6)
 -- Minus Button
 mine.Name = "mine"
 mine.Parent = Frame
-mine.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+mine.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
+mine.BackgroundTransparency = 0.1
 mine.BorderSizePixel = 0
 mine.Position = UDim2.new(0.3, 0, 0.65, 0)
 mine.Size = UDim2.new(0, 40, 0, 30)
@@ -153,7 +161,8 @@ mineCorner.CornerRadius = UDim.new(0, 6)
 -- Close Button
 closebutton.Name = "Close"
 closebutton.Parent = main.Frame
-closebutton.BackgroundColor3 = Color3.fromRGB(244, 67, 54)
+closebutton.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Purple amethyst
+closebutton.BackgroundTransparency = 0.1
 closebutton.BorderSizePixel = 0
 closebutton.Font = Enum.Font.GothamBold
 closebutton.Size = UDim2.new(0, 30, 0, 25)
@@ -168,7 +177,8 @@ closeCorner.CornerRadius = UDim.new(0, 6)
 -- Minimize Button
 mini.Name = "minimize"
 mini.Parent = main.Frame
-mini.BackgroundColor3 = Color3.fromRGB(96, 125, 139)
+mini.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
+mini.BackgroundTransparency = 0.1
 mini.BorderSizePixel = 0
 mini.Font = Enum.Font.GothamBold
 mini.Size = UDim2.new(0, 30, 0, 25)
@@ -180,21 +190,22 @@ mini.Position = UDim2.new(1, -70, 0, -30)
 miniCorner.Parent = mini
 miniCorner.CornerRadius = UDim.new(0, 6)
 
--- Restore Button
-mini2.Name = "minimize2"
-mini2.Parent = main.Frame
-mini2.BackgroundColor3 = Color3.fromRGB(96, 125, 139)
-mini2.BorderSizePixel = 0
-mini2.Font = Enum.Font.GothamBold
-mini2.Size = UDim2.new(0, 30, 0, 25)
-mini2.Text = "+"
-mini2.TextColor3 = Color3.fromRGB(255, 255, 255)
-mini2.TextSize = 16
-mini2.Position = UDim2.new(1, -70, 0, -30)
-mini2.Visible = false
+-- Minimized Box (MH)
+miniBox.Name = "miniBox"
+miniBox.Parent = main
+miniBox.BackgroundColor3 = Color3.fromRGB(102, 51, 153) -- Amethyst color
+miniBox.BackgroundTransparency = 0.15
+miniBox.BorderSizePixel = 0
+miniBox.Font = Enum.Font.GothamBold
+miniBox.Size = UDim2.new(0, 50, 0, 50)
+miniBox.Text = "MH"
+miniBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+miniBox.TextSize = 16
+miniBox.Position = UDim2.new(0, 20, 0, 20) -- Top left corner
+miniBox.Visible = false
 
-mini2Corner.Parent = mini2
-mini2Corner.CornerRadius = UDim.new(0, 6)
+miniBoxCorner.Parent = miniBox
+miniBoxCorner.CornerRadius = UDim.new(0, 25) -- Makes it fully rounded
 
 speeds = 1
 
@@ -519,28 +530,14 @@ closebutton.MouseButton1Click:Connect(function()
 	main:Destroy()
 end)
 
+-- Updated minimize function to show MH box
 mini.MouseButton1Click:Connect(function()
-	up.Visible = false
-	down.Visible = false
-	onof.Visible = false
-	plus.Visible = false
-	speed.Visible = false
-	mine.Visible = false
-	mini.Visible = false
-	mini2.Visible = true
-	TextLabel.Visible = false
-	main.Frame.BackgroundTransparency = 1
+	Frame.Visible = false
+	miniBox.Visible = true
 end)
 
-mini2.MouseButton1Click:Connect(function()
-	up.Visible = true
-	down.Visible = true
-	onof.Visible = true
-	plus.Visible = true
-	speed.Visible = true
-	mine.Visible = true
-	mini.Visible = true
-	mini2.Visible = false
-	TextLabel.Visible = true
-	main.Frame.BackgroundTransparency = 0 
+-- Click MH box to restore
+miniBox.MouseButton1Click:Connect(function()
+	Frame.Visible = true
+	miniBox.Visible = false
 end)
