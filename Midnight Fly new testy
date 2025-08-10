@@ -41,7 +41,7 @@ UICorner.CornerRadius = UDim.new(0, 12)
 
 -- Title Label (moved up and made smaller)
 TextLabel.Parent = Frame
-TextLabel.BackgroundColor3 = Color3.fromRGB(186, 85, 211) -- Medium orchid amethyst
+TextLabel.BackgroundColor3 = Color3.fromRGB(82, 63, 119) -- Medium orchid amethyst
 TextLabel.BackgroundTransparency = 0.1
 TextLabel.BorderSizePixel = 0
 TextLabel.Position = UDim2.new(0.05, 0, 0.05, 0) -- Moved to top-left
@@ -59,7 +59,7 @@ labelCorner.CornerRadius = UDim.new(0, 6)
 -- Close Button (inside frame, top-right)
 closebutton.Name = "Close"
 closebutton.Parent = Frame
-closebutton.BackgroundColor3 = Color3.fromRGB(128, 0, 128) -- Purple amethyst
+closebutton.BackgroundColor3 = Color3.fromRGB(141, 48, 75) -- Purple amethyst
 closebutton.BackgroundTransparency = 0.1
 closebutton.BorderSizePixel = 0
 closebutton.Font = Enum.Font.GothamBold
@@ -75,7 +75,7 @@ closeCorner.CornerRadius = UDim.new(0, 4)
 -- Minimize Button (inside frame, next to close)
 mini.Name = "minimize"
 mini.Parent = Frame
-mini.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
+mini.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Light amethyst
 mini.BackgroundTransparency = 0.1
 mini.BorderSizePixel = 0
 mini.Font = Enum.Font.GothamBold
@@ -91,7 +91,7 @@ miniCorner.CornerRadius = UDim.new(0, 4)
 -- UP Button (repositioned)
 up.Name = "up"
 up.Parent = Frame
-up.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
+up.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Purple amethyst
 up.BackgroundTransparency = 0.1
 up.BorderSizePixel = 0
 up.Position = UDim2.new(0.05, 0, 0.35, 0) -- Moved down
@@ -107,7 +107,7 @@ upCorner.CornerRadius = UDim.new(0, 6)
 -- Plus Button (repositioned)
 plus.Name = "plus"
 plus.Parent = Frame
-plus.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Purple amethyst
+plus.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Purple amethyst
 plus.BackgroundTransparency = 0.1
 plus.BorderSizePixel = 0
 plus.Position = UDim2.new(0.3, 0, 0.35, 0) -- Moved down
@@ -125,7 +125,7 @@ plusCorner.CornerRadius = UDim.new(0, 6)
 -- Speed Display (repositioned)
 speed.Name = "speed"
 speed.Parent = Frame
-speed.BackgroundColor3 = Color3.fromRGB(153, 50, 204) -- Dark orchid amethyst
+speed.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Dark orchid amethyst
 speed.BackgroundTransparency = 0.1
 speed.BorderSizePixel = 0
 speed.Position = UDim2.new(0.55, 0, 0.35, 0) -- Moved down
@@ -143,7 +143,7 @@ speedCorner.CornerRadius = UDim.new(0, 6)
 -- FLY Toggle Button (repositioned)
 onof.Name = "onof"
 onof.Parent = Frame
-onof.BackgroundColor3 = Color3.fromRGB(147, 112, 219) -- Light amethyst
+onof.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Light amethyst
 onof.BackgroundTransparency = 0.1
 onof.BorderSizePixel = 0
 onof.Position = UDim2.new(0.75, 0, 0.35, 0) -- Moved down
@@ -159,7 +159,7 @@ onofCorner.CornerRadius = UDim.new(0, 6)
 -- DOWN Button (repositioned)
 down.Name = "down"
 down.Parent = Frame
-down.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
+down.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Darker amethyst
 down.BackgroundTransparency = 0.1
 down.BorderSizePixel = 0
 down.Position = UDim2.new(0.05, 0, 0.7, 0) -- Bottom row
@@ -175,7 +175,7 @@ downCorner.CornerRadius = UDim.new(0, 6)
 -- Minus Button (repositioned)
 mine.Name = "mine"
 mine.Parent = Frame
-mine.BackgroundColor3 = Color3.fromRGB(75, 0, 130) -- Darker amethyst
+mine.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Darker amethyst
 mine.BackgroundTransparency = 0.1
 mine.BorderSizePixel = 0
 mine.Position = UDim2.new(0.3, 0, 0.7, 0) -- Bottom row
