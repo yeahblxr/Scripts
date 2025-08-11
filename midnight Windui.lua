@@ -3,7 +3,7 @@ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/rel
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
-    Icon = "door-open",
+    Icon = "moon",
     Author = "Yeahblxr",
     Folder = "Midnight Hub",
     Size = UDim2.fromOffset(580, 460),
@@ -17,7 +17,7 @@ local Window = WindUI:CreateWindow({
     ScrollBarEnabled = false,
     User = {
         Enabled = true,
-        Anonymous = true,
+        Anonymous = false,
         Callback = function()
             print("clicked")
         end,
@@ -39,4 +39,13 @@ local Tab = Window:Tab({
     Title = "Emi A Fag",
     Icon = "home",
     Locked = false,
+})
+
+
+
+WindUI:Notify({
+    Title = "Loaded!",
+    Content = "Loaded Midnight Hub",
+    Duration = 3, -- 3 seconds
+    Icon = "check",
 })
