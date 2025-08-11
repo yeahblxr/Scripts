@@ -1,5 +1,5 @@
 -- Load WindUI from rscripts mirror (working)
-local WindUI = loadstring(game:HttpGet("https://rawscripts.net/raw/Footagesus-WindUI-Example_943"))()
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 if not WindUI then
     warn("Failed to load WindUI from rscripts mirror!")
