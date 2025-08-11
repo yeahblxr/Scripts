@@ -41,6 +41,17 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
+local Button = Tab:Button({
+    Title = "Reset",
+    Desc = "Kill Yourself",
+    Locked = false,
+    Callback = function()
+        local character = player.Character
+        if character then
+            character:BreakJoints() -- This will reset the character
+        end
+    end
+})
 
 
 WindUI:Notify({
