@@ -108,7 +108,7 @@ local Button = Tab:CreateButton({
 
 local Divider = Tab:CreateDivider()
 
-local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added tiktok link, Added discord link, Added github link, Added copy script button, Added ShiftLock Script Added Fov Slider, Added reset charater, Fixed inf jump not disabling Fixed Respawn at death point not disabling"})
+local Paragraph = Tab:CreateParagraph({Title = "Midnight Hub Changelogs *8/4/25", Content = "Added egor script"})
 
 local Paragraph = Tab:CreateParagraph({Title = "About Midnight Hub", Content = "Midnight Hub is designed for script users who want a clean, reliable, and easy to use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple"})
 
@@ -304,7 +304,7 @@ local Input = Tab:CreateInput({
                 Title = "FOV Adjusted",
                 Content = string.format("FOV was clamped to %d (range is 70–120).", newFov),
                 Duration = 3.5,
-                Image = "check",
+                Image = "ban",
             })
         else
             Rayfield:Notify({
@@ -382,6 +382,13 @@ local Toggle = Tab:CreateToggle({
     Callback = function(Value)
         toggleMoonGravity(Value)
     end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Egor Script",
+   Callback = function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/DROID-cell-sys/ANTI-UTTP-SCRIPTT/refs/heads/main/EGOR%20SCRIPT%20BY%20ANTI-UTTP"))()
+   end,
 })
 
 local Tab = Window:CreateTab("Advantage Scripts", "swords") -- Title, Image
