@@ -1,5 +1,10 @@
--- Load WindUI properly
-local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/Library.lua"))()
+-- Load WindUI from rscripts mirror (working)
+local WindUI = loadstring(game:HttpGet("https://rawscripts.net/raw/Footagesus-WindUI-Example_943"))()
+
+if not WindUI then
+    warn("Failed to load WindUI from rscripts mirror!")
+    return
+end
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
