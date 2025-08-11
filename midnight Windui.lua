@@ -1,5 +1,5 @@
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
-
+-- Load WindUI properly
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/Library.lua"))()
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
@@ -11,7 +11,7 @@ local Window = WindUI:CreateWindow({
     Theme = "Dark",
     Resizable = true,
     SideBarWidth = 200,
-    Background = "", -- rbxassetid or video 
+    Background = "",
     BackgroundImageTransparency = 0.42,
     HideSearchBar = true,
     ScrollBarEnabled = false,
@@ -22,7 +22,7 @@ local Window = WindUI:CreateWindow({
             print("clicked")
         end,
     },
-    KeySystem = { -- <- ↓ !!!!! remove this all, if you dont need the key system
+    KeySystem = {
         Key = { "1234" },
         Note = "Key is 1234",
         Thumbnail = {
@@ -31,19 +31,17 @@ local Window = WindUI:CreateWindow({
         },
         URL = "https://github.com/Footagesus/WindUI",
         SaveKey = true,
-        -- API = {} ← Services
     },
 })
 
-local themes = WindUI:GetThemes()
-
-local Tab = Window:Tab({
-    Title = "Home",
+-- Main tab
+local MainTab = Window:Tab({
+    Title = "Emi A Fag",
     Icon = "home",
     Locked = false,
 })
 
-local Button = Tab:Button({
+local Button = MainTab:Button({
     Title = "Dih",
     Desc = "Gives Dih",
     Locked = false,
@@ -55,17 +53,17 @@ local Button = Tab:Button({
 -- Get all available themes
 local themes = WindUI:GetThemes()
 
--- Print themes to console
+-- Print themes
 print("Available WindUI Themes:")
 for name, _ in pairs(themes) do
     print(name)
 end
 
--- Create a dropdown to choose a theme
-local Tab = Window:CreateTab("Themes")
-local Dropdown = Tab:CreateDropdown({
+-- Themes tab
+local ThemesTab = Window:CreateTab("Themes")
+local Dropdown = ThemesTab:CreateDropdown({
     Name = "Select Theme",
-    Options = {}, -- will be filled below
+    Options = {},
     CurrentOption = "Dark",
     Callback = function(selected)
         WindUI:ChangeTheme(selected)
@@ -73,13 +71,16 @@ local Dropdown = Tab:CreateDropdown({
     end
 })
 
--- Add all themes to dropdown options
+-- Fill dropdown with theme names
 for name, _ in pairs(themes) do
     table.insert(Dropdown.Options, name)
+end
+Dropdown:Refresh(Dropdown.Options, true)
 
+-- Notify
 WindUI:Notify({
     Title = "Loaded!",
     Content = "Loaded Midnight Hub",
-    Duration = 3, -- 3 seconds
+    Duration = 3,
     Icon = "check",
 })
