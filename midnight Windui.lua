@@ -6,7 +6,7 @@ local Window = WindUI:CreateWindow({
     Icon = "moon",
     Author = "Yeahblxr",
     Folder = "Midnight Hub",
-    Size = UDim2.fromOffset(580, 460),
+    Size = UDim2.fromOffset(580, 360),
     Transparent = true,
     Theme = "Dark",
     Resizable = true,
@@ -42,14 +42,11 @@ local Tab = Window:Tab({
 })
 
 local Button = Tab:Button({
-    Title = "Reset",
-    Desc = "Kill Yourself",
+    Title = "Dih",
+    Desc = "Gives Dih",
     Locked = false,
     Callback = function()
-        local character = player.Character
-        if character then
-            character:BreakJoints() -- This will reset the character
-        end
+      loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
     end
 })
 
