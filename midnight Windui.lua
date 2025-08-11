@@ -35,8 +35,10 @@ local Window = WindUI:CreateWindow({
     },
 })
 
+local themes = WindUI:GetThemes()
+
 local Tab = Window:Tab({
-    Title = "Emi A Fag",
+    Title = "Home",
     Icon = "home",
     Locked = false,
 })
