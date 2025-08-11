@@ -50,6 +50,30 @@ local Button = Tab:Button({
     end
 })
 
+-- Get all available themes
+local themes = WindUI:GetThemes()
+
+-- Print themes to console
+print("Available WindUI Themes:")
+for name, _ in pairs(themes) do
+    print(name)
+end
+
+-- Create a dropdown to choose a theme
+local Tab = Window:CreateTab("Themes")
+local Dropdown = Tab:CreateDropdown({
+    Name = "Select Theme",
+    Options = {}, -- will be filled below
+    CurrentOption = "Dark",
+    Callback = function(selected)
+        WindUI:ChangeTheme(selected)
+        print("Theme changed to:", selected)
+    end
+})
+
+-- Add all themes to dropdown options
+for name, _ in pairs(themes) do
+    table.insert(Dropdown.Options, name)
 
 WindUI:Notify({
     Title = "Loaded!",
