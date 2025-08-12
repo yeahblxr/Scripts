@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.91",
+    Title = "Beta 0.9.2.2",
     Color = Color3.fromHex("#663399")
 })
 
@@ -177,7 +177,7 @@ local Slider = Tab:Slider({
         Default = 50,
     },
     Callback = function(value)
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
     end
 })
 -- Inf Jump start
