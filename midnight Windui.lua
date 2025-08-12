@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.3.4",
+    Title = "Beta 0.9.3.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -76,7 +76,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "New UI",
+    Content = "New UI, Egor Script, you can now select who you want to fling",
     Buttons = {
         {
             Title = "Confirm",
