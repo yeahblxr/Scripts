@@ -67,8 +67,7 @@ local Paragraph = Tab:Paragraph({
     ImageSize = 0,
     Thumbnail = "",
     ThumbnailSize = 0,
-    Locked = false,
-    }
+    Locked = false
 })
 
 local Dialog = Window:Dialog({
