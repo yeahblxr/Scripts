@@ -35,7 +35,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.1",
+    Title = "Beta 0.3",
     Color = Color3.fromHex("#663399")
 })
 
@@ -57,6 +57,24 @@ local Tab = Window:Tab({
     Title = "Home",
     Icon = "house",
     Locked = false,
+})
+
+local Paragraph = Tab:Paragraph({
+    Title = "About Midnight Hub",
+    Desc = "Midnight Hub is designed for script users who want a clean, reliable, and easy-to-use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place, no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple.",
+    Color = "White",
+    Image = "",
+    ImageSize = 30,
+    Thumbnail = "",
+    ThumbnailSize = 80,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "bird",
+            Title = "Button",
+            Callback = function() print("1 Button") end,
+        }
+    }
 })
 
 local Dialog = Window:Dialog({
