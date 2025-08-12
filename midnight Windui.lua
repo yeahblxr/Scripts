@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.5.0",
+    Title = "Beta 0.9.5.1",
     Color = Color3.fromHex("#663399")
 })
 
@@ -871,11 +871,11 @@ local function teleportToPlayer(targetName)
     end)
 end
 
--- Rayfield dropdown setup (assumes you have already initialized Rayfield and have a Tab)
+-- Windui dropdown setup (assumes you have already initialized Windui and have a Tab)
 local Dropdown = Tab:Dropdown({
-    Title = Teleport to Player",
+    Title = "Dropdown (Multi)",
     Values = getOtherPlayerNames(),
-    Value = { "" },
+    Value = "",
     Callback = function(selection) 
         if selection and selection[1] and selection[1] ~= "" then
             print("Dropdown selected:", selection[1])  -- debug to ensure callback fires
