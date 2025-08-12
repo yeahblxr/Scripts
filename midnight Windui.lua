@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.2.5",
+    Title = "Beta 0.9.3.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -360,19 +360,105 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
+local Button = Tab:Button({
+    Title = "No Fe Snake",
+    Desc = "Gives you like a snake thing",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Fake Lag",
+    Desc = "Makes you look laggy",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Jerk",
+    Desc = "Gives goon item (FE)",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Fling All",
+    Desc = "(Needs Player Colisions)",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+    end
+})
+
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local humanoid = nil
+
+local originalJumpPower
+local originalGravity = workspace.Gravity
+
+-- Function to enable or disable moon gravity
+local function toggleMoonGravity(state)
+    local character = player.Character or player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    if state then
+        -- Save original jump power
+        originalJumpPower = humanoid.JumpPower
+
+        -- Apply moon gravity
+        workspace.Gravity = 50 -- Default is 196.2; 50 is like low gravity
+    else
+        -- Reset to default
+        workspace.Gravity = originalGravity
+        humanoid.JumpPower = originalJumpPower or 50
+    end
+end
+
+-- Rayfield Toggle
+local Toggle = Tab:Toggle({
+    Title = "Moon Gravity",
+    Desc = "Lowers gravity to make it look like your on the moon",
+    Icon = "moon",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(value) 
+        toggleMoonGravity(Value)
+    end,
+})
+
+
+local Button = Tab:Button({
+    Title = "Egor",
+    Desc = "Makes you run like Egor",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Biem6ondo/FAKELAG/refs/heads/main/Fakelag"))()
+    end
+})
 
 
 
+-- Ensure character/player is loaded (if this runs very early)
+if not player then
+    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
+    player = Players.LocalPlayer
+end
 
-
-
-
-
-
+local nameToShow = player.DisplayName
+-- Optional: if you want the actual username instead of/displayName fallback:
+-- local nameToShow = player.DisplayName ~= "" and player.DisplayName or player.Name
 
 WindUI:Notify({
-    Title = "Loaded!",
-    Content = "Loaded Midnight Hub",
+    Title = "Midnight Hub Loaded",
+    Content = ("Greetings, %s!"):format(nameToShow),
     Duration = 3,
-    Icon = "check",
+    Icon = "user-check",
 })
