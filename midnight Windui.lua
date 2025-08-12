@@ -62,18 +62,12 @@ local Tab = Window:Tab({
 local Paragraph = Tab:Paragraph({
     Title = "About Midnight Hub",
     Desc = "Midnight Hub is designed for script users who want a clean, reliable, and easy-to-use interface without sacrificing power. Built for convenience and compatibility, it brings together a collection of useful tools in one place, no bloat, no confusion. Whether you're a casual user or a serious exploiter, Midnight Hub keeps things simple.",
-    Color = "White",
+    Color = "Black",
     Image = "",
-    ImageSize = 30,
+    ImageSize = 0,
     Thumbnail = "",
-    ThumbnailSize = 80,
+    ThumbnailSize = 0,
     Locked = false,
-    Buttons = {
-        {
-            Icon = "bird",
-            Title = "Button",
-            Callback = function() print("1 Button") end,
-        }
     }
 })
 
