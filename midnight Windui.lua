@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.6.6",
+    Title = "Beta 0.9.7.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1044,6 +1044,109 @@ local Input = Tab:Input({
     end
 })
 
+local Button = Tab:Button({
+    Title = "Rejoin",
+    Desc = "Rejoin same server",
+    Locked = false,
+    Callback = function()
+        local ts = game:GetService("TeleportService")
+
+
+
+local p = game:GetService("Players").LocalPlayer
+
+
+
+
+
+
+
+ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, p)
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Server hop",
+    Desc = "Changes your server",
+    Locked = false,
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+
+local Servers = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+local Server, Next = nil, nil
+local function ListServers(cursor)
+    local Raw = game:HttpGet(Servers .. ((cursor and "&cursor=" .. cursor) or ""))
+    return HttpService:JSONDecode(Raw)
+end
+
+repeat
+    local Servers = ListServers(Next)
+    Server = Servers.data[math.random(1, (#Servers.data / 3))]
+    Next = Servers.nextPageCursor
+until Server
+
+if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
+    TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
+end
+    end
+})
+
+local Tab = Window:Tab({
+    Title = "Misc",
+    Icon = "dices",
+    Locked = false,
+})
+
+local Button = Tab:Button({
+    Title = "Keyboard",
+    Desc = "Launches delta keyboard for the mobile players",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt", true))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Short proximity prompt",
+    Desc = "removes the hold duration for proximity prompts so you can spam it",
+    Locked = false,
+    Callback = function()
+        local function SetupProximityPrompt(prompt)
+    prompt.HoldDuration = 0
+end
+
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("ProximityPrompt") then
+        SetupProximityPrompt(descendant)
+    end
+end)
+
+for _, prompt in ipairs(workspace:GetDescendants()) do
+    if prompt:IsA("ProximityPrompt") then
+        SetupProximityPrompt(prompt)
+    end
+end
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Shiftlock",
+    Desc = "Gives a shiftlock button",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/MiniNoobie/ShiftLockx/main/Shiftlock-MiniNoobie",true))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Infinite Yield",
+    Desc = "Loads Ininite Yeild",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
 
 -- Ensure character/player is loaded (if this runs very early)
 if not player then
