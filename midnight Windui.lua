@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.4.0",
+    Title = "Beta 0.9.5.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -656,6 +656,261 @@ local Tab = Window:Tab({
     Icon = "swords",
     Locked = false,
 })
+
+local Button = Tab:Button({
+    Title = "Esp",
+    Desc = "Lets you see other players through walls",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Fly Gui",
+    Desc = "Custom-made fly GUI to match the theme of Midnight Hub (inspired by fly GUI V3)",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/-Midnight-hub/refs/heads/main/Midnighthub_Fly.lua"))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Fly Gui",
+    Desc = "Custom-made fly GUI to match the theme of Midnight Hub (inspired by fly GUI V3)",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/-Midnight-hub/refs/heads/main/Midnighthub_Fly.lua"))()
+    end
+})
+
+local floatName = nil -- or set to a string to exclude that part, e.g. "FloatPart"
+
+local Toggle = Tab:Toggle({
+    Title = "Noclip",
+    Desc = "Toggle for noclip (after disable jump to fully diable noclip)",
+    Icon = "brick-wall",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(Value) 
+        -- persistent connection for this toggle
+        if not _G._noclipConnection then _G._noclipConnection = nil end
+
+        local function enableNoclip()
+            -- disconnect existing if any
+            if _G._noclipConnection then
+                _G._noclipConnection:Disconnect()
+                _G._noclipConnection = nil
+            end
+
+            _G._noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                local player = game.Players.LocalPlayer
+                if not player then return end
+                local character = player.Character
+                if not character then return end
+
+                for _, v in pairs(character:GetDescendants()) do
+                    if v:IsA("BasePart") and v.CanCollide then
+                        if not floatName or v.Name ~= floatName then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        end
+
+        local function disableNoclip()
+            if _G._noclipConnection then
+                _G._noclipConnection:Disconnect()
+                _G._noclipConnection = nil
+            end
+        end
+
+        if Value then
+            enableNoclip()
+        else
+            disableNoclip()
+        end
+    end,
+})
+
+local Button = Tab:Button({
+    Title = "Aimbot",
+    Desc = "Enables an Aimbot Gui",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
+    end
+})
+
+local Slider = Tab:Slider({
+    Title = "Slider",
+    
+    -- To make float number supported, 
+    -- make the Step a float number.
+    -- example: Step = 0.1
+    Step = 1,
+    
+    Value = {
+        Min = 1,
+        Max = 250,
+        Default = 1,
+    },
+    Callback = function(Value)
+        _G.HeadSize = Value
+_G.Disabled = true
+ 
+
+--Don't Touch
+game:GetService('RunService').RenderStepped:connect(function()
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+--TRANSPARENCY of the HITBOX
+v.Character.HumanoidRootPart.Transparency = 0.5
+v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+v.Character.HumanoidRootPart.Material = "Neon"
+v.Character.HumanoidRootPart.CanCollide = false
+end)
+end
+end
+end
+end)
+   end,
+})
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function setInvisibility(state)
+    local char = player.Character or player.CharacterAdded:Wait()
+
+    for _, part in ipairs(char:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Transparency = state and 1 or 0
+            part.CanCollide = not state
+        elseif part:IsA("Decal") then
+            part.Transparency = state and 1 or 0
+        end
+    end
+
+    -- Hide or show name tag (optional)
+    local head = char:FindFirstChild("Head")
+    if head then
+        local nameTag = head:FindFirstChildWhichIsA("BillboardGui")
+        if nameTag then
+            nameTag.Enabled = not state
+        end
+    end
+end
+
+local Button = Tab:Button({
+    Title = "Invisibility",
+    Desc = "Adds a button on screen to toggle invisibility",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
+    end
+})
+
+-- Tp to player script
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Debounce
+local teleporting = false
+
+-- Utility: get all other player names
+local function getOtherPlayerNames()
+    local names = {}
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            table.insert(names, plr.Name)
+        end
+    end
+    return names
+end
+
+-- Teleport function: moves you near the target player
+local function teleportToPlayer(targetName)
+    if teleporting then return end
+    teleporting = true
+
+    local target = Players:FindFirstChild(targetName)
+    if not target then
+        warn("[Teleport] Target not found:", targetName)
+        teleporting = false
+        return
+    end
+
+    -- Wait for characters and parts to exist
+    local targetChar = target.Character or target.CharacterAdded:Wait()
+    local targetHRP = targetChar:WaitForChild("HumanoidRootPart", 5)
+    if not targetHRP then
+        warn("[Teleport] Target HumanoidRootPart missing")
+        teleporting = false
+        return
+    end
+
+    local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local myHRP = myChar:WaitForChild("HumanoidRootPart", 5)
+    if not myHRP then
+        warn("[Teleport] My HumanoidRootPart missing")
+        teleporting = false
+        return
+    end
+
+    -- Teleport slightly above to reduce getting stuck; uses CFrame as recommended. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+    myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
+    print("[Teleport] Done to:", targetName)
+
+    task.delay(0.5, function()
+        teleporting = false
+    end)
+end
+
+-- Rayfield dropdown setup (assumes you have already initialized Rayfield and have a Tab)
+local Dropdown = Tab:Dropdown({
+    Title = Teleport to Player",
+    Values = getOtherPlayerNames(),
+    Value = { "" },
+    Callback = function(selection) 
+        if selection and selection[1] and selection[1] ~= "" then
+            print("Dropdown selected:", selection[1])  -- debug to ensure callback fires
+            teleportToPlayer(selection[1])
+        end
+    end,
+})
+
+-- Helper to refresh dropdown when player list changes
+local function refreshDropdown()
+    local names = getOtherPlayerNames()
+    -- Rayfield dropdowns typically support something like :Refresh or recreating; if no API exists, recreate:
+    -- If Refresh method exists:
+    if Dropdown.Refresh then
+        Dropdown:Refresh(names)
+    else
+        -- fallback: destroy and recreate (simplified)
+        -- Note: adapt this depending on how your Rayfield version wants dynamic updates
+        -- For example, you might store the previous selection and rebuild the dropdown
+    end
+end
+
+Players.PlayerAdded:Connect(function()
+    refreshDropdown()
+end)
+Players.PlayerRemoving:Connect(function()
+    refreshDropdown()
+end)
+
+local Tab = Window:Tab({
+    Title = "Client",
+    Icon = "usb",
+    Locked = false,
+})
+
 
 -- Ensure character/player is loaded (if this runs very early)
 if not player then
