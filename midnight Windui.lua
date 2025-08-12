@@ -5,7 +5,7 @@ WindUI:SetNotificationLower(true)
 WindUI:AddTheme({
     Name = "Midnight",
     Accent = "#a855f7",
-    Dialog = "#ffbdfd",
+    Dialog = "#2E004F",
     Outline = "#6b21a8",
     Text = "#f3e8ff",
     Placeholder = "#d8b4fe",
@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.7",
+    Title = "Beta 0.8",
     Color = Color3.fromHex("#663399")
 })
 
