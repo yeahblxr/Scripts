@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.6.2",
+    Title = "Beta 0.9.6.3",
     Color = Color3.fromHex("#663399")
 })
 
@@ -998,7 +998,7 @@ local Paragraph = Tab:Paragraph({
     Title = "Server Job ID",
     Desc = "Unique ID for this server instance",
     Content = jobId,
-    Color = "#2E004F",         -- or any color you like
+    Color = "Black",         -- or any color you like
     Image = "",             -- optional
     ImageSize = 0,
     Thumbnail = "",         -- optional
