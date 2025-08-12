@@ -53,12 +53,12 @@ Window:EditOpenButton({
     Draggable = true,
 })
 
--- Main tab
-local MainTab = Window:Tab({
+local Tab = Window:Tab({
     Title = "Home",
     Icon = "house",
     Locked = false,
 })
+
 local Button = Tab:Button({
     Title = "Discord",
     Desc = "Copy Discord Server Link",
