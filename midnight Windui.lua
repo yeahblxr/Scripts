@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.6.3",
+    Title = "Beta 0.9.6.4",
     Color = Color3.fromHex("#663399")
 })
 
@@ -998,19 +998,21 @@ local Paragraph = Tab:Paragraph({
     Title = "Server Job ID",
     Desc = "Unique ID for this server instance",
     Content = jobId,
-    Color = "Black",         -- or any color you like
-    Image = "",             -- optional
+    Color = "Black",
+    Image = "",
     ImageSize = 0,
-    Thumbnail = "",         -- optional
+    Thumbnail = "",
     ThumbnailSize = 0,
     Locked = false,
     Buttons = {
         {
             Icon = "clipboard",
             Title = "Copy",
-            Callback = function()         if setclipboard then
-            setclipboard(jobId)
-        end end,
+            Callback = function()
+                if setclipboard then
+                    setclipboard(jobId)
+                end
+            end,
         }
     }
 })
