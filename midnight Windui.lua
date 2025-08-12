@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.5.5",
+    Title = "Beta 0.9.6.1",
     Color = Color3.fromHex("#663399")
 })
 
@@ -79,12 +79,27 @@ local Dialog = Window:Dialog({
     Content = "New UI, Egor Script, you can now select who you want to fling",
     Buttons = {
         {
-            Title = "Confirm",
+            Title = "Continue",
             Callback = function()
-                print("Confirmed!")
+                print("Continued")
             end,
         },
     },
+})
+
+local Button = Tab:Button({
+    Title = "Unc Test",
+    Desc = "Take the UNC test to see capabilities of your executor!",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://github.com/ltseverydayyou/uuuuuuu/blob/main/UNC%20test?raw=true"))()
+            WindUI:Notify({
+    Title = "UNC test results",
+    Content = "Type /console in chat or press F9 to view results.",
+    Duration = 5, -- 3 seconds
+    Icon = "list-checks",
+})
+    end
 })
 
 local Button = Tab:Button({
@@ -884,6 +899,116 @@ local Tab = Window:Tab({
     Title = "Client",
     Icon = "usb",
     Locked = false,
+})
+
+local Button = Tab:Button({
+    Title = "Fullbright",
+    Desc = "Lets you see in the dark.",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fullbright.lua"))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Remove fog",
+    Desc = "Removes the fog.",
+    Locked = false,
+    Callback = function()
+         local function removeFog()
+    local lighting = game:GetService("Lighting")
+    lighting.FogEnd = 1e10
+    lighting.FogStart = 1e10
+    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
+end
+
+
+
+removeFog()
+
+game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogStart"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeFog)
+
+game:GetService("Lighting").Changed:Connect(removeFog)
+    end
+})
+
+local Input = Tab:Input({
+    Title = "Set fps cap",
+    Desc = "Lets you cange the fps cap of Roblox.",
+    Value = "60",
+    InputIcon = "square-pen",
+    Type = "Input", -- or "Textarea"
+    Placeholder = "Enter fps cap",
+    Callback = function(text) 
+        setfpscap(text)
+            WindUI:Notify({
+    Title = "Fps cap changed",
+    Content = "Fps cap has been set!",
+    Duration = 3, -- 3 seconds
+    Icon = "pencil-line",
+})
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Fps Booster",
+    Desc = "Removes things to boost performance.",
+    Locked = false,
+    Callback = function()
+  _G.Settings = {
+    Players = {
+        ["Ignore Me"] = true, -- Ignore your Character
+        ["Ignore Others"] = true -- Ignore other Characters
+    },
+    Meshes = {
+        Destroy = false, -- Destroy Meshes
+        LowDetail = true -- Low detail meshes (NOT SURE IT DOES ANYTHING)
+    },
+    Images = {
+        Invisible = true, -- Invisible Images
+        LowDetail = false, -- Low detail images (NOT SURE IT DOES ANYTHING)
+        Destroy = false, -- Destroy Images
+    },
+    Other = {
+        ["No Particles"] = true, -- Disables all ParticleEmitter, Trail, Smoke, Fire and Sparkles
+        ["No Camera Effects"] = true, -- Disables all PostEffect's (Camera/Lighting Effects)
+        ["No Explosions"] = true, -- Makes Explosion's invisible
+        ["No Clothes"] = true, -- Removes Clothing from the game
+        ["Low Water Graphics"] = true, -- Removes Water Quality
+        ["No Shadows"] = true, -- Remove Shadows
+        ["Low Rendering"] = true, -- Lower Rendering
+        ["Low Quality Parts"] = true -- Lower quality parts
+    }
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua"))()
+   end,
+})
+
+local Tab = Window:Tab({
+    Title = "Server",
+    Icon = "server",
+    Locked = false,
+})
+
+local jobId = game.JobId or "Unknown"
+
+-- Create the paragraph somewhere in your Tab (adjust this to your actual setup)
+local Paragraph = Tab:Paragraph({
+    Title = "Server Job ID",
+    Content = jobId,
+})
+
+local Button = Tab:Button({
+    Title = "Copy JobID",
+    Desc = "Copies the JobID of this server.",
+    Locked = false,
+    Callback = function()
+        if setclipboard then
+            setclipboard(jobId)
+        end
+    end
 })
 
 
