@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.5.2",
+    Title = "Beta 0.9.5.3",
     Color = Color3.fromHex("#663399")
 })
 
@@ -805,15 +805,14 @@ local Button = Tab:Button({
         loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
     end
 })
-
--- Tp to player script
+-- tp to players script
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Debounce
+-- Debounce to prevent rapid teleports
 local teleporting = false
 
--- Utility: get all other player names
+-- Get all other player names for the dropdown
 local function getOtherPlayerNames()
     local names = {}
     for _, plr in pairs(Players:GetPlayers()) do
@@ -824,7 +823,7 @@ local function getOtherPlayerNames()
     return names
 end
 
--- Teleport function: moves you near the target player
+-- Teleport function: move LocalPlayer near target player
 local function teleportToPlayer(targetName)
     if teleporting then return end
     teleporting = true
@@ -836,7 +835,6 @@ local function teleportToPlayer(targetName)
         return
     end
 
-    -- Wait for characters and parts to exist
     local targetChar = target.Character or target.CharacterAdded:Wait()
     local targetHRP = targetChar:WaitForChild("HumanoidRootPart", 5)
     if not targetHRP then
@@ -853,48 +851,40 @@ local function teleportToPlayer(targetName)
         return
     end
 
-    -- Teleport slightly above to reduce getting stuck; uses CFrame as recommended. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+    -- Teleport above the target player to avoid collisions
     myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
-    print("[Teleport] Done to:", targetName)
+    print("[Teleport] Teleported to:", targetName)
 
     task.delay(0.5, function()
         teleporting = false
     end)
 end
 
--- Windui dropdown setup (assumes you have already initialized Windui and have a Tab)
+-- Create the dropdown in your Tab (assumes you already have a Tab variable)
 local Dropdown = Tab:Dropdown({
-    Title = "Teleport to Players",
+    Title = "Teleport to Player",
     Values = getOtherPlayerNames(),
-    Value = "",
-    Callback = function(selection) 
-        if selection and selection[1] and selection[1] ~= "" then
-            print("Dropdown selected:", selection[1])  -- debug to ensure callback fires
-            teleportToPlayer(selection[1])
+    Value = "",  -- default no selection
+    Callback = function(selection)
+        if selection and selection ~= "" then
+            teleportToPlayer(selection)
         end
     end,
 })
 
--- Helper to refresh dropdown when player list changes
+-- Refresh dropdown values when players join or leave
 local function refreshDropdown()
     local names = getOtherPlayerNames()
-    -- Rayfield dropdowns typically support something like :Refresh or recreating; if no API exists, recreate:
-    -- If Refresh method exists:
     if Dropdown.Refresh then
         Dropdown:Refresh(names)
     else
-        -- fallback: destroy and recreate (simplified)
-        -- Note: adapt this depending on how your Rayfield version wants dynamic updates
-        -- For example, you might store the previous selection and rebuild the dropdown
+        -- If no Refresh method, you could recreate dropdown here if needed
     end
 end
 
-Players.PlayerAdded:Connect(function()
-    refreshDropdown()
-end)
-Players.PlayerRemoving:Connect(function()
-    refreshDropdown()
-end)
+Players.PlayerAdded:Connect(refreshDropdown)
+Players.PlayerRemoving:Connect(refreshDropdown)
+
 
 local Tab = Window:Tab({
     Title = "Client",
