@@ -1,10 +1,6 @@
 -- Load WindUI from rscripts mirror (working)
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
-if not WindUI then
-    warn("Failed to load WindUI from rscripts mirror!")
-    return
-end
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
@@ -39,50 +35,45 @@ local Window = WindUI:CreateWindow({
     },
 })
 
+Window:EditOpenButton({
+    Title = "Midnight Hub",
+    Icon = "moon",
+    CornerRadius = UDim.new(0,16),
+    StrokeThickness = 2,
+    Color = ColorSequence.new( -- gradient
+        Color3.fromHex("523F77"), 
+        Color3.fromHex("663399")
+    ),
+    OnlyMobile = false,
+    Enabled = true,
+    Draggable = true,
+})
+
 -- Main tab
 local MainTab = Window:Tab({
-    Title = "Emi A Fag",
+    Title = "Home",
     Icon = "home",
     Locked = false,
 })
 
-local Button = MainTab:Button({
-    Title = "Dih",
-    Desc = "Gives Dih",
+local Button = Tab:Button({
+    Title = "Discord",
+    Desc = "Copy Discord Server Link",
     Locked = false,
     Callback = function()
-      loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
+         setclipboard("https://discord.gg/Yqak7y7DYT")
+            WindUI:Notify({
+    Title = "Copied!",
+    Content = "Discord link copied to clipboard",
+    Duration = 2, -- 3 seconds
+    Icon = "check",
+})
     end
 })
 
--- Get all available themes
-local themes = WindUI:GetThemes()
 
--- Print themes
-print("Available WindUI Themes:")
-for name, _ in pairs(themes) do
-    print(name)
-end
 
--- Themes tab
-local ThemesTab = Window:CreateTab("Themes")
-local Dropdown = ThemesTab:CreateDropdown({
-    Name = "Select Theme",
-    Options = {},
-    CurrentOption = "Dark",
-    Callback = function(selected)
-        WindUI:ChangeTheme(selected)
-        print("Theme changed to:", selected)
-    end
-})
 
--- Fill dropdown with theme names
-for name, _ in pairs(themes) do
-    table.insert(Dropdown.Options, name)
-end
-Dropdown:Refresh(Dropdown.Options, true)
-
--- Notify
 WindUI:Notify({
     Title = "Loaded!",
     Content = "Loaded Midnight Hub",
