@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.6.1",
+    Title = "Beta 0.9.6.2",
     Color = Color3.fromHex("#663399")
 })
 
@@ -994,22 +994,27 @@ local Tab = Window:Tab({
 
 local jobId = game.JobId or "Unknown"
 
--- Create the paragraph somewhere in your Tab (adjust this to your actual setup)
 local Paragraph = Tab:Paragraph({
     Title = "Server Job ID",
+    Desc = "Unique ID for this server instance",
     Content = jobId,
+    Color = "#2E004F",         -- or any color you like
+    Image = "",             -- optional
+    ImageSize = 0,
+    Thumbnail = "",         -- optional
+    ThumbnailSize = 0,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "clipboard",
+            Title = "Copy",
+            Callback = function()         if setclipboard then
+            setclipboard(jobId)
+        end end,
+        }
+    }
 })
 
-local Button = Tab:Button({
-    Title = "Copy JobID",
-    Desc = "Copies the JobID of this server.",
-    Locked = false,
-    Callback = function()
-        if setclipboard then
-            setclipboard(jobId)
-        end
-    end
-})
 
 
 -- Ensure character/player is loaded (if this runs very early)
