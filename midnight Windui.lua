@@ -35,7 +35,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "v0.1",
+    Title = "Beta 0.1",
     Color = Color3.fromHex("#663399")
 })
 
