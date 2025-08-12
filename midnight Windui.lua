@@ -1,4 +1,3 @@
--- Load WindUI from rscripts mirror (working)
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 
@@ -35,6 +34,11 @@ local Window = WindUI:CreateWindow({
     },
 })
 
+Window:Tag({
+    Title = "v0.1",
+    Color = Color3.fromHex("#663399")
+})
+
 Window:EditOpenButton({
     Title = "Midnight Hub",
     Icon = "moon",
@@ -52,10 +56,9 @@ Window:EditOpenButton({
 -- Main tab
 local MainTab = Window:Tab({
     Title = "Home",
-    Icon = "home",
+    Icon = "house",
     Locked = false,
 })
-
 local Button = Tab:Button({
     Title = "Discord",
     Desc = "Copy Discord Server Link",
