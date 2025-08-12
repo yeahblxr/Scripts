@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.7.0",
+    Title = "V1.0.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1136,6 +1136,15 @@ local Button = Tab:Button({
     Locked = false,
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/MiniNoobie/ShiftLockx/main/Shiftlock-MiniNoobie",true))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Performance Stats",
+    Desc = "Displays ping and fps in top left corner",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fps_stats.lua"))()
     end
 })
 
