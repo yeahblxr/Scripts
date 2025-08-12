@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.5.1",
+    Title = "Beta 0.9.5.2",
     Color = Color3.fromHex("#663399")
 })
 
@@ -675,15 +675,6 @@ local Button = Tab:Button({
     end
 })
 
-local Button = Tab:Button({
-    Title = "Fly Gui",
-    Desc = "Custom-made fly GUI to match the theme of Midnight Hub (inspired by fly GUI V3)",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/-Midnight-hub/refs/heads/main/Midnighthub_Fly.lua"))()
-    end
-})
-
 local floatName = nil -- or set to a string to exclude that part, e.g. "FloatPart"
 
 local Toggle = Tab:Toggle({
@@ -744,7 +735,7 @@ local Button = Tab:Button({
 })
 
 local Slider = Tab:Slider({
-    Title = "Slider",
+    Title = "Hitbox Size",
     
     -- To make float number supported, 
     -- make the Step a float number.
@@ -873,7 +864,7 @@ end
 
 -- Windui dropdown setup (assumes you have already initialized Windui and have a Tab)
 local Dropdown = Tab:Dropdown({
-    Title = "Dropdown (Multi)",
+    Title = "Teleport to Players",
     Values = getOtherPlayerNames(),
     Value = "",
     Callback = function(selection) 
