@@ -23,13 +23,13 @@ local Window = WindUI:CreateWindow({
         end,
     },
     KeySystem = {
-        Key = { "1234" },
-        Note = "Key is 1234",
+        Key = { "Midnight" },
+        Note = "If you remember the old script key, it's the same. (Join Discord for the key) ",
         Thumbnail = {
             Image = "rbxassetid://117617062603739",
             Title = "Midnight Hub Key",
         },
-        URL = "https://github.com/Footagesus/WindUI",
+        URL = "https://discord.gg/Yqak7y7DYT",
         SaveKey = true,
     },
 })
@@ -59,6 +59,26 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
+local Dialog = Window:Dialog({
+    Icon = "upload",
+    Title = "Update Log",
+    Content = "New UI",
+    Buttons = {
+        {
+            Title = "Confirm",
+            Callback = function()
+                print("Confirmed!")
+            end,
+        },
+        {
+            Title = "Cancel",
+            Callback = function()
+                print("Cancelled!")
+            end,
+        },
+    },
+})
+
 local Button = Tab:Button({
     Title = "Discord",
     Desc = "Copy Discord Server Link",
@@ -73,6 +93,37 @@ local Button = Tab:Button({
 })
     end
 })
+
+local Button = Tab:Button({
+    Title = "Tiktok",
+    Desc = "Copy Tiktok profile Link",
+    Locked = false,
+    Callback = function()
+         setclipboard("https://www.tiktok.com/@yeahblxr")
+            WindUI:Notify({
+    Title = "Copied!",
+    Content = "Tiktok link copied to clipboard",
+    Duration = 2, -- 3 seconds
+    Icon = "check",
+})
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Github",
+    Desc = "Copy Github Link",
+    Locked = false,
+    Callback = function()
+         setclipboard("https://github.com/yeahblxr/-Midnight-hub/blob/main/Midnight%20Hub")
+            WindUI:Notify({
+    Title = "Copied!",
+    Content = "Github link copied to clipboard",
+    Duration = 2, -- 3 seconds
+    Icon = "check",
+})
+    end
+})
+
 
 
 
