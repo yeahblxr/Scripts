@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.3.5",
+    Title = "Beta 0.9.4.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -651,7 +651,11 @@ local Button = Tab:Button({
     end
 })
 
-
+local Tab = Window:Tab({
+    Title = "Advantage",
+    Icon = "swords",
+    Locked = false,
+})
 
 -- Ensure character/player is loaded (if this runs very early)
 if not player then
