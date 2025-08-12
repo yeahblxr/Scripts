@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.6.5",
+    Title = "Beta 0.9.6.6",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1021,21 +1021,26 @@ local Button = Tab:Button({
 local Input = Tab:Input({
     Title = "Join Server",
     Desc = "Join a server with a jobID",
-    Value = "JobId",
+    Value = "",                      -- start empty so it doesn't try to teleport automatically
     InputIcon = "id-card",
     Type = "Input", -- or "Textarea"
     Placeholder = "JobId",
     Callback = function(Text) 
-        local JobIdTextBoxValue = "Text" -- Store the textbox value i guess CHANGE THIS that is just an example
-local placeId = game.PlaceId -- Get the current place ID of the game 
- 
-
-local jobId = JobIdTextBoxValue
-if jobId ~= "" then
-    local success, errorMessage = pcall(function()
-        game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, jobId, game.Players.LocalPlayer) -- teleports i hope nothing goes wrong
-    end)
-end
+        local JobIdTextBoxValue = Text  -- Use actual user input
+        
+        local placeId = game.PlaceId
+        
+        -- Only teleport if input is not empty and not default placeholder text
+        if JobIdTextBoxValue ~= "" and JobIdTextBoxValue:lower() ~= "jobid" then
+            local success, errorMessage = pcall(function()
+                game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, JobIdTextBoxValue, game.Players.LocalPlayer)
+            end)
+            if not success then
+                warn("Teleport failed: " .. tostring(errorMessage))
+            end
+        else
+            print("No valid JobId entered, teleport cancelled.")
+        end
     end
 })
 
