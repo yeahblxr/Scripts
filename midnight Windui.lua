@@ -139,6 +139,168 @@ local Button = Tab:Button({
 })
 
 
+local Tab = Window:Tab({
+    Title = "Player",
+    Icon = "user",
+    Locked = false,
+})
+
+local Slider = Tab:Slider({
+    Title = "Walkspeed",
+    
+    -- To make float number supported, 
+    -- make the Step a float number.
+    -- example: Step = 0.1
+    Step = 2,
+    
+    Value = {
+        Min = 1,
+        Max = 500,
+        Default = 16,
+    },
+    Callback = function(value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+    end
+})
+
+local Slider = Tab:Slider({
+    Title = "Jumppower",
+    
+    -- To make float number supported, 
+    -- make the Step a float number.
+    -- example: Step = 0.1
+    Step = 10,
+    
+    Value = {
+        Min = 1,
+        Max = 1000,
+        Default = 50,
+    },
+    Callback = function(value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    end
+})
+-- Inf Jump start
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+-- keep track of the connection so we can disconnect it
+local infiniteJumpConnection
+
+local Toggle = Tab:Toggle({
+    Title = "Infinite Jump",
+    Desc = "Allows you jump in the air",
+    Icon = "infinity",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(enabled) 
+        if enabled then
+            -- if already connected, avoid double-connecting
+            if infiniteJumpConnection then return end
+
+            infiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
+                local character = localPlayer.Character
+                if not character then return end
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.Health > 0 then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        else
+            -- disable: disconnect the listener
+            if infiniteJumpConnection then
+                infiniteJumpConnection:Disconnect()
+                infiniteJumpConnection = nil
+            end
+        end
+    end,
+})
+
+-- Respawn at Death area script start
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local deathPosition = nil
+local characterAddedConnection = nil
+local deathConnections = {} -- track humanoid.Died connections per character
+
+local function onCharacterDied(character)
+    if not character then return end
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        deathPosition = hrp.Position
+    end
+end
+
+local function cleanupCharacterConnections(character)
+    if deathConnections[character] then
+        deathConnections[character]:Disconnect()
+        deathConnections[character] = nil
+    end
+end
+
+local function onCharacterAdded(character)
+    -- ensure previous connections for this character are cleaned (safety)
+    cleanupCharacterConnections(character)
+
+    local humanoid = character:WaitForChild("Humanoid")
+    -- connect death listener and store it
+    deathConnections[character] = humanoid.Died:Connect(function()
+        onCharacterDied(character)
+    end)
+
+    -- if we have a stored deathPosition (and toggle is still on), teleport
+    if deathPosition then
+        local hrp = character:WaitForChild("HumanoidRootPart")
+        if hrp then
+            -- small upward offset so they don't get stuck
+            hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
+        end
+    end
+
+    -- clean up when character is removed/replaced
+    character.AncestryChanged:Connect(function(_, parent)
+        if not parent then
+            cleanupCharacterConnections(character)
+        end
+    end)
+end
+
+-- Toggle
+local Toggle = Tab:Toggle({
+    Title = "Respawn At death point",
+    Desc = "Respawns you at the area where you died",
+    Icon = "rotate-ccw",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(enabled) 
+        if enabled then
+            -- start tracking
+            deathPosition = nil -- reset any old death position
+            characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+        else
+            -- stop tracking and clear state
+            if characterAddedConnection then
+                characterAddedConnection:Disconnect()
+                characterAddedConnection = nil
+            end
+            deathPosition = nil
+            -- clean up any existing per-character death listeners
+            for character, conn in pairs(deathConnections) do
+                if conn then
+                    conn:Disconnect()
+                end
+                deathConnections[character] = nil
+            end
+        end
+    end,
+})
+
+
 
 
 
