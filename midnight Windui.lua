@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.3.0",
+    Title = "Beta 0.9.3.1",
     Color = Color3.fromHex("#663399")
 })
 
@@ -396,43 +396,36 @@ local Button = Tab:Button({
     end
 })
 
-
+-- Moon Gravity
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-local humanoid = nil
-
 local originalJumpPower
 local originalGravity = workspace.Gravity
 
--- Function to enable or disable moon gravity
 local function toggleMoonGravity(state)
     local character = player.Character or player.CharacterAdded:Wait()
-    humanoid = character:WaitForChild("Humanoid")
+    local humanoid = character:WaitForChild("Humanoid")
 
     if state then
-        -- Save original jump power
         originalJumpPower = humanoid.JumpPower
-
-        -- Apply moon gravity
-        workspace.Gravity = 50 -- Default is 196.2; 50 is like low gravity
+        workspace.Gravity = 50
     else
-        -- Reset to default
         workspace.Gravity = originalGravity
         humanoid.JumpPower = originalJumpPower or 50
     end
 end
 
--- Rayfield Toggle
 local Toggle = Tab:Toggle({
     Title = "Moon Gravity",
     Desc = "Lowers gravity to make it look like your on the moon",
     Icon = "moon",
     Type = "Checkbox",
     Default = false,
-    Callback = function(value) 
-        toggleMoonGravity(Value)
+    Callback = function(value)
+        toggleMoonGravity(value)
     end,
 })
+
 
 
 local Button = Tab:Button({
