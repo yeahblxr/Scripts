@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.2.4",
+    Title = "Beta 0.9.2.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -312,9 +312,9 @@ end
 local initialFov = clamp(tonumber(workspace.CurrentCamera.FieldOfView) or 70, 70, 120)
 
 local Input = Tab:Input({
-    Title = "Input",
-    Desc = "Input Description",
-    Value = "70",
+    Title = "Fov Changer",
+    Desc = "Change your fov (70-120)",
+    Value = tostring(initialFov),
     InputIcon = "file-json",
     Type = "Input", -- or "Textarea"
     Placeholder = "Enter Fov (70-120)",
