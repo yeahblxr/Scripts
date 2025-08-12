@@ -1,5 +1,19 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
+WindUI:SetNotificationLower(true)
+
+WindUI:AddTheme({
+    Name = "Midnight",
+    Accent = "#a855f7",
+    Dialog = "#ffbdfd",
+    Outline = "#6b21a8",
+    Text = "#f3e8ff",
+    Placeholder = "#d8b4fe",
+    Background = "#2e004f",
+    Button = "#9333ea",
+    Icon = "#e9d5ff",
+})
+
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
@@ -8,7 +22,7 @@ local Window = WindUI:CreateWindow({
     Folder = "Midnight Hub",
     Size = UDim2.fromOffset(580, 360),
     Transparent = true,
-    Theme = "Dark",
+    Theme = "Midnight",
     Resizable = true,
     SideBarWidth = 200,
     Background = "",
@@ -35,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.5",
+    Title = "Beta 0.6",
     Color = Color3.fromHex("#663399")
 })
 
