@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.2.2",
+    Title = "Beta 0.9.2.3",
     Color = Color3.fromHex("#663399")
 })
 
@@ -299,6 +299,72 @@ local Toggle = Tab:Toggle({
         end
     end,
 })
+
+-- Fov Changer script start
+-- helper clamp in case Rayfield or environment doesn't have one
+local function clamp(val, min, max)
+    if val < min then return min end
+    if val > max then return max end
+    return val
+end
+
+-- initialize with current FOV (clamped to allowed range)
+local initialFov = clamp(tonumber(workspace.CurrentCamera.FieldOfView) or 70, 70, 120)
+
+local Input = Tab:Input({
+    Title = "Input",
+    Desc = "Input Description",
+    Value = "Default value",
+    InputIcon = "file-json",
+    Type = "Input", -- or "Textarea"
+    Placeholder = "Enter Fov (70-120)",
+    Callback = function(Text) 
+        local num = tonumber(Text)
+        if not num then
+            WindUI:Notify({
+                Title = "Invalid Value",
+                Content = "Please enter a number between 70 and 120.",
+                Duration = 2,
+                Icon = "ban"
+            })
+            return
+        end
+
+        local newFov = clamp(num, 70, 120)
+        workspace.CurrentCamera.FieldOfView = newFov
+
+        -- if the user entered out-of-range, you can reflect the clamped value back
+        if newFov ~= num then
+            -- optional: update the input display if API supports it
+            -- e.g., if there's a SetValue method: Input:SetValue(tostring(newFov))
+            WindUI:Notify({
+                Title = "FOV Adjusted",
+                Content = string.format("FOV was clamped to %d (range is 70–120).", newFov),
+                Duration = 3.5,
+                Icon = "ban",
+            })
+        else
+            WindUI:Notify({
+                Title = "FOV Changed",
+                Content = string.format("FOV has been changed to %d", newFov),
+                Duration = 3.5,
+                Icon = "check"
+            })
+        end
+    end,
+})
+
+local Tab = Window:Tab({
+    Title = "Fun Scripts",
+    Icon = "joystick",
+    Locked = false,
+})
+
+
+
+
+
+
 
 
 
