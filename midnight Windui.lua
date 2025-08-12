@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.3.3",
+    Title = "Beta 0.9.3.4",
     Color = Color3.fromHex("#663399")
 })
 
@@ -384,15 +384,6 @@ local Button = Tab:Button({
     Locked = false,
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Edge.lua"))()
-    end
-})
-
-local Button = Tab:Button({
-    Title = "Fling All",
-    Desc = "(Needs Player Colisions)",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/zqyDSUWX"))()
     end
 })
 
