@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.5.3",
+    Title = "Beta 0.9.5.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -82,12 +82,6 @@ local Dialog = Window:Dialog({
             Title = "Confirm",
             Callback = function()
                 print("Confirmed!")
-            end,
-        },
-        {
-            Title = "Cancel",
-            Callback = function()
-                print("Cancelled!")
             end,
         },
     },
