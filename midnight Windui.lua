@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "Beta 0.9.6.4",
+    Title = "Beta 0.9.6.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -994,29 +994,50 @@ local Tab = Window:Tab({
 
 local jobId = game.JobId or "Unknown"
 
-local Paragraph = Tab:Paragraph({
-    Title = "Server Job ID",
-    Desc = "Unique ID for this server instance",
-    Content = jobId,
-    Color = "Black",
-    Image = "",
-    ImageSize = 0,
-    Thumbnail = "",
-    ThumbnailSize = 0,
+local Button = Tab:Button({
+    Title = "Copy Server Job ID",
+    Desc = "Copies the current server Job ID to your clipboard",
     Locked = false,
-    Buttons = {
-        {
-            Icon = "clipboard",
-            Title = "Copy",
-            Callback = function()
-                if setclipboard then
-                    setclipboard(jobId)
-                end
-            end,
-        }
-    }
+    Callback = function()
+        if setclipboard then
+            setclipboard(jobId)
+            WindUI:Notify({
+    Title = "Copied",
+    Content = "Jobid Copied to Clipboard",
+    Duration = 3, -- 3 seconds
+    Icon = "clipboard-check",
+})
+        else
+                        WindUI:Notify({
+    Title = "Failed",
+    Content = "Copy Failed",
+    Duration = 3, -- 3 seconds
+    Icon = "clipboard-x",
+})
+        end
+    end
 })
 
+local Input = Tab:Input({
+    Title = "Join Server",
+    Desc = "Join a server with a jobID",
+    Value = "JobId",
+    InputIcon = "id-card",
+    Type = "Input", -- or "Textarea"
+    Placeholder = "JobId",
+    Callback = function(Text) 
+        local JobIdTextBoxValue = "Text" -- Store the textbox value i guess CHANGE THIS that is just an example
+local placeId = game.PlaceId -- Get the current place ID of the game 
+ 
+
+local jobId = JobIdTextBoxValue
+if jobId ~= "" then
+    local success, errorMessage = pcall(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(placeId, jobId, game.Players.LocalPlayer) -- teleports i hope nothing goes wrong
+    end)
+end
+    end
+})
 
 
 -- Ensure character/player is loaded (if this runs very early)
