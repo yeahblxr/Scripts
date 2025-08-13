@@ -24,7 +24,6 @@ bg.BackgroundTransparency = 1
 bg.ZIndex = 0
 TweenService:Create(bg, TweenInfo.new(0.5), {BackgroundTransparency = 0.3}):Play()
 
--- ðŸ”¥ Ø§Ù„Ù„ÙˆØ¬Ùˆ Ø§Ù„Ù…ØªØ­Ø±Ùƒ
 local logo = Instance.new("ImageLabel", frame)
 logo.Image = "rbxassetid://119615372248548"
 logo.Size = UDim2.new(0, 150, 0, 150)
@@ -37,11 +36,7 @@ logo.Rotation = 0
 TweenService:Create(
     logo,
     TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-    {
-        ImageTransparency = 0,
-        Size = UDim2.new(0, 200, 0, 200),
-        Rotation = 15
-    }
+    {ImageTransparency = 0, Size = UDim2.new(0, 200, 0, 200), Rotation = 15}
 ):Play()
 
 task.delay(
@@ -50,14 +45,10 @@ task.delay(
         TweenService:Create(
             logo,
             TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-            {
-                Size = UDim2.new(0, 150, 0, 150),
-                Rotation = 0
-            }
+            {Size = UDim2.new(0, 150, 0, 150), Rotation = 0}
         ):Play()
     end
 )
-
 
 local word = "Midnight Hub"
 local letters = {}
@@ -74,9 +65,13 @@ local function tweenOutAndDestroy()
     blur:Destroy()
 end
 
-task.wait(1) 
+task.wait(1)
 
-for i = 1, #word do
+local maxWidth = 500 -- total width of the word in pixels
+local letterCount = #word
+local spacing = maxWidth / letterCount -- dynamic spacing
+
+for i = 1, letterCount do
     local char = word:sub(i, i)
 
     local label = Instance.new("TextLabel")
@@ -87,20 +82,20 @@ for i = 1, #word do
     label.TextTransparency = 1
     label.TextScaled = false
     label.TextSize = 30
-    label.Size = UDim2.new(0, 60, 0, 60)
+    label.Size = UDim2.new(0, 50, 0, 50)
     label.AnchorPoint = Vector2.new(0.5, 0.5)
-    label.Position = UDim2.new(0.5, (i - (#word / 2 + 0.5)) * 65, 0.6, 0)
+
+    -- dynamic horizontal positioning
+    label.Position = UDim2.new(0.5, (i - (letterCount / 2 + 0.5)) * spacing, 0.6, 0)
+
     label.BackgroundTransparency = 1
     label.Parent = frame
 
     local gradient = Instance.new("UIGradient")
-    gradient.Color =
-        ColorSequence.new(
-        {
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)), 
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245)) 
-        }
-    )
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
+    })
     gradient.Rotation = 90
     gradient.Parent = label
 
