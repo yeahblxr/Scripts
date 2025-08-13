@@ -1,4 +1,4 @@
--- Custom draggable toggle for Midnight Hub
+-- Make sure the button is created after the Window is fully initialized
 local gui = Instance.new("ScreenGui")
 gui.Name = "StrikeXMenuGUI"
 gui.IgnoreGuiInset = true
@@ -24,16 +24,15 @@ stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 stroke.Parent = button
 
 local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new {
+gradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
 }
 gradient.Rotation = 45
 gradient.Parent = stroke
 
--- Dragging logic
+-- Dragging setup
 local dragging, dragInput, dragStart, startPos
-
 button.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
@@ -58,26 +57,28 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
     if input == dragInput and dragging then
         local delta = input.Position - dragStart
         button.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
         )
     end
 end)
 
--- Open/Close control
+-- Make sure the window is ready before toggling
 local opened = true
 button.MouseButton1Click:Connect(function()
-    if opened then
-        pcall(function() Window:Close() end)
-    else
-        pcall(function() Window:Open() end)
-    end
     opened = not opened
+    if opened then
+        if typeof(Window.Open) == "function" then
+            Window:Open()
+        end
+    else
+        if typeof(Window.Close) == "function" then
+            Window:Close()
+        end
+    end
 end)
 
--- Clean up when Window is destroyed
+-- Cleanup if WindUI window is destroyed
 Window:OnDestroy(function()
     gui:Destroy()
 end)
