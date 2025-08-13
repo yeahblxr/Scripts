@@ -49,7 +49,7 @@ local Window = WindUI:CreateWindow({
     },
 })
 
--- Create a small draggable GUI button to toggle the Midnight Hub window
+-- Make sure the button is created after the Window is fully initialized
 local gui = Instance.new("ScreenGui")
 gui.Name = "StrikeXMenuGUI"
 gui.IgnoreGuiInset = true
@@ -114,12 +114,18 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
     end
 end)
 
--- Toggle the WindUI window visibility
-local opened = true -- starts opened
+-- Make sure the window is ready before toggling
+local opened = true
 button.MouseButton1Click:Connect(function()
     opened = not opened
-    if Window.Frame then
-        Window.Frame.Visible = opened
+    if opened then
+        if typeof(Window.Open) == "function" then
+            Window:Open()
+        end
+    else
+        if typeof(Window.Close) == "function" then
+            Window:Close()
+        end
     end
 end)
 
@@ -129,8 +135,9 @@ Window:OnDestroy(function()
 end)
 
 
+
 Window:Tag({
-    Title = "V1.2.5",
+    Title = "V1.2.6",
     Color = Color3.fromHex("#663399")
 })
 
