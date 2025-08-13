@@ -41,7 +41,7 @@ local Window = WindUI:CreateWindow({
         Key = { "Midnight" },
         Note = "If you remember the old script key, it's the same. (Join Discord for the key) ",
         Thumbnail = {
-            Image = "rbxassetid://117617062603739",
+            Image = "rbxassetid://119615372248548",
             Title = "Midnight Hub Key",
         },
         URL = "https://discord.gg/Yqak7y7DYT",
@@ -50,7 +50,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "V1.0.0",
+    Title = "V1.1.0",
     Color = Color3.fromHex("#663399")
 })
 
