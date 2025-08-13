@@ -26,7 +26,7 @@ TweenService:Create(bg, TweenInfo.new(0.5), {BackgroundTransparency = 0.3}):Play
 
 -- ðŸ”¥ Ø§Ù„Ù„ÙˆØ¬Ùˆ Ø§Ù„Ù…ØªØ­Ø±Ùƒ
 local logo = Instance.new("ImageLabel", frame)
-logo.Image = "rbxassetid://132532204774331"
+logo.Image = "rbxassetid://71280734460618"
 logo.Size = UDim2.new(0, 150, 0, 150)
 logo.Position = UDim2.new(0.5, 0, 0.3, 0)
 logo.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -97,8 +97,8 @@ for i = 1, #word do
     gradient.Color =
         ColorSequence.new(
         {
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)), 
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 0, 0)) 
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(46, 0, 79)), 
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(136, 98, 163)) 
         }
     )
     gradient.Rotation = 90
