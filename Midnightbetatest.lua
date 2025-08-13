@@ -49,10 +49,8 @@ local Window = WindUI:CreateWindow({
     },
 })
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-opener.lua"))()
-
 Window:Tag({
-    Title = "V1.2.2",
+    Title = "V1.2.3",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1163,3 +1161,5 @@ WindUI:Notify({
     Duration = 3,
     Icon = "user-check",
 })
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-opener.lua"))()
