@@ -49,24 +49,13 @@ local Window = WindUI:CreateWindow({
     },
 })
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
+
 Window:Tag({
-    Title = "V1.1.0",
+    Title = "V1.2.1",
     Color = Color3.fromHex("#663399")
 })
 
-Window:EditOpenButton({
-    Title = "Midnight Hub",
-    Icon = "moon",
-    CornerRadius = UDim.new(0,16),
-    StrokeThickness = 2,
-    Color = ColorSequence.new( -- gradient
-        Color3.fromHex("523F77"), 
-        Color3.fromHex("663399")
-    ),
-    OnlyMobile = false,
-    Enabled = true,
-    Draggable = true,
-})
 
 local Tab = Window:Tab({
     Title = "Home",
