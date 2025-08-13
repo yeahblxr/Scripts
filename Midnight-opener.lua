@@ -1,5 +1,5 @@
-
-    local gui = Instance.new("ScreenGui")
+-- Custom draggable toggle for Midnight Hub
+local gui = Instance.new("ScreenGui")
 gui.Name = "StrikeXMenuGUI"
 gui.IgnoreGuiInset = true
 gui.ResetOnSpawn = false
@@ -24,76 +24,60 @@ stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 stroke.Parent = button
 
 local gradient = Instance.new("UIGradient")
-gradient.Color =
-    ColorSequence.new {
+gradient.Color = ColorSequence.new {
     ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
 }
 gradient.Rotation = 45
 gradient.Parent = stroke
 
+-- Dragging logic
 local dragging, dragInput, dragStart, startPos
 
-button.InputBegan:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = button.Position
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = button.Position
 
-            input.Changed:Connect(
-                function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragging = false
-                    end
-                end
-            )
-        end
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
     end
-)
+end)
 
-button.InputChanged:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
+button.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
     end
-)
+end)
 
-game:GetService("UserInputService").InputChanged:Connect(
-    function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            button.Position =
-                UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        button.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
     end
-)
+end)
 
-local opened = false
-
-button.MouseButton1Click:Connect(
-    function()
-        if opened == false then
-            opened = true
-            pcall(
-                function()
-                    Window:Close()
-                end
-            )
-        else
-            opened = false
-            pcall(
-                function()
-                    Window:Open()
-                end
-            )
-        end
+-- Open/Close control
+local opened = true
+button.MouseButton1Click:Connect(function()
+    if opened then
+        pcall(function() Window:Close() end)
+    else
+        pcall(function() Window:Open() end)
     end
-)
+    opened = not opened
+end)
 
-Window:OnDestroy(
-    function()
-        gui:Destroy()
-    end
-)
+-- Clean up when Window is destroyed
+Window:OnDestroy(function()
+    gui:Destroy()
+end)
