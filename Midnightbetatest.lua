@@ -149,7 +149,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "New UI, Egor Script, you can now select who you want to fling",
+    Content = "Added new intro animation, added a custom button to toggle GUI (don't use minimize button, use the toggle)",
     Buttons = {
         {
             Title = "Continue",
