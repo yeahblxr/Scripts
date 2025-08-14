@@ -49,6 +49,10 @@ local Window = WindUI:CreateWindow({
     },
 })
 
+Window:EditOpenButton({
+    Enabled = false
+})
+
 -- Make sure the button is created after the Window is fully initialized
 local gui = Instance.new("ScreenGui")
 gui.Name = "StrikeXMenuGUI"
@@ -135,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.2.8",
+    Title = "V1.2.9",
     Color = Color3.fromHex("#663399")
 })
 
