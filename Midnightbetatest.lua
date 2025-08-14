@@ -153,7 +153,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Added new intro animation, added a custom button to toggle GUI (don't use minimize button, use the toggle)",
+    Content = "Added new intro animation, added a custom button to toggle GUI",
     Buttons = {
         {
             Title = "Continue",
