@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.2.9",
+    Title = "V1.3.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -153,7 +153,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Added new intro animation, added a custom button to toggle GUI",
+    Content = "Added skip button to intro for impatient people",
     Buttons = {
         {
             Title = "Continue",
