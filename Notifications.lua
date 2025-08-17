@@ -1,4 +1,4 @@
--- V1
+-- V2
 local TweenService = game:GetService("TweenService")
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -6,7 +6,7 @@ ScreenGui.Name = "NotificationGui"
 ScreenGui.Parent = game.CoreGui
 
 local CONFIG = {
-    Duration = 10,
+    Duration = 4,
     Position = UDim2.new(1, -20, 0, 20),
     Size = UDim2.new(0, 350, 0, 70),
     BackgroundColor = Color3.fromRGB(20,0,55),
@@ -135,7 +135,7 @@ local function CreateNotification()
     titleLabel.TextSize = CONFIG.TextSize
     titleLabel.TextColor3 = CONFIG.TextColor
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    titleLabel.Text = "Notification"
+    titleLabel.Text = "Loaded!"
     titleLabel.TextTransparency = 1
     titleLabel.Parent = contentContainer
     
@@ -148,7 +148,7 @@ local function CreateNotification()
     messageLabel.TextSize = CONFIG.TextSize - 2
     messageLabel.TextColor3 = CONFIG.TextColor
     messageLabel.TextXAlignment = Enum.TextXAlignment.Left
-    messageLabel.Text = "My dick entered in your ass"
+    messageLabel.Text = "Midnight Hub has Loaded"
     messageLabel.TextTransparency = 1
     messageLabel.Parent = contentContainer
     
