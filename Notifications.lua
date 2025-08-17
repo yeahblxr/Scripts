@@ -1,3 +1,4 @@
+-- V1
 local TweenService = game:GetService("TweenService")
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -8,9 +9,9 @@ local CONFIG = {
     Duration = 10,
     Position = UDim2.new(1, -20, 0, 20),
     Size = UDim2.new(0, 350, 0, 70),
-    BackgroundColor = Color3.fromRGB(0, 0, 0),
+    BackgroundColor = Color3.fromRGB(20,0,55),
     TextColor = Color3.fromRGB(255, 255, 255),
-    AccentColor = Color3.fromRGB(118, 185, 0),
+    AccentColor = Color3.fromRGB(150,76,247),
     Font = Enum.Font.GothamBold,
     TextSize = 16,
     ParticleConfig = {
