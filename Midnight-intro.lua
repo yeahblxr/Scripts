@@ -24,6 +24,32 @@ bg.BackgroundTransparency = 1
 bg.ZIndex = 0
 TweenService:Create(bg, TweenInfo.new(0.5), {BackgroundTransparency = 0.3}):Play()
 
+-- SKIP BUTTON
+local skipButton = Instance.new("TextButton", frame)
+skipButton.Size = UDim2.new(0, 100, 0, 40)
+skipButton.Position = UDim2.new(1, -110, 0, 10) -- top-right corner
+skipButton.AnchorPoint = Vector2.new(0, 0)
+skipButton.Text = "Skip"
+skipButton.Font = Enum.Font.GothamBold
+skipButton.TextSize = 20
+skipButton.TextColor3 = Color3.new(1, 1, 1)
+skipButton.BackgroundTransparency = 0
+skipButton.AutoButtonColor = true
+skipButton.ZIndex = 10
+
+-- Rounded corners
+local corner = Instance.new("UICorner", skipButton)
+corner.CornerRadius = UDim.new(0, 12)
+
+-- Gradient background (same as logo letters)
+local gradient = Instance.new("UIGradient", skipButton)
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
+})
+gradient.Rotation = 90
+
+-- LOGO
 local logo = Instance.new("ImageLabel", frame)
 logo.Image = "rbxassetid://119615372248548"
 logo.Size = UDim2.new(0, 150, 0, 150)
@@ -53,17 +79,23 @@ task.delay(
 local word = "Midnight Hub"
 local letters = {}
 
-local function tweenOutAndDestroy()
+function tweenOutAndDestroy()
     for _, label in ipairs(letters) do
         TweenService:Create(label, TweenInfo.new(0.3), {TextTransparency = 1, TextSize = 20}):Play()
     end
     TweenService:Create(bg, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
     TweenService:Create(blur, TweenInfo.new(0.5), {Size = 0}):Play()
     TweenService:Create(logo, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
+    TweenService:Create(skipButton, TweenInfo.new(0.5), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
     wait(0.6)
     screenGui:Destroy()
     blur:Destroy()
 end
+
+-- Skip instantly ends intro
+skipButton.MouseButton1Click:Connect(function()
+    tweenOutAndDestroy()
+end)
 
 task.wait(1)
 
