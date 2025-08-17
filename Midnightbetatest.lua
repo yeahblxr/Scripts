@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.0",
+    Title = "V1.3.1",
     Color = Color3.fromHex("#663399")
 })
 
@@ -153,7 +153,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Added skip button to intro for impatient people",
+    Content = "Added skip button to intro for impatient people, added new notification when script fully loads, removed some notifications when you load in too.",
     Buttons = {
         {
             Title = "Continue",
@@ -430,13 +430,6 @@ local Input = Tab:Input({
                 Icon = "ban",
             })
         else
-            WindUI:Notify({
-                Title = "FOV Changed",
-                Content = string.format("FOV has been changed to %d", newFov),
-                Duration = 3.5,
-                Icon = "check"
-            })
-        end
     end,
 })
 
@@ -1020,12 +1013,6 @@ local Input = Tab:Input({
     Placeholder = "Enter fps cap",
     Callback = function(text) 
         setfpscap(text)
-            WindUI:Notify({
-    Title = "Fps cap changed",
-    Content = "Fps cap has been set!",
-    Duration = 3, -- 3 seconds
-    Icon = "pencil-line",
-})
     end
 })
 
@@ -1234,20 +1221,4 @@ local Button = Tab:Button({
     end
 })
 
--- Ensure character/player is loaded (if this runs very early)
-if not player then
-    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
-    player = Players.LocalPlayer
-end
-
-local nameToShow = player.DisplayName
--- Optional: if you want the actual username instead of/displayName fallback:
--- local nameToShow = player.DisplayName ~= "" and player.DisplayName or player.Name
-
-WindUI:Notify({
-    Title = "Midnight Hub Loaded",
-    Content = ("Greetings, %s!"):format(nameToShow),
-    Duration = 3,
-    Icon = "user-check",
-})
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Notifications.lua"))()
