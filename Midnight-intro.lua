@@ -1,4 +1,4 @@
--- V1
+-- v2
 wait(1)
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -34,7 +34,8 @@ skipButton.Text = "Skip"
 skipButton.Font = Enum.Font.GothamBold
 skipButton.TextSize = 20
 skipButton.TextColor3 = Color3.new(1, 1, 1)
-skipButton.BackgroundTransparency = 0
+skipButton.BackgroundTransparency = 1 -- start invisible
+skipButton.TextTransparency = 1       -- start invisible
 skipButton.AutoButtonColor = true
 skipButton.ZIndex = 10
 
@@ -49,6 +50,11 @@ gradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
 })
 gradient.Rotation = 90
+
+-- Fade in Skip button after 0.5s
+task.delay(0.5, function()
+    TweenService:Create(skipButton, TweenInfo.new(0.6), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+end)
 
 -- LOGO
 local logo = Instance.new("ImageLabel", frame)
@@ -69,18 +75,17 @@ TweenService:Create(
 task.delay(
     0.5,
     function()
-        if logo.Parent then
-            TweenService:Create(
-                logo,
-                TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-                {Size = UDim2.new(0, 150, 0, 150), Rotation = 0}
-            ):Play()
-        end
+        TweenService:Create(
+            logo,
+            TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0, 150, 0, 150), Rotation = 0}
+        ):Play()
     end
 )
 
 local word = "Midnight Hub"
 local letters = {}
+local skipped = false -- track if skip was pressed
 
 function tweenOutAndDestroy()
     for _, label in ipairs(letters) do
@@ -90,63 +95,62 @@ function tweenOutAndDestroy()
     TweenService:Create(blur, TweenInfo.new(0.5), {Size = 0}):Play()
     TweenService:Create(logo, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
     TweenService:Create(skipButton, TweenInfo.new(0.5), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
-    task.wait(0.6)
-    if screenGui then screenGui:Destroy() end
-    if blur then blur:Destroy() end
+    wait(0.6)
+    screenGui:Destroy()
+    blur:Destroy()
 end
 
 -- Skip instantly ends intro
 skipButton.MouseButton1Click:Connect(function()
-    tweenOutAndDestroy()
-end)
-
--- Run intro in its own thread (non-blocking)
-task.spawn(function()
-    task.wait(1)
-
-    local maxWidth = 500 -- total width of the word in pixels
-    local letterCount = #word
-    local spacing = maxWidth / letterCount -- dynamic spacing
-
-    for i = 1, letterCount do
-        if not screenGui.Parent then return end -- stop if skipped
-        local char = word:sub(i, i)
-
-        local label = Instance.new("TextLabel")
-        label.Text = char
-        label.Font = Enum.Font.GothamBlack
-        label.TextColor3 = Color3.new(1, 1, 1)
-        label.TextStrokeTransparency = 1
-        label.TextTransparency = 1
-        label.TextScaled = false
-        label.TextSize = 30
-        label.Size = UDim2.new(0, 50, 0, 50)
-        label.AnchorPoint = Vector2.new(0.5, 0.5)
-
-        -- dynamic horizontal positioning
-        label.Position = UDim2.new(0.5, (i - (letterCount / 2 + 0.5)) * spacing, 0.6, 0)
-
-        label.BackgroundTransparency = 1
-        label.Parent = frame
-
-        local gradient = Instance.new("UIGradient")
-        gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
-        })
-        gradient.Rotation = 90
-        gradient.Parent = label
-
-        local tweenIn = TweenService:Create(label, TweenInfo.new(0.3), {TextTransparency = 0, TextSize = 60})
-        tweenIn:Play()
-
-        table.insert(letters, label)
-        task.wait(0.25)
-    end
-
-    -- instead of blocking wait, check if still alive
-    if screenGui.Parent then
-        task.wait(2.5)
+    if not skipped then
+        skipped = true
         tweenOutAndDestroy()
     end
 end)
+
+task.wait(1)
+
+local maxWidth = 500 -- total width of the word in pixels
+local letterCount = #word
+local spacing = maxWidth / letterCount -- dynamic spacing
+
+for i = 1, letterCount do
+    local char = word:sub(i, i)
+
+    local label = Instance.new("TextLabel")
+    label.Text = char
+    label.Font = Enum.Font.GothamBlack
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.TextStrokeTransparency = 1
+    label.TextTransparency = 1
+    label.TextScaled = false
+    label.TextSize = 30
+    label.Size = UDim2.new(0, 50, 0, 50)
+    label.AnchorPoint = Vector2.new(0.5, 0.5)
+
+    -- dynamic horizontal positioning
+    label.Position = UDim2.new(0.5, (i - (letterCount / 2 + 0.5)) * spacing, 0.6, 0)
+
+    label.BackgroundTransparency = 1
+    label.Parent = frame
+
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
+    })
+    gradient.Rotation = 90
+    gradient.Parent = label
+
+    local tweenIn = TweenService:Create(label, TweenInfo.new(0.3), {TextTransparency = 0, TextSize = 60})
+    tweenIn:Play()
+
+    table.insert(letters, label)
+    wait(0.25)
+end
+
+-- automatic outro if skip not pressed
+task.wait(2.5)
+if not skipped then
+    tweenOutAndDestroy()
+end
