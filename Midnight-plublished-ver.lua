@@ -1,3 +1,4 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:SetNotificationLower(true)
@@ -40,7 +41,7 @@ local Window = WindUI:CreateWindow({
         Key = { "Midnight" },
         Note = "If you remember the old script key, it's the same. (Join Discord for the key) ",
         Thumbnail = {
-            Image = "rbxassetid://117617062603739",
+            Image = "rbxassetid://119615372248548",
             Title = "Midnight Hub Key",
         },
         URL = "https://discord.gg/Yqak7y7DYT",
@@ -48,24 +49,100 @@ local Window = WindUI:CreateWindow({
     },
 })
 
+Window:EditOpenButton({
+    Enabled = false
+})
+
+-- Make sure the button is created after the Window is fully initialized
+local gui = Instance.new("ScreenGui")
+gui.Name = "StrikeXMenuGUI"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
+
+local button = Instance.new("ImageButton")
+button.Size = UDim2.new(0, 60, 0, 60)
+button.Position = UDim2.new(0, 70, 0, 70)
+button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+button.Image = "rbxassetid://119615372248548"
+button.Name = "StrikeXToggle"
+button.AutoButtonColor = true
+button.Parent = gui
+
+local corner = Instance.new("UICorner", button)
+corner.CornerRadius = UDim.new(0, 12)
+
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 2
+stroke.Color = Color3.fromRGB(20, 0, 54)
+stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+stroke.Parent = button
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
+}
+gradient.Rotation = 45
+gradient.Parent = stroke
+
+-- Dragging setup
+local dragging, dragInput, dragStart, startPos
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = button.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+button.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        button.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Make sure the window is ready before toggling
+local opened = true
+button.MouseButton1Click:Connect(function()
+    opened = not opened
+    if opened then
+        if typeof(Window.Open) == "function" then
+            Window:Open()
+        end
+    else
+        if typeof(Window.Close) == "function" then
+            Window:Close()
+        end
+    end
+end)
+
+-- Cleanup if WindUI window is destroyed
+Window:OnDestroy(function()
+    gui:Destroy()
+end)
+
 Window:Tag({
-    Title = "V1.0.0",
+    Title = "V1.3.2",
     Color = Color3.fromHex("#663399")
 })
 
-Window:EditOpenButton({
-    Title = "Midnight Hub",
-    Icon = "moon",
-    CornerRadius = UDim.new(0,16),
-    StrokeThickness = 2,
-    Color = ColorSequence.new( -- gradient
-        Color3.fromHex("523F77"), 
-        Color3.fromHex("663399")
-    ),
-    OnlyMobile = false,
-    Enabled = true,
-    Draggable = true,
-})
 
 local Tab = Window:Tab({
     Title = "Home",
@@ -76,7 +153,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "New UI, Egor Script, you can now select who you want to fling",
+    Content = "Added skip button to intro for impatient people, added new notification when script fully loads, removed some notifications when you load in too.",
     Buttons = {
         {
             Title = "Continue",
@@ -310,7 +387,7 @@ local Toggle = Tab:Toggle({
 })
 
 -- Fov Changer script start
--- helper clamp in case Rayfield or environment doesn't have one
+-- helper clamp in case WindUI or environment doesn't have one
 local function clamp(val, min, max)
     if val < min then return min end
     if val > max then return max end
@@ -325,8 +402,8 @@ local Input = Tab:Input({
     Desc = "Change your fov (70-120)",
     Value = tostring(initialFov),
     InputIcon = "file-json",
-    Type = "Input", -- or "Textarea"
-    Placeholder = "Enter Fov (70-120)",
+    Type = "Input", -- could also be "Textarea"
+    Placeholder = "Enter FOV (70-120)",
     Callback = function(Text) 
         local num = tonumber(Text)
         if not num then
@@ -342,22 +419,13 @@ local Input = Tab:Input({
         local newFov = clamp(num, 70, 120)
         workspace.CurrentCamera.FieldOfView = newFov
 
-        -- if the user entered out-of-range, you can reflect the clamped value back
+        -- Only show notify if input was out of range and got clamped
         if newFov ~= num then
-            -- optional: update the input display if API supports it
-            -- e.g., if there's a SetValue method: Input:SetValue(tostring(newFov))
             WindUI:Notify({
                 Title = "FOV Adjusted",
                 Content = string.format("FOV was clamped to %d (range is 70–120).", newFov),
                 Duration = 3.5,
-                Icon = "ban",
-            })
-        else
-            WindUI:Notify({
-                Title = "FOV Changed",
-                Content = string.format("FOV has been changed to %d", newFov),
-                Duration = 3.5,
-                Icon = "check"
+                Icon = "alert-triangle",
             })
         end
     end,
@@ -935,20 +1003,24 @@ game:GetService("Lighting").Changed:Connect(removeFog)
 })
 
 local Input = Tab:Input({
-    Title = "Set fps cap",
-    Desc = "Lets you cange the fps cap of Roblox.",
+    Title = "Set FPS Cap",
+    Desc = "Lets you change the FPS cap of Roblox.",
     Value = "60",
     InputIcon = "square-pen",
-    Type = "Input", -- or "Textarea"
-    Placeholder = "Enter fps cap",
+    Type = "Input",
+    Placeholder = "Enter FPS cap",
     Callback = function(text) 
-        setfpscap(text)
+        local num = tonumber(text)
+        if num then
+            setfpscap(num)
+        else
             WindUI:Notify({
-    Title = "Fps cap changed",
-    Content = "Fps cap has been set!",
-    Duration = 3, -- 3 seconds
-    Icon = "pencil-line",
-})
+                Title = "Invalid Value",
+                Content = "Please enter a valid number for the FPS cap.",
+                Duration = 2,
+                Icon = "ban"
+            })
+        end
     end
 })
 
@@ -1157,19 +1229,4 @@ local Button = Tab:Button({
     end
 })
 
--- Ensure character/player is loaded (if this runs very early)
-if not player then
-    Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
-    player = Players.LocalPlayer
-end
-
-local nameToShow = player.DisplayName
--- Optional: if you want the actual username instead of/displayName fallback:
--- local nameToShow = player.DisplayName ~= "" and player.DisplayName or player.Name
-
-WindUI:Notify({
-    Title = "Midnight Hub Loaded",
-    Content = ("Greetings, %s!"):format(nameToShow),
-    Duration = 3,
-    Icon = "user-check",
-})
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Notifications.lua"))()
