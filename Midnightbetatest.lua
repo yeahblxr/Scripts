@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.1",
+    Title = "V1.3.2",
     Color = Color3.fromHex("#663399")
 })
 
@@ -387,7 +387,7 @@ local Toggle = Tab:Toggle({
 })
 
 -- Fov Changer script start
--- helper clamp in case Rayfield or environment doesn't have one
+-- helper clamp in case WindUI or environment doesn't have one
 local function clamp(val, min, max)
     if val < min then return min end
     if val > max then return max end
@@ -402,8 +402,8 @@ local Input = Tab:Input({
     Desc = "Change your fov (70-120)",
     Value = tostring(initialFov),
     InputIcon = "file-json",
-    Type = "Input", -- or "Textarea"
-    Placeholder = "Enter Fov (70-120)",
+    Type = "Input", -- could also be "Textarea"
+    Placeholder = "Enter FOV (70-120)",
     Callback = function(Text) 
         local num = tonumber(Text)
         if not num then
@@ -419,17 +419,15 @@ local Input = Tab:Input({
         local newFov = clamp(num, 70, 120)
         workspace.CurrentCamera.FieldOfView = newFov
 
-        -- if the user entered out-of-range, you can reflect the clamped value back
+        -- Only show notify if input was out of range and got clamped
         if newFov ~= num then
-            -- optional: update the input display if API supports it
-            -- e.g., if there's a SetValue method: Input:SetValue(tostring(newFov))
             WindUI:Notify({
                 Title = "FOV Adjusted",
                 Content = string.format("FOV was clamped to %d (range is 70–120).", newFov),
                 Duration = 3.5,
-                Icon = "ban",
+                Icon = "alert-triangle",
             })
-        else
+        end
     end,
 })
 
@@ -1005,14 +1003,24 @@ game:GetService("Lighting").Changed:Connect(removeFog)
 })
 
 local Input = Tab:Input({
-    Title = "Set fps cap",
-    Desc = "Lets you cange the fps cap of Roblox.",
+    Title = "Set FPS Cap",
+    Desc = "Lets you change the FPS cap of Roblox.",
     Value = "60",
     InputIcon = "square-pen",
-    Type = "Input", -- or "Textarea"
-    Placeholder = "Enter fps cap",
+    Type = "Input",
+    Placeholder = "Enter FPS cap",
     Callback = function(text) 
-        setfpscap(text)
+        local num = tonumber(text)
+        if num then
+            setfpscap(num)
+        else
+            WindUI:Notify({
+                Title = "Invalid Value",
+                Content = "Please enter a valid number for the FPS cap.",
+                Duration = 2,
+                Icon = "ban"
+            })
+        end
     end
 })
 
