@@ -733,7 +733,7 @@ local Button = Tab:Button({
     Desc = "Lets you walk on walls (reset charater after pressed)",
     Locked = false,
     Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Wallwalk.lua"))()
     end
 })
 
