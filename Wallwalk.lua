@@ -1,5 +1,5 @@
 --[[
-v1local _p = game:WaitForChild("Players")
+v2local _p = game:WaitForChild("Players")
 local _plr = _p.ChildAdded:Wait()
 if _plr == _p.LocalPlayer then
 	_plr.ChildAdded:Connect(function(cccc)
@@ -11573,7 +11573,7 @@ local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 250, 0, 120)
 mainFrame.Position = UDim2.new(0, 20, 0, 20)
-mainFrame.BackgroundColor3 = Color3.fromRGB(40, 30, 60) -- Amethyst color
+mainFrame.BackgroundColor3 = Color3.fromRGB(40, 30, 60) -- Amethyst
 mainFrame.BackgroundTransparency = 0.2
 mainFrame.BorderSizePixel = 0
 mainFrame.Active = true
@@ -11586,14 +11586,10 @@ corner.Parent = mainFrame
 -- Title Bar
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1, 0, 0, 30)
-titleBar.BackgroundColor3 = Color3.fromRGB(82, 63, 119) -- Medium orchid amethyst
+titleBar.BackgroundColor3 = Color3.fromRGB(82, 63, 119) -- Medium orchid
 titleBar.BackgroundTransparency = 0.1
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrame
-
-local titleCorner = Instance.new("UICorner")
-titleCorner.CornerRadius = UDim.new(0, 12)
-titleCorner.Parent = titleBar
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, -60, 1, 0)
@@ -11610,7 +11606,7 @@ titleLabel.Parent = titleBar
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 20, 0, 20)
 minimizeBtn.Position = UDim2.new(1, -50, 0, 5)
-minimizeBtn.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Light amethyst
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(83, 64, 120)
 minimizeBtn.BackgroundTransparency = 0.1
 minimizeBtn.BorderSizePixel = 0
 minimizeBtn.Text = "−"
@@ -11627,7 +11623,7 @@ minCorner.Parent = minimizeBtn
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 20, 0, 20)
 closeBtn.Position = UDim2.new(1, -25, 0, 5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(141, 48, 75) -- Purple amethyst
+closeBtn.BackgroundColor3 = Color3.fromRGB(141, 48, 75)
 closeBtn.BackgroundTransparency = 0.1
 closeBtn.BorderSizePixel = 0
 closeBtn.Text = "×"
@@ -11640,12 +11636,12 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeBtn
 
--- Toggle Button (inside frame)
+-- Toggle Button
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "GravityToggleButton"
 toggleButton.Size = UDim2.new(0, 200, 0, 40)
 toggleButton.Position = UDim2.new(0.5, -100, 0, 50)
-toggleButton.BackgroundColor3 = Color3.fromRGB(83, 64, 120) -- Purple amethyst
+toggleButton.BackgroundColor3 = Color3.fromRGB(83, 64, 120)
 toggleButton.BackgroundTransparency = 0.1
 toggleButton.BorderSizePixel = 0
 toggleButton.TextColor3 = Color3.new(1, 1, 1)
@@ -11658,12 +11654,30 @@ local toggleCorner = Instance.new("UICorner")
 toggleCorner.CornerRadius = UDim.new(0, 10)
 toggleCorner.Parent = toggleButton
 
--- Logic (original)
+-- Minimized Box
+local minimizedBox = Instance.new("TextButton")
+minimizedBox.Size = UDim2.new(0, 40, 0, 40)
+minimizedBox.Position = UDim2.new(0, 20, 0, 20)
+minimizedBox.BackgroundColor3 = Color3.fromRGB(40, 30, 60)
+minimizedBox.BackgroundTransparency = 0.2
+minimizedBox.Text = "MH"
+minimizedBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizedBox.Font = Enum.Font.GothamBold
+minimizedBox.TextSize = 16
+minimizedBox.Visible = false
+minimizedBox.Parent = screenGui
+
+local miniCorner = Instance.new("UICorner")
+miniCorner.CornerRadius = UDim.new(0, 10)
+miniCorner.Parent = minimizedBox
+
+-- Logic
 local GravityController = _GravityController()
 local Controller = nil
 
 local function updateButton()
     toggleButton.Text = Controller and "Wallwalking: ON" or "Wallwalking: OFF"
+    toggleButton.TextColor3 = Controller and Color3.fromRGB(100, 255, 100) or Color3.fromRGB(255, 120, 120)
 end
 
 toggleButton.MouseButton1Click:Connect(function()
@@ -11679,23 +11693,23 @@ end)
 
 updateButton()
 
--- Minimize/Close functionality
-local minimized = false
+-- Minimize / Restore
 minimizeBtn.MouseButton1Click:Connect(function()
-    minimized = not minimized
-    for _, child in ipairs(mainFrame:GetChildren()) do
-        if child ~= titleBar then
-            child.Visible = not minimized
-        end
-    end
-    mainFrame.Size = minimized and UDim2.new(0, 250, 0, 30) or UDim2.new(0, 250, 0, 120)
+    mainFrame.Visible = false
+    minimizedBox.Visible = true
 end)
 
+minimizedBox.MouseButton1Click:Connect(function()
+    minimizedBox.Visible = false
+    mainFrame.Visible = true
+end)
+
+-- Close Button
 closeBtn.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
--- Drag functionality (only title bar)
+-- Dragging (only title bar)
 local dragging = false
 local dragStart, startPos
 
@@ -11707,7 +11721,7 @@ titleBar.InputBegan:Connect(function(input)
     end
 end)
 
-titleBar.InputChanged:Connect(function(input)
+UserInputService.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
         local delta = input.Position - dragStart
         mainFrame.Position = UDim2.new(
