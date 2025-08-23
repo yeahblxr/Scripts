@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.3",
+    Title = "V1.3.4",
     Color = Color3.fromHex("#663399")
 })
 
@@ -153,7 +153,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Added walk on walls script in fun scripts (kinda buggy)",
+    Content = "Wallwalk scipt",
     Buttons = {
         {
             Title = "Continue",
@@ -429,14 +429,6 @@ local Input = Tab:Input({
             })
         end
     end,
-})
-
-local Button = Tab:Button({
-    Title = "Walk on walls",
-    Desc = "Creats gui that lets you walk on walls (after pressed reset charater)",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Wallwalk.lua"))()
 })
 
 local Tab = Window:Tab({
