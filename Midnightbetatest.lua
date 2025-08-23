@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.4",
+    Title = "V1.3.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -725,6 +725,15 @@ local Button = Tab:Button({
     Locked = false,
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/DROID-cell-sys/ANTI-UTTP-SCRIPTT/refs/heads/main/EGOR%20SCRIPT%20BY%20ANTI-UTTP"))()
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Wallwalk Gui",
+    Desc = "Lets you walk on walls (reset charater after pressed)",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))()
     end
 })
 
