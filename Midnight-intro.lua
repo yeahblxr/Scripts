@@ -1,4 +1,4 @@
--- v3
+-- v4
 wait(1)
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -86,6 +86,7 @@ task.delay(
 local word = "Midnight Hub"
 local letters = {}
 local skipped = false -- track if skip was pressed
+local introCompleted = false -- track if intro is done
 
 function tweenOutAndDestroy()
     for _, label in ipairs(letters) do
@@ -98,65 +99,70 @@ function tweenOutAndDestroy()
     wait(0.6)
     screenGui:Destroy()
     blur:Destroy()
+    introCompleted = true -- mark as completed
 end
 
 -- Skip instantly ends intro
 skipButton.MouseButton1Click:Connect(function()
-    if not skipped then
+    if not skipped and not introCompleted then
         skipped = true
         tweenOutAndDestroy()
     end
 end)
 
--- Wrap the rest of the intro in a coroutine so it can be interrupted
-coroutine.wrap(function()
-    task.wait(1)
+task.wait(1)
+
+local maxWidth = 500 -- total width of the word in pixels
+local letterCount = #word
+local spacing = maxWidth / letterCount -- dynamic spacing
+
+for i = 1, letterCount do
+    -- Check if skipped before creating each letter
+    if skipped then break end
     
-    local maxWidth = 500 -- total width of the word in pixels
-    local letterCount = #word
-    local spacing = maxWidth / letterCount -- dynamic spacing
+    local char = word:sub(i, i)
 
-    for i = 1, letterCount do
-        -- Check if skipped before creating each letter
-        if skipped then return end
-        
-        local char = word:sub(i, i)
+    local label = Instance.new("TextLabel")
+    label.Text = char
+    label.Font = Enum.Font.GothamBlack
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.TextStrokeTransparency = 1
+    label.TextTransparency = 1
+    label.TextScaled = false
+    label.TextSize = 30
+    label.Size = UDim2.new(0, 50, 0, 50)
+    label.AnchorPoint = Vector2.new(0.5, 0.5)
 
-        local label = Instance.new("TextLabel")
-        label.Text = char
-        label.Font = Enum.Font.GothamBlack
-        label.TextColor3 = Color3.new(1, 1, 1)
-        label.TextStrokeTransparency = 1
-        label.TextTransparency = 1
-        label.TextScaled = false
-        label.TextSize = 30
-        label.Size = UDim2.new(0, 50, 0, 50)
-        label.AnchorPoint = Vector2.new(0.5, 0.5)
+    -- dynamic horizontal positioning
+    label.Position = UDim2.new(0.5, (i - (letterCount / 2 + 0.5)) * spacing, 0.6, 0)
 
-        -- dynamic horizontal positioning
-        label.Position = UDim2.new(0.5, (i - (letterCount / 2 + 0.5)) * spacing, 0.6, 0)
+    label.BackgroundTransparency = 1
+    label.Parent = frame
 
-        label.BackgroundTransparency = 1
-        label.Parent = frame
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
+    })
+    gradient.Rotation = 90
+    gradient.Parent = label
 
-        local gradient = Instance.new("UIGradient")
-        gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 0, 54)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 76, 245))
-        })
-        gradient.Rotation = 90
-        gradient.Parent = label
+    local tweenIn = TweenService:Create(label, TweenInfo.new(0.3), {TextTransparency = 0, TextSize = 60})
+    tweenIn:Play()
 
-        local tweenIn = TweenService:Create(label, TweenInfo.new(0.3), {TextTransparency = 0, TextSize = 60})
-        tweenIn:Play()
+    table.insert(letters, label)
+    wait(0.25)
+end
 
-        table.insert(letters, label)
-        wait(0.25)
-    end
-
-    -- automatic outro if skip not pressed
+-- Only run automatic outro if NOT skipped
+if not skipped then
     task.wait(2.5)
-    if not skipped then
+    if not skipped then -- double check in case skip was pressed during the wait
         tweenOutAndDestroy()
     end
-end)()
+end
+
+-- Wait for intro to be completely finished before continuing
+repeat
+    wait()
+until introCompleted
