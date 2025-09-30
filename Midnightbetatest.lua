@@ -1,4 +1,4 @@
--- ded is good
+-- dataloss
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -146,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.12",
+    Title = "V1.4.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -160,7 +160,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Spectate players, Free private server, Added settings, added configs, removed egor script. (broken)",
+    Content = "Spectate players, Free private server, Added settings, removed egor script. (broken)",
     Buttons = {
         {
             Title = "Continue",
@@ -1414,37 +1414,9 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
-local ConfigManager = Window.ConfigManager
-local myConfig -- define outside so both callbacks can use it
-
-local Input = Tab:Input({
-    Title = "Save Config",
-    Desc = "Set config name",
-    Value = "Config1",
-    InputIcon = "save",
-    Type = "Input",
-    Placeholder = "Enter config name...",
-    Callback = function(input)
-        myConfig = ConfigManager:CreateConfig(input)
-    end
-})
-
-local Dropdown = Tab:Dropdown({
-    Title = "Load Config",
-    Values = ConfigManager:AllConfigs(),
-    Value = "Config1",
-    Callback = function(option)
-        if myConfig then
-            myConfig:Load(option)
-        else
-            WindUI:Notify({
-                Title = "No Config",
-                Content = "Please create a config first.",
-                Duration = 2,
-                Icon = "ban"
-            })
-        end
-    end
+local Section = Tab:Section({ 
+    Title = "Nothing here yet", -- optional
+    Desc = "More features coming soon!", -- optional
 })
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Notifications.lua"))()
