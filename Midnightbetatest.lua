@@ -5,6 +5,13 @@ WindUI:SetNotificationLower(true)
 
 WindUI:AddTheme({
     Name = "Midnight",
+
+    Accent = WindUI:Gradient({                                                  
+        ["0"] = { Color = Color3.fromHex("#2e004f"), Transparency = 0.2 },        
+        ["100"]   = { Color = Color3.fromHex("#8d09b5"), Transparency = 0.2 },    
+    }, {                                                                        
+        Rotation = 45,                                                           
+    }),  
     Accent = "#a855f7",
     Dialog = "#2E004F",
     Outline = "#6b21a8",
@@ -19,7 +26,7 @@ WindUI:AddTheme({
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
     Icon = "moon",
-    Author = "Yeahblxr (Join Discord for updates)",
+    Author = "Yeahblxr",
     Folder = "Midnight Hub",
     Size = UDim2.fromOffset(580, 360),
     Transparent = true,
@@ -139,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.7",
+    Title = "V1.3.8",
     Color = Color3.fromHex("#663399")
 })
 
@@ -153,7 +160,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Spectate players, Free private server, removed egor script. (broken)",
+    Content = "Spectate players, Free private server, Added settings, added themes, removed egor script. (broken)",
     Buttons = {
         {
             Title = "Continue",
@@ -1333,6 +1340,7 @@ local Button = Tab:Button({
     end
 })
 
+
 local Tab = Window:Tab({
     Title = "Misc",
     Icon = "dices",
@@ -1397,5 +1405,94 @@ local Button = Tab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end
 })
+
+Window:Divider()
+
+local Tab = Window:Tab({
+    Title = "Settings",
+    Icon = "cog", -- optional
+    Locked = false,
+})
+
+-- Theme configuration
+local themes = {
+    ["Midnight"] = {
+        type = "default"
+    },
+    ["Chroma Glow"] = {
+        type = "image",
+        asset = "rbxassetid://73929911208713"
+    },
+    ["Crimson Moon"] = {
+        type = "gradient",
+        colors = {
+            ColorSequenceKeypoint.new(0, Color3.fromHex("#670000")),
+            ColorSequenceKeypoint.new(1, Color3.fromHex("#000000"))
+        },
+        rotation = 45
+    }
+}
+
+-- Function to apply theme
+local function applyTheme(themeName)
+    local theme = themes[themeName]
+    
+    if not theme then
+        print("Theme not found: " .. themeName)
+        return
+    end
+    
+    if theme.type == "default" then
+        -- Reset to default Midnight theme
+        Window:SetTheme("Midnight")
+        print("Applied theme: " .. themeName)
+        
+    elseif theme.type == "image" then
+        -- Apply image background
+        Window:SetBackground({
+            Type = "Image",
+            Image = theme.asset
+        })
+        print("Applied theme: " .. themeName)
+        
+    elseif theme.type == "gradient" then
+        -- Apply gradient background
+        Window:SetBackground({
+            Type = "Gradient",
+            Colors = ColorSequence.new(theme.colors),
+            Rotation = theme.rotation
+        })
+        
+        -- Update UI element colors to match the dark red theme
+        Window:SetAccentColor(Color3.fromHex("#670000"))
+        
+        print("Applied theme: " .. themeName)
+    end
+end
+
+-- Create theme dropdown
+local ThemeDropdown = Tab:Dropdown({
+    Title = "UI Theme",
+    Values = {"Midnight", "Chroma Glow", "Crimson Moon"},
+    Value = "Midnight",
+    Callback = function(option) 
+        print("Theme selected: " .. option)
+        applyTheme(option)
+    end
+})
+
+-- Optional: Add a reset theme button
+local ResetThemeButton = Tab:Button({
+    Title = "Reset to Default",
+    Desc = "Reset UI theme to Midnight",
+    Locked = false,
+    Callback = function()
+        applyTheme("Midnight")
+        ThemeDropdown:SetValue("Midnight")
+    end
+})
+
+
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Notifications.lua"))()
