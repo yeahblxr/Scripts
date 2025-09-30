@@ -1,4 +1,4 @@
--- testy
+-- i farted
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -147,7 +147,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.9",
+    Title = "V1.3.10",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1444,75 +1444,16 @@ local function createGradient(parent, color1, color2, rotation)
     return gradient
 end
 
--- Function to apply theme with manual styling
-local function applyTheme(themeName)
-    local theme = themes[themeName]
-    if not theme then
-        print("Theme not found: " .. themeName)
-        return
-    end
 
-    local windowFrame = Window.Frame -- <-- This is the fix!
 
-    if theme.type == "default" then
-        for _, child in pairs(windowFrame:GetChildren()) do
-            if child:IsA("ImageLabel") and child.Name == "CustomBackground" then
-                child:Destroy()
-            elseif child:IsA("UIGradient") and child.Name == "CustomGradient" then
-                child:Destroy()
-            end
-        end
-        windowFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    elseif theme.type == "image" then
-        for _, child in pairs(windowFrame:GetChildren()) do
-            if (child:IsA("ImageLabel") and child.Name == "CustomBackground") or 
-               (child:IsA("UIGradient") and child.Name == "CustomGradient") then
-                child:Destroy()
-            end
-        end
-        local imageBackground = Instance.new("ImageLabel")
-        imageBackground.Name = "CustomBackground"
-        imageBackground.Size = UDim2.new(1, 0, 1, 0)
-        imageBackground.Position = UDim2.new(0, 0, 0, 0)
-        imageBackground.Image = theme.asset
-        imageBackground.BackgroundTransparency = 1
-        imageBackground.ZIndex = -1
-        imageBackground.Parent = windowFrame
-    elseif theme.type == "gradient" then
-        for _, child in pairs(windowFrame:GetChildren()) do
-            if (child:IsA("ImageLabel") and child.Name == "CustomBackground") or 
-               (child:IsA("UIGradient") and child.Name == "CustomGradient") then
-                child:Destroy()
-            end
-        end
-        local gradient = createGradient(windowFrame, theme.color1, theme.color2, theme.rotation)
-        gradient.Name = "CustomGradient"
-        local function updateUIColors(parent)
-            for _, child in pairs(parent:GetDescendants()) do
-                if child:IsA("TextButton") or child:IsA("ImageButton") then
-                    child.BackgroundColor3 = Color3.fromHex("#670000")
-                    child.BorderColor3 = Color3.fromHex("#440000")
-                elseif child:IsA("TextLabel") and child.Name:find("Title") then
-                    child.TextColor3 = Color3.fromHex("#FF6666")
-                elseif child:IsA("Frame") and child.Name:find("Dropdown") then
-                    child.BackgroundColor3 = Color3.fromHex("#440000")
-                    child.BorderColor3 = Color3.fromHex("#670000")
-                end
-            end
-        end
-        updateUIColors(windowFrame)
-    end
-    print("Applied theme: " .. themeName)
-end
-
--- Create theme dropdown
+-- Create theme dropdown using WindUI's theme system
 local ThemeDropdown = Tab:Dropdown({
     Title = "UI Theme",
     Values = {"Midnight", "Chroma Glow", "Dark Red Gradient"},
     Value = "Midnight",
     Callback = function(option) 
         print("Theme selected: " .. option)
-        applyTheme(option)
+        Window:SetTheme(option)
     end
 })
 
@@ -1522,7 +1463,7 @@ local ResetThemeButton = Tab:Button({
     Desc = "Reset UI theme to default Midnight",
     Locked = false,
     Callback = function()
-        applyTheme("Midnight")
+        Window:SetTheme("Midnight")
         ThemeDropdown:SetValue("Midnight")
     end
 })
