@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.6",
+    Title = "V1.3.7",
     Color = Color3.fromHex("#663399")
 })
 
@@ -727,7 +727,11 @@ local Button = Tab:Button({
     end
 })
 
+
+-- Spectate Player script start
 -- Get all player names except yourself
+Tab:Divider()
+
 local function getPlayerNames()
     local playerNames = {}
     local localPlayer = game.Players.LocalPlayer
@@ -880,6 +884,8 @@ local RefreshButton = Tab:Button({
         updatePlayerDropdown()
     end
 })
+
+Tab:Divider()
 
 
 local Tab = Window:Tab({
