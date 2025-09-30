@@ -19,7 +19,7 @@ WindUI:AddTheme({
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
     Icon = "moon",
-    Author = "Yeahblxr",
+    Author = "Yeahblxr (Join Discord for updates)",
     Folder = "Midnight Hub",
     Size = UDim2.fromOffset(580, 360),
     Transparent = true,
