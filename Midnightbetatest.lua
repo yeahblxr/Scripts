@@ -1,4 +1,4 @@
--- i farted
+-- i ded
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -23,6 +23,41 @@ WindUI:AddTheme({
     Icon = "#e9d5ff",
 })
 
+WindUI:AddTheme({
+    Name = "Chroma Glow",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#00ffd0"), Transparency = 0.2 },
+        ["100"] = { Color = Color3.fromHex("#8d09b5"), Transparency = 0.2 },
+    }, {
+        Rotation = 90,
+    }),
+    Accent = "#00ffd0",
+    Dialog = "#1a0033",
+    Outline = "#00ffd0",
+    Text = "#e0fff7",
+    Placeholder = "#b4ffe8",
+    Background = "#1a0033",
+    Button = "#00ffd0",
+    Icon = "#e0fff7",
+})
+
+WindUI:AddTheme({
+    Name = "Crimson Moon",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#670000"), Transparency = 0.2 },
+        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0.2 },
+    }, {
+        Rotation = 45,
+    }),
+    Accent = "#670000",
+    Dialog = "#220000",
+    Outline = "#670000",
+    Text = "#ffeaea",
+    Placeholder = "#ffb4b4",
+    Background = "#220000",
+    Button = "#670000",
+    Icon = "#ffeaea",
+})
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight Hub",
@@ -47,7 +82,7 @@ local Window = WindUI:CreateWindow({
     },
     KeySystem = {
         Key = { "Midnight" },
-        Note = "If you remember the old script key, it's the same. (Join Discord for the key) ",
+        Note = "Join Discord for the key",
         Thumbnail = {
             Image = "rbxassetid://119615372248548",
             Title = "Midnight Hub Key",
@@ -147,7 +182,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.10",
+    Title = "V1.3.11",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1415,41 +1450,12 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
--- Alternative theme system with manual styling
-local themes = {
-    ["Midnight"] = {
-        type = "default"
-    },
-    ["Chroma Glow"] = {
-        type = "image",
-        asset = "rbxassetid://73929911208713"
-    },
-    ["Dark Red Gradient"] = {
-        type = "gradient",
-        color1 = Color3.fromHex("#670000"),
-        color2 = Color3.fromHex("#000000"),
-        rotation = 45
-    }
-}
-
--- Function to create gradient
-local function createGradient(parent, color1, color2, rotation)
-    local gradient = Instance.new("UIGradient")
-    gradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, color1),
-        ColorSequenceKeypoint.new(1, color2)
-    }
-    gradient.Rotation = rotation
-    gradient.Parent = parent
-    return gradient
-end
-
 
 
 -- Create theme dropdown using WindUI's theme system
 local ThemeDropdown = Tab:Dropdown({
     Title = "UI Theme",
-    Values = {"Midnight", "Chroma Glow", "Dark Red Gradient"},
+    Values = {"Midnight", "Chroma Glow", "Crimson Moon"},
     Value = "Midnight",
     Callback = function(option) 
         print("Theme selected: " .. option)
