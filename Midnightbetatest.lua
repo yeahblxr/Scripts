@@ -139,7 +139,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.5",
+    Title = "V1.3.6",
     Color = Color3.fromHex("#663399")
 })
 
@@ -153,7 +153,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Wallwalk scipt",
+    Content = "Spectate players, Free private server, removed egor script. (broken)",
     Buttons = {
         {
             Title = "Continue",
@@ -718,16 +718,6 @@ local Toggle = Tab:Toggle({
 })
 
 
-
-local Button = Tab:Button({
-    Title = "Egor",
-    Desc = "Makes you run like Egor",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/DROID-cell-sys/ANTI-UTTP-SCRIPTT/refs/heads/main/EGOR%20SCRIPT%20BY%20ANTI-UTTP"))()
-    end
-})
-
 local Button = Tab:Button({
     Title = "Wallwalk Gui",
     Desc = "Lets you walk on walls (reset charater after pressed)",
@@ -736,6 +726,161 @@ local Button = Tab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Wallwalk.lua"))()
     end
 })
+
+-- Get all player names except yourself
+local function getPlayerNames()
+    local playerNames = {}
+    local localPlayer = game.Players.LocalPlayer
+    
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= localPlayer then
+            table.insert(playerNames, player.Name)
+        end
+    end
+    
+    -- Return at least one value to prevent empty dropdown
+    if #playerNames == 0 then
+        return {"No Players Available"}
+    end
+    
+    return playerNames
+end
+
+-- Variables to track spectating state
+local isSpectating = false
+local spectateConnection = nil
+local originalCFrame = nil
+local currentSpectateTarget = nil
+
+-- Function to start spectating a player
+local function spectatePlayer(playerName)
+    if playerName == "No Players Available" then
+        print("No players available to spectate")
+        return
+    end
+    
+    local targetPlayer = game.Players:FindFirstChild(playerName)
+    local localPlayer = game.Players.LocalPlayer
+    
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        -- Stop current spectating if active
+        if isSpectating then
+            stopSpectating()
+        end
+        
+        -- Store original camera position
+        if not originalCFrame then
+            originalCFrame = workspace.CurrentCamera.CFrame
+        end
+        
+        -- Set camera to follow target player
+        workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
+        workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+        
+        currentSpectateTarget = targetPlayer
+        isSpectating = true
+        
+        print("Now spectating: " .. playerName)
+    else
+        print("Could not find player or player's character: " .. playerName)
+    end
+end
+
+-- Function to stop spectating
+local function stopSpectating()
+    local localPlayer = game.Players.LocalPlayer
+    
+    if isSpectating then
+        -- Reset camera to local player
+        if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
+            workspace.CurrentCamera.CameraSubject = localPlayer.Character.Humanoid
+        end
+        
+        -- Restore original camera position if available
+        if originalCFrame then
+            workspace.CurrentCamera.CFrame = originalCFrame
+            originalCFrame = nil
+        end
+        
+        workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+        
+        isSpectating = false
+        currentSpectateTarget = nil
+        
+        print("Stopped spectating")
+    end
+end
+
+-- Create dropdown for player selection
+local playerNames = getPlayerNames()
+local defaultValue = playerNames[1]
+
+local SpectateDropdown = Tab:Dropdown({
+    Title = "Spectate Player",
+    Values = playerNames,
+    Value = defaultValue,
+    Callback = function(option) 
+        print("Player selected: " .. option)
+        spectatePlayer(option)
+    end
+})
+
+-- Create button to stop spectating
+local StopSpectateButton = Tab:Button({
+    Title = "Stop Spectating",
+    Desc = "Return camera to your character",
+    Locked = false,
+    Callback = function()
+        stopSpectating()
+    end
+})
+
+-- Function to update dropdown with new player list
+local function updatePlayerDropdown()
+    local newPlayerNames = getPlayerNames()
+    
+    -- Update the dropdown values using WindUI's SetValues method
+    SpectateDropdown:SetValues(newPlayerNames)
+    
+    -- If currently spectating someone who left, stop spectating
+    if isSpectating and currentSpectateTarget then
+        local targetStillExists = false
+        for _, name in pairs(newPlayerNames) do
+            if name == currentSpectateTarget.Name then
+                targetStillExists = true
+                break
+            end
+        end
+        
+        if not targetStillExists then
+            print("Spectate target left the game, stopping spectate")
+            stopSpectating()
+        end
+    end
+    
+    print("Updated player list")
+end
+
+-- Connect to player events to update the dropdown
+game.Players.PlayerAdded:Connect(function(player)
+    wait(1) -- Small delay to ensure player is fully loaded
+    updatePlayerDropdown()
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    updatePlayerDropdown()
+end)
+
+-- Optional: Add a refresh button to manually update the player list
+local RefreshButton = Tab:Button({
+    Title = "Refresh Player List",
+    Desc = "Update the spectate dropdown with current players",
+    Locked = false,
+    Callback = function()
+        updatePlayerDropdown()
+    end
+})
+
 
 local Tab = Window:Tab({
     Title = "Advantage",
@@ -1170,6 +1315,15 @@ until Server
 if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
     TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
 end
+    end
+})
+
+local Button = Tab:Button({
+    Title = "Free private server",
+    Desc = "Makes a server that only you are in",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/Free%20Private%20Server.lua"))()
     end
 })
 
