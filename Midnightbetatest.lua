@@ -1,4 +1,4 @@
--- i ded
+-- ded is good
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -21,42 +21,6 @@ WindUI:AddTheme({
     Background = "#2e004f",
     Button = "#9333ea",
     Icon = "#e9d5ff",
-})
-
-WindUI:AddTheme({
-    Name = "Chroma Glow",
-    Accent = WindUI:Gradient({
-        ["0"] = { Color = Color3.fromHex("#00ffd0"), Transparency = 0.2 },
-        ["100"] = { Color = Color3.fromHex("#8d09b5"), Transparency = 0.2 },
-    }, {
-        Rotation = 90,
-    }),
-    Accent = "#00ffd0",
-    Dialog = "#1a0033",
-    Outline = "#00ffd0",
-    Text = "#e0fff7",
-    Placeholder = "#b4ffe8",
-    Background = "#1a0033",
-    Button = "#00ffd0",
-    Icon = "#e0fff7",
-})
-
-WindUI:AddTheme({
-    Name = "Crimson Moon",
-    Accent = WindUI:Gradient({
-        ["0"] = { Color = Color3.fromHex("#670000"), Transparency = 0.2 },
-        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0.2 },
-    }, {
-        Rotation = 45,
-    }),
-    Accent = "#670000",
-    Dialog = "#220000",
-    Outline = "#670000",
-    Text = "#ffeaea",
-    Placeholder = "#ffb4b4",
-    Background = "#220000",
-    Button = "#670000",
-    Icon = "#ffeaea",
 })
 
 local Window = WindUI:CreateWindow({
@@ -182,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.11",
+    Title = "V1.3.12",
     Color = Color3.fromHex("#663399")
 })
 
@@ -196,7 +160,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Spectate players, Free private server, Added settings, added themes, removed egor script. (broken)",
+    Content = "Spectate players, Free private server, Added settings, added configs, removed egor script. (broken)",
     Buttons = {
         {
             Title = "Continue",
@@ -1450,31 +1414,37 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
+local ConfigManager = Window.ConfigManager
+local myConfig -- define outside so both callbacks can use it
 
-
--- Create theme dropdown using WindUI's theme system
-local ThemeDropdown = Tab:Dropdown({
-    Title = "UI Theme",
-    Values = {"Midnight", "Chroma Glow", "Crimson Moon"},
-    Value = "Midnight",
-    Callback = function(option) 
-        print("Theme selected: " .. option)
-        Window:SetTheme(option)
+local Input = Tab:Input({
+    Title = "Save Config",
+    Desc = "Set config name",
+    Value = "Config1",
+    InputIcon = "save",
+    Type = "Input",
+    Placeholder = "Enter config name...",
+    Callback = function(input)
+        myConfig = ConfigManager:CreateConfig(input)
     end
 })
 
--- Reset theme button
-local ResetThemeButton = Tab:Button({
-    Title = "Reset Theme",
-    Desc = "Reset UI theme to default Midnight",
-    Locked = false,
-    Callback = function()
-        Window:SetTheme("Midnight")
-        ThemeDropdown:SetValue("Midnight")
+local Dropdown = Tab:Dropdown({
+    Title = "Load Config",
+    Values = ConfigManager:AllConfigs(),
+    Value = "Config1",
+    Callback = function(option)
+        if myConfig then
+            myConfig:Load(option)
+        else
+            WindUI:Notify({
+                Title = "No Config",
+                Content = "Please create a config first.",
+                Duration = 2,
+                Icon = "ban"
+            })
+        end
     end
 })
-
-
-
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Notifications.lua"))()
