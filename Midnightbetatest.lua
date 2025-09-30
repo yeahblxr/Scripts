@@ -146,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.3.8",
+    Title = "V1.3.9",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1414,7 +1414,7 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
--- Theme configuration
+-- Alternative theme system with manual styling
 local themes = {
     ["Midnight"] = {
         type = "default"
@@ -1423,57 +1423,91 @@ local themes = {
         type = "image",
         asset = "rbxassetid://73929911208713"
     },
-    ["Crimson Moon"] = {
+    ["Dark Red Gradient"] = {
         type = "gradient",
-        colors = {
-            ColorSequenceKeypoint.new(0, Color3.fromHex("#670000")),
-            ColorSequenceKeypoint.new(1, Color3.fromHex("#000000"))
-        },
+        color1 = Color3.fromHex("#670000"),
+        color2 = Color3.fromHex("#000000"),
         rotation = 45
     }
 }
 
--- Function to apply theme
+-- Function to create gradient
+local function createGradient(parent, color1, color2, rotation)
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, color1),
+        ColorSequenceKeypoint.new(1, color2)
+    }
+    gradient.Rotation = rotation
+    gradient.Parent = parent
+    return gradient
+end
+
+-- Function to apply theme with manual styling
 local function applyTheme(themeName)
     local theme = themes[themeName]
-    
     if not theme then
         print("Theme not found: " .. themeName)
         return
     end
-    
+
+    local windowFrame = Window.Frame -- <-- This is the fix!
+
     if theme.type == "default" then
-        -- Reset to default Midnight theme
-        Window:SetTheme("Midnight")
-        print("Applied theme: " .. themeName)
-        
+        for _, child in pairs(windowFrame:GetChildren()) do
+            if child:IsA("ImageLabel") and child.Name == "CustomBackground" then
+                child:Destroy()
+            elseif child:IsA("UIGradient") and child.Name == "CustomGradient" then
+                child:Destroy()
+            end
+        end
+        windowFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     elseif theme.type == "image" then
-        -- Apply image background
-        Window:SetBackground({
-            Type = "Image",
-            Image = theme.asset
-        })
-        print("Applied theme: " .. themeName)
-        
+        for _, child in pairs(windowFrame:GetChildren()) do
+            if (child:IsA("ImageLabel") and child.Name == "CustomBackground") or 
+               (child:IsA("UIGradient") and child.Name == "CustomGradient") then
+                child:Destroy()
+            end
+        end
+        local imageBackground = Instance.new("ImageLabel")
+        imageBackground.Name = "CustomBackground"
+        imageBackground.Size = UDim2.new(1, 0, 1, 0)
+        imageBackground.Position = UDim2.new(0, 0, 0, 0)
+        imageBackground.Image = theme.asset
+        imageBackground.BackgroundTransparency = 1
+        imageBackground.ZIndex = -1
+        imageBackground.Parent = windowFrame
     elseif theme.type == "gradient" then
-        -- Apply gradient background
-        Window:SetBackground({
-            Type = "Gradient",
-            Colors = ColorSequence.new(theme.colors),
-            Rotation = theme.rotation
-        })
-        
-        -- Update UI element colors to match the dark red theme
-        Window:SetAccentColor(Color3.fromHex("#670000"))
-        
-        print("Applied theme: " .. themeName)
+        for _, child in pairs(windowFrame:GetChildren()) do
+            if (child:IsA("ImageLabel") and child.Name == "CustomBackground") or 
+               (child:IsA("UIGradient") and child.Name == "CustomGradient") then
+                child:Destroy()
+            end
+        end
+        local gradient = createGradient(windowFrame, theme.color1, theme.color2, theme.rotation)
+        gradient.Name = "CustomGradient"
+        local function updateUIColors(parent)
+            for _, child in pairs(parent:GetDescendants()) do
+                if child:IsA("TextButton") or child:IsA("ImageButton") then
+                    child.BackgroundColor3 = Color3.fromHex("#670000")
+                    child.BorderColor3 = Color3.fromHex("#440000")
+                elseif child:IsA("TextLabel") and child.Name:find("Title") then
+                    child.TextColor3 = Color3.fromHex("#FF6666")
+                elseif child:IsA("Frame") and child.Name:find("Dropdown") then
+                    child.BackgroundColor3 = Color3.fromHex("#440000")
+                    child.BorderColor3 = Color3.fromHex("#670000")
+                end
+            end
+        end
+        updateUIColors(windowFrame)
     end
+    print("Applied theme: " .. themeName)
 end
 
 -- Create theme dropdown
 local ThemeDropdown = Tab:Dropdown({
     Title = "UI Theme",
-    Values = {"Midnight", "Chroma Glow", "Crimson Moon"},
+    Values = {"Midnight", "Chroma Glow", "Dark Red Gradient"},
     Value = "Midnight",
     Callback = function(option) 
         print("Theme selected: " .. option)
@@ -1481,10 +1515,10 @@ local ThemeDropdown = Tab:Dropdown({
     end
 })
 
--- Optional: Add a reset theme button
+-- Reset theme button
 local ResetThemeButton = Tab:Button({
-    Title = "Reset to Default",
-    Desc = "Reset UI theme to Midnight",
+    Title = "Reset Theme",
+    Desc = "Reset UI theme to default Midnight",
     Locked = false,
     Callback = function()
         applyTheme("Midnight")
