@@ -1,4 +1,4 @@
--- hi
+-- hi but cool
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:SetNotificationLower(true)
@@ -21,8 +21,28 @@ WindUI:AddTheme({
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight - Survive Lebron 2",
-    Icon = "moon",
+    Icon = "moon", -- lucide icon
     Author = "Yeahblxr",
+    Folder = "Midnight survive bron",
+    
+    -- ↓ This all is Optional. You can remove it.
+    Size = UDim2.fromOffset(580, 460),
+    MinSize = Vector2.new(560, 350),
+    MaxSize = Vector2.new(850, 560),
+    Transparent = true,
+    Theme = "Midnight",
+    Resizable = true,
+    SideBarWidth = 200,
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = true,
+    ScrollBarEnabled = true,
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function()
+            print("clicked")
+        end,
+    },
 })
 
 local Tab = Window:Tab({
@@ -30,6 +50,11 @@ local Tab = Window:Tab({
     Icon = "house",
     Locked = false,
 })
+
+
+--------------------------------------------------------------------
+--                 Teleport to Lever
+--------------------------------------------------------------------
 
 -- Collect all lever names dynamically
 local leverNames = {}
@@ -95,5 +120,40 @@ local Dropdown = Tab:Dropdown({
         end
 
         warn("Could not find model: " .. selected)
+    end
+})
+
+--------------------------------------------------------------------
+--                 Teleport to MasterLever
+--------------------------------------------------------------------
+
+local Button = Tab:Button({
+    Title = "Teleport to Master Lever",
+    Desc = "Instantly teleports you to the MasterLever model",
+    Locked = false,
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local root = character:FindFirstChild("HumanoidRootPart")
+        if not root then return warn("No HumanoidRootPart found!") end
+
+        local target = workspace:FindFirstChild("MasterLever", true)
+        if not target or not target:IsA("Model") then
+            return warn("MasterLever model not found!")
+        end
+
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid and humanoid.SeatPart then
+            humanoid.Sit = false
+            task.wait(0.1)
+        end
+
+        local targetCFrame = getModelCFrame(target)
+        if targetCFrame then
+            root.CFrame = targetCFrame + Vector3.new(0, 3, 0)
+            print("Teleported to MasterLever")
+        else
+            warn("Failed to find a valid CFrame for MasterLever")
+        end
     end
 })
