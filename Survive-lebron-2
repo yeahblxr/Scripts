@@ -1,0 +1,96 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+WindUI:SetNotificationLower(true)
+
+WindUI:AddTheme({
+    Name = "Midnight",
+
+    Accent = WindUI:Gradient({                                                  
+        ["0"] = { Color = Color3.fromHex("#2e004f"), Transparency = 0.2 },        
+        ["100"]   = { Color = Color3.fromHex("#8d09b5"), Transparency = 0.2 },    
+    }, {                                                                        
+        Rotation = 45,                                                           
+    }),  
+    Accent = "#a855f7",
+    Dialog = "#2E004F",
+    Outline = "#6b21a8",
+    Text = "#f3e8ff",
+    Placeholder = "#d8b4fe",
+    Background = "#2e004f",
+    Button = "#9333ea",
+    Icon = "#e9d5ff",
+})
+
+local Window = WindUI:CreateWindow({
+    Title = "Midnight Hub",
+    Icon = "moon",
+    Author = "Yeahblxr",
+    Folder = "Midnight Hub",
+    Size = UDim2.fromOffset(580, 360),
+    Transparent = true,
+    Theme = "Midnight",
+    Resizable = true,
+    SideBarWidth = 200,
+    Background = "",
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = true,
+    ScrollBarEnabled = false,
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function()
+            print("clicked")
+        end,
+    },
+
+local Tab = Window:Tab({
+    Title = "Main",
+    Icon = "house",
+    Locked = false,
+})
+
+-- Collect all lever names dynamically
+local leverNames = {}
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Model") and v.Name:match("^Lever_%d+$") then
+        table.insert(leverNames, v.Name)
+    end
+end
+
+-- Sort lever names numerically (so Lever_1, Lever_2, Lever_3, etc.)
+table.sort(leverNames, function(a, b)
+    local numA = tonumber(a:match("%d+"))
+    local numB = tonumber(b:match("%d+"))
+    return numA < numB
+end)
+
+-- Create dropdown for teleporting to levers
+local Dropdown = Tab:Dropdown({
+    Title = "Teleport to Lever",
+    Values = leverNames,
+    Value = leverNames[1] or "None found",
+    Callback = function(selected)
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local root = character:FindFirstChild("HumanoidRootPart")
+
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v.Name == selected and v:IsA("Model") then
+                -- Ensure player isn't sitting before teleport
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.SeatPart then
+                    humanoid.Sit = false
+                    task.wait(0.1)
+                end
+
+                if root and v:GetModelCFrame() then
+                    root.CFrame = v:GetModelCFrame()
+                    print("Teleported to " .. selected)
+                    return
+                end
+            end
+        end
+
+        warn("Could not find model: " .. selected)
+    end
+})
