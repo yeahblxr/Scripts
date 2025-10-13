@@ -1,16 +1,14 @@
+-- hi
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:SetNotificationLower(true)
 
 WindUI:AddTheme({
     Name = "Midnight",
-
-    Accent = WindUI:Gradient({                                                  
-        ["0"] = { Color = Color3.fromHex("#2e004f"), Transparency = 0.2 },        
-        ["100"]   = { Color = Color3.fromHex("#8d09b5"), Transparency = 0.2 },    
-    }, {                                                                        
-        Rotation = 45,                                                           
-    }),  
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#2e004f"), Transparency = 0.2 },
+        ["100"] = { Color = Color3.fromHex("#8d09b5"), Transparency = 0.2 },
+    }, { Rotation = 45 }),
     Accent = "#a855f7",
     Dialog = "#2E004F",
     Outline = "#6b21a8",
@@ -23,8 +21,8 @@ WindUI:AddTheme({
 
 local Window = WindUI:CreateWindow({
     Title = "Midnight - Survive Lebron 2",
-    Icon = "moon", -- lucide icon. optional
-    Author = "Yeahblxr", -- optional
+    Icon = "moon",
+    Author = "Yeahblxr",
 })
 
 local Tab = Window:Tab({
@@ -41,37 +39,58 @@ for _, v in pairs(workspace:GetDescendants()) do
     end
 end
 
--- Sort lever names numerically (so Lever_1, Lever_2, Lever_3, etc.)
+-- Sort lever names numerically
 table.sort(leverNames, function(a, b)
-    local numA = tonumber(a:match("%d+"))
-    local numB = tonumber(b:match("%d+"))
-    return numA < numB
+    return tonumber(a:match("%d+")) < tonumber(b:match("%d+"))
 end)
+
+-- Function to get model's center CFrame safely
+local function getModelCFrame(model)
+    if not model:IsA("Model") then return end
+    local primary = model.PrimaryPart
+    if not primary then
+        -- If no PrimaryPart, calculate an approximate CFrame from its parts
+        local parts = model:GetDescendants()
+        for _, p in ipairs(parts) do
+            if p:IsA("BasePart") then
+                return p.CFrame
+            end
+        end
+    else
+        return primary.CFrame
+    end
+end
 
 -- Create dropdown for teleporting to levers
 local Dropdown = Tab:Dropdown({
     Title = "Teleport to Lever",
-    Values = leverNames,
-    Value = leverNames[1] or "None found",
+    Values = #leverNames > 0 and leverNames or {"No levers found"},
+    Value = leverNames[1] or "None",
     Callback = function(selected)
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local root = character:FindFirstChild("HumanoidRootPart")
+        if not root then
+            warn("No HumanoidRootPart found!")
+            return
+        end
 
         for _, v in pairs(workspace:GetDescendants()) do
-            if v.Name == selected and v:IsA("Model") then
-                -- Ensure player isn't sitting before teleport
+            if v:IsA("Model") and v.Name == selected then
                 local humanoid = character:FindFirstChildOfClass("Humanoid")
                 if humanoid and humanoid.SeatPart then
                     humanoid.Sit = false
                     task.wait(0.1)
                 end
 
-                if root and v:GetModelCFrame() then
-                    root.CFrame = v:GetModelCFrame()
+                local targetCFrame = getModelCFrame(v)
+                if targetCFrame then
+                    root.CFrame = targetCFrame + Vector3.new(0, 3, 0) -- teleport slightly above lever
                     print("Teleported to " .. selected)
-                    return
+                else
+                    warn("Failed to find a CFrame for " .. selected)
                 end
+                return
             end
         end
 
