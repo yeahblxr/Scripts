@@ -1,4 +1,4 @@
--- hi but cool
+-- hi but cooler
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:SetNotificationLower(true)
@@ -157,3 +157,82 @@ local Button = Tab:Button({
         end
     end
 })
+
+--------------------------------------------------------------------
+--                 Instant proximity prompt
+--------------------------------------------------------------------
+
+local Button = Tab:Button({
+    Title = "Instant Proximity Prompt",
+    Desc = "Disable the cooldown for proximity prompts",
+    Locked = false,
+    Callback = function()
+        local function SetupProximityPrompt(prompt)
+    prompt.HoldDuration = 0
+end
+
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("ProximityPrompt") then
+        SetupProximityPrompt(descendant)
+    end
+end)
+
+for _, prompt in ipairs(workspace:GetDescendants()) do
+    if prompt:IsA("ProximityPrompt") then
+        SetupProximityPrompt(prompt)
+    end
+end
+    end
+})
+
+--------------------------------------------------------------------
+--                 Cframe flyd
+--------------------------------------------------------------------
+
+local RunService = game:GetService("RunService")
+local CFspeed = 50
+local CFloop
+
+local Toggle = Tab:Toggle({
+    Title = "Fly",
+    Desc = "Toggle fly on or off",
+    Icon = "wind",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        local player = game.Players.LocalPlayer
+        if not player.Character then return warn("No character found!") end
+        local char = player.Character
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        local Head = char:WaitForChild("Head")
+
+        if state then
+            -- Enable fly
+            humanoid.PlatformStand = true
+            Head.Anchored = true
+            if CFloop then CFloop:Disconnect() end
+
+            CFloop = RunService.Heartbeat:Connect(function(deltaTime)
+                local moveDirection = humanoid.MoveDirection * (CFspeed * deltaTime)
+                local headCFrame = Head.CFrame
+                local camera = workspace.CurrentCamera
+                local cameraCFrame = camera.CFrame
+                local cameraOffset = headCFrame:ToObjectSpace(cameraCFrame).Position
+                cameraCFrame = cameraCFrame * CFrame.new(-cameraOffset.X, -cameraOffset.Y, -cameraOffset.Z + 1)
+                local cameraPosition = cameraCFrame.Position
+                local headPosition = headCFrame.Position
+
+                local objectSpaceVelocity = CFrame.new(cameraPosition, Vector3.new(headPosition.X, cameraPosition.Y, headPosition.Z)):VectorToObjectSpace(moveDirection)
+                Head.CFrame = CFrame.new(headPosition) * (cameraCFrame - cameraPosition) * CFrame.new(objectSpaceVelocity)
+            end)
+            print("CFrame Fly Enabled")
+        else
+            -- Disable fly
+            if CFloop then CFloop:Disconnect() end
+            humanoid.PlatformStand = false
+            Head.Anchored = false
+            print("CFrame Fly Disabled")
+        end
+    end
+})
+
