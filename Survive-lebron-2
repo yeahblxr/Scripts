@@ -22,26 +22,10 @@ WindUI:AddTheme({
 })
 
 local Window = WindUI:CreateWindow({
-    Title = "Midnight Hub",
-    Icon = "moon",
-    Author = "Yeahblxr",
-    Folder = "Midnight Hub",
-    Size = UDim2.fromOffset(580, 360),
-    Transparent = true,
-    Theme = "Midnight",
-    Resizable = true,
-    SideBarWidth = 200,
-    Background = "",
-    BackgroundImageTransparency = 0.42,
-    HideSearchBar = true,
-    ScrollBarEnabled = false,
-    User = {
-        Enabled = true,
-        Anonymous = false,
-        Callback = function()
-            print("clicked")
-        end,
-    },
+    Title = "Midnight - Survive Lebron 2",
+    Icon = "moon", -- lucide icon. optional
+    Author = "Yeahblxr", -- optional
+})
 
 local Tab = Window:Tab({
     Title = "Main",
