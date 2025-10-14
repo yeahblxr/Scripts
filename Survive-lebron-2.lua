@@ -186,6 +186,28 @@ end
 })
 
 --------------------------------------------------------------------
+--                 Teleport to spawn
+--------------------------------------------------------------------
+local Button = Tab:Button({
+    Title = "Teleport to Spawn",
+    Desc = "Teleports to Back to lobby area",
+    Locked = false,
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local root = character:FindFirstChild("HumanoidRootPart")
+        if not root then
+            warn("No HumanoidRootPart found!")
+            return
+        end
+
+        -- Teleport to the specified coordinates
+        root.CFrame = CFrame.new(27, 95, 28)
+        print("Teleported to (27, 95, 28)")
+    end
+})
+
+--------------------------------------------------------------------
 --                 Cframe flyd
 --------------------------------------------------------------------
 
