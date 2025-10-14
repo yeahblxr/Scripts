@@ -1,4 +1,4 @@
--- hi but cooler
+-- hi but coolest
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 WindUI:SetNotificationLower(true)
@@ -56,33 +56,36 @@ local Tab = Window:Tab({
 --                 Teleport to Lever
 --------------------------------------------------------------------
 
--- Collect all lever names dynamically
-local leverNames = {}
-for _, v in pairs(workspace:GetDescendants()) do
-    if v:IsA("Model") and v.Name:match("^Lever_%d+$") then
-        table.insert(leverNames, v.Name)
+-- Function to collect lever names dynamically
+local function getLeverNames()
+    local names = {}
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Model") and v.Name:match("^Lever_%d+$") then
+            table.insert(names, v.Name)
+        end
     end
+    table.sort(names, function(a, b)
+        return tonumber(a:match("%d+")) < tonumber(b:match("%d+"))
+    end)
+    return names
 end
 
--- Sort lever names numerically
-table.sort(leverNames, function(a, b)
-    return tonumber(a:match("%d+")) < tonumber(b:match("%d+"))
-end)
+-- Initial lever names
+local leverNames = getLeverNames()
 
 -- Function to get model's center CFrame safely
 local function getModelCFrame(model)
     if not model:IsA("Model") then return end
     local primary = model.PrimaryPart
-    if not primary then
-        -- If no PrimaryPart, calculate an approximate CFrame from its parts
-        local parts = model:GetDescendants()
-        for _, p in ipairs(parts) do
+    if primary then
+        return primary.CFrame
+    else
+        -- Approximate from parts if no PrimaryPart
+        for _, p in ipairs(model:GetDescendants()) do
             if p:IsA("BasePart") then
                 return p.CFrame
             end
         end
-    else
-        return primary.CFrame
     end
 end
 
@@ -110,7 +113,7 @@ local Dropdown = Tab:Dropdown({
 
                 local targetCFrame = getModelCFrame(v)
                 if targetCFrame then
-                    root.CFrame = targetCFrame + Vector3.new(0, 7, 0) -- teleport slightly above lever
+                    root.CFrame = targetCFrame + Vector3.new(0, 7, 0) -- slightly above lever
                     print("Teleported to " .. selected)
                 else
                     warn("Failed to find a CFrame for " .. selected)
@@ -123,6 +126,21 @@ local Dropdown = Tab:Dropdown({
     end
 })
 
+-------------------------------
+--  Refresh Levers
+-------------------------------
+local RefreshButton = Tab:Button({
+    Title = "Refresh Levers",
+    Desc = "Updates the lever list in the dropdown",
+    Locked = false,
+    Callback = function()
+        leverNames = getLeverNames()
+        Dropdown:Refresh(leverNames) -- Update dropdown values dynamically
+        print("Lever list refreshed!")
+    end
+})
+
+Tab:Divider()
 --------------------------------------------------------------------
 --                 Teleport to MasterLever
 --------------------------------------------------------------------
@@ -258,3 +276,43 @@ local Toggle = Tab:Toggle({
     end
 })
 
+Tab:Divider()
+
+--------------------------------------------------------------------
+--                 Fullbright
+--------------------------------------------------------------------
+local Button = Tab:Button({
+    Title = "Fullbright",
+    Desc = "Lets you see in the dark.",
+    Locked = false,
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Fullbright.lua"))()
+    end
+})
+
+--------------------------------------------------------------------
+--                 No Fog
+--------------------------------------------------------------------
+local Button = Tab:Button({
+    Title = "Remove fog",
+    Desc = "Removes the fog.",
+    Locked = false,
+    Callback = function()
+         local function removeFog()
+    local lighting = game:GetService("Lighting")
+    lighting.FogEnd = 1e10
+    lighting.FogStart = 1e10
+    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
+end
+
+
+
+removeFog()
+
+game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogStart"):Connect(removeFog)
+game:GetService("Lighting"):GetPropertyChangedSignal("FogColor"):Connect(removeFog)
+
+game:GetService("Lighting").Changed:Connect(removeFog)
+    end
+})
