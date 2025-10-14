@@ -110,7 +110,7 @@ local Dropdown = Tab:Dropdown({
 
                 local targetCFrame = getModelCFrame(v)
                 if targetCFrame then
-                    root.CFrame = targetCFrame + Vector3.new(0, 3, 0) -- teleport slightly above lever
+                    root.CFrame = targetCFrame + Vector3.new(0, 7, 0) -- teleport slightly above lever
                     print("Teleported to " .. selected)
                 else
                     warn("Failed to find a CFrame for " .. selected)
