@@ -136,7 +136,12 @@ local RefreshButton = Tab:Button({
     Callback = function()
         leverNames = getLeverNames()
         Dropdown:Refresh(leverNames) -- Update dropdown values dynamically
-        print("Lever list refreshed!")
+        WindUI:Notify({
+    Title = "Refreshed",
+    Content = "Lever list refreshed",
+    Duration = 3, -- 3 seconds
+    Icon = "bird",
+})
     end
 })
 
