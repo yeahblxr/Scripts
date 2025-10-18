@@ -56,7 +56,6 @@ local Tab = Window:Tab({
 --                 Teleport to Lever
 --------------------------------------------------------------------
 
--- Function to collect lever names dynamically
 local function getLeverNames()
     local names = {}
     for _, v in pairs(workspace:GetDescendants()) do
@@ -69,18 +68,13 @@ local function getLeverNames()
     end)
     return names
 end
-
--- Initial lever names
 local leverNames = getLeverNames()
-
--- Function to get model's center CFrame safely
 local function getModelCFrame(model)
     if not model:IsA("Model") then return end
     local primary = model.PrimaryPart
     if primary then
         return primary.CFrame
     else
-        -- Approximate from parts if no PrimaryPart
         for _, p in ipairs(model:GetDescendants()) do
             if p:IsA("BasePart") then
                 return p.CFrame
@@ -89,7 +83,7 @@ local function getModelCFrame(model)
     end
 end
 
--- Create dropdown for teleporting to levers
+
 local Dropdown = Tab:Dropdown({
     Title = "Teleport to Lever",
     Values = #leverNames > 0 and leverNames or {"No levers found"},
@@ -113,7 +107,7 @@ local Dropdown = Tab:Dropdown({
 
                 local targetCFrame = getModelCFrame(v)
                 if targetCFrame then
-                    root.CFrame = targetCFrame + Vector3.new(0, 7, 0) -- slightly above lever
+                    root.CFrame = targetCFrame + Vector3.new(0, 7, 0)
                     print("Teleported to " .. selected)
                 else
                     warn("Failed to find a CFrame for " .. selected)
@@ -135,11 +129,11 @@ local RefreshButton = Tab:Button({
     Locked = false,
     Callback = function()
         leverNames = getLeverNames()
-        Dropdown:Refresh(leverNames) -- Update dropdown values dynamically
+        Dropdown:Refresh(leverNames)
         WindUI:Notify({
     Title = "Refreshed",
     Content = "Lever list refreshed",
-    Duration = 3, -- 3 seconds
+    Duration = 3,
     Icon = "refresh-cw",
 })
     end
@@ -224,7 +218,6 @@ local Button = Tab:Button({
             return
         end
 
-        -- Teleport to the specified coordinates
         root.CFrame = CFrame.new(27, 95, 28)
         print("Teleported to (27, 95, 28)")
     end
@@ -252,7 +245,6 @@ local Toggle = Tab:Toggle({
         local Head = char:WaitForChild("Head")
 
         if state then
-            -- Enable fly
             humanoid.PlatformStand = true
             Head.Anchored = true
             if CFloop then CFloop:Disconnect() end
@@ -272,7 +264,6 @@ local Toggle = Tab:Toggle({
             end)
             print("CFrame Fly Enabled")
         else
-            -- Disable fly
             if CFloop then CFloop:Disconnect() end
             humanoid.PlatformStand = false
             Head.Anchored = false
@@ -307,7 +298,7 @@ local Button = Tab:Button({
     local lighting = game:GetService("Lighting")
     lighting.FogEnd = 1e10
     lighting.FogStart = 1e10
-    lighting.FogColor = Color3.new(1, 1, 1) -- Optional: Set to desired color
+    lighting.FogColor = Color3.new(1, 1, 1)
 end
 
 
