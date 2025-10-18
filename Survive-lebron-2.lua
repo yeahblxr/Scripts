@@ -140,7 +140,7 @@ local RefreshButton = Tab:Button({
     Title = "Refreshed",
     Content = "Lever list refreshed",
     Duration = 3, -- 3 seconds
-    Icon = "bird",
+    Icon = "refresh-cw",
 })
     end
 })
