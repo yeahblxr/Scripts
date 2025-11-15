@@ -1,4 +1,4 @@
--- yes
+-- hahah
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -146,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.0",
+    Title = "V1.4.1",
     Color = Color3.fromHex("#663399")
 })
 
@@ -160,7 +160,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Spectate players, Free private server, Added settings, removed egor script. (broken)",
+    Content = "Fix script not loading fully, Removed free private server (Patched), Fixed flinging all upon execute",
     Buttons = {
         {
             Title = "Continue",
@@ -393,7 +393,7 @@ local Toggle = Tab:Toggle({
     end,
 })
 
--- Fov Changer script start
+--[[ Fov Changer script start
 -- helper clamp in case WindUI or environment doesn't have one
 local function clamp(val, min, max)
     if val < min then return min end
@@ -436,7 +436,7 @@ local Input = Tab:Input({
             })
         end
     end,
-})
+}) --]]
 
 local Tab = Window:Tab({
     Title = "Fun Scripts",
@@ -637,7 +637,7 @@ end
 
 -- Build list of player names (excluding yourself)
 local function GetPlayerNames()
-    local names = {}
+    local names = {"None", "All"}
     for _, plr in ipairs(Players:GetPlayers()) do
         if plr ~= Player then
             table.insert(names, plr.Name)
@@ -652,7 +652,7 @@ end
 local Dropdown = Tab:Dropdown({
     Title = "Select Player to Fling",
     Values = GetPlayerNames(),
-    Value = "All",
+    Value = "None",
     Callback = function(selectedName)
         if selectedName == "All" then
             for _, targetPlayer in ipairs(Players:GetPlayers()) do
@@ -824,7 +824,7 @@ end
 
 -- Create dropdown for player selection
 local playerNames = getPlayerNames()
-local defaultValue = playerNames[1]
+local defaultValue = "Select a Player"
 
 local SpectateDropdown = Tab:Dropdown({
     Title = "Spectate Player",
@@ -1328,15 +1328,6 @@ until Server
 if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
     TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
 end
-    end
-})
-
-local Button = Tab:Button({
-    Title = "Free private server",
-    Desc = "Makes a server that only you are in",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/Free%20Private%20Server.lua"))()
     end
 })
 
