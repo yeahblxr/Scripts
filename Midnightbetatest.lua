@@ -159,7 +159,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Fix Flinging all upon load",
+    Content = "Fix script not loading fully, Removed free private server (Patched), Fixed flinging all upon execute",
     Buttons = {
         {
             Title = "Continue",
@@ -823,7 +823,7 @@ end
 
 -- Create dropdown for player selection
 local playerNames = getPlayerNames()
-local defaultValue = playerNames[1]
+local defaultValue = Select a Player
 
 local SpectateDropdown = Tab:Dropdown({
     Title = "Spectate Player",
@@ -1327,15 +1327,6 @@ until Server
 if Server.playing < Server.maxPlayers and Server.id ~= game.JobId then
     TeleportService:TeleportToPlaceInstance(game.PlaceId, Server.id, game.Players.LocalPlayer)
 end
-    end
-})
-
-local Button = Tab:Button({
-    Title = "Free private server",
-    Desc = "Makes a server that only you are in",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/Free%20Private%20Server.lua"))()
     end
 })
 
