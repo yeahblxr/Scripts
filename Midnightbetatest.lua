@@ -1,4 +1,3 @@
--- lotta work
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -146,7 +145,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.0",
+    Title = "V1.4.1",
     Color = Color3.fromHex("#663399")
 })
 
@@ -160,7 +159,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Spectate players, Free private server, Added settings, removed egor script. (broken)",
+    Content = "Fix Flinging all upon load",
     Buttons = {
         {
             Title = "Continue",
@@ -500,7 +499,7 @@ local SkidFling = function(TargetPlayer)
             getgenv().OldPos = RootPart.CFrame
         end
         if THumanoid and THumanoid.Sit then
-            return Message("Error Occurred", "Target is sitting", 5)
+            return Message("Error Occurred", "Targeting is sitting", 5)
         end
 
         if THead then
@@ -534,35 +533,49 @@ local SkidFling = function(TargetPlayer)
 
                         FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0 ,0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(2.25, 1.5, -2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(-2.25, -1.5, 2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection, CFrame.Angles(math.rad(Angle), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection, CFrame.Angles(math.rad(Angle), 0, 0))
                         task.wait()
                     else
                         FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, -TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5 ,0), CFrame.Angles(math.rad(-90), 0, 0))
                         task.wait()
+
                         FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
                         task.wait()
                     end
@@ -621,30 +634,26 @@ local SkidFling = function(TargetPlayer)
     end
 end
 
--- Build list of player names
+-- Build list of player names (excluding yourself)
 local function GetPlayerNames()
-    local names = {}
+    local names = {"None", "All"}
     for _, plr in ipairs(Players:GetPlayers()) do
         if plr ~= Player then
             table.insert(names, plr.Name)
         end
     end
-
     table.sort(names)
     table.insert(names, 1, "All")
-    table.insert(names, 1, "None")
     return names
 end
 
--- UI Dropdown
+-- Create the dropdown UI
 local Dropdown = Tab:Dropdown({
     Title = "Select Player to Fling",
     Values = GetPlayerNames(),
     Value = "None",
     Callback = function(selectedName)
-        if selectedName == "None" then
-            return
-        elseif selectedName == "All" then
+        if selectedName == "All" then
             for _, targetPlayer in ipairs(Players:GetPlayers()) do
                 if targetPlayer ~= Player then
                     SkidFling(targetPlayer)
@@ -661,41 +670,25 @@ local Dropdown = Tab:Dropdown({
     end,
 })
 
--- Player join update
+-- Update dropdown when players join
 Players.PlayerAdded:Connect(function(plr)
     if plr ~= Player then
         local currentValues = Dropdown.Values
-
-        table.remove(currentValues, 1)
-        table.remove(currentValues, 1)
-
         table.insert(currentValues, plr.Name)
         table.sort(currentValues)
-
-        table.insert(currentValues, 1, "All")
-        table.insert(currentValues, 1, "None")
-
         Dropdown.Values = currentValues
     end
 end)
 
--- Player leave update
+-- Update dropdown when players leave
 Players.PlayerRemoving:Connect(function(plr)
     local currentValues = Dropdown.Values
-
-    table.remove(currentValues, 1)
-    table.remove(currentValues, 1)
-
     for i, name in ipairs(currentValues) do
         if name == plr.Name then
             table.remove(currentValues, i)
             break
         end
     end
-
-    table.insert(currentValues, 1, "All")
-    table.insert(currentValues, 1, "None")
-
     Dropdown.Values = currentValues
 end)
 
