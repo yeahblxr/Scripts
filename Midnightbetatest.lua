@@ -392,7 +392,7 @@ local Toggle = Tab:Toggle({
     end,
 })
 
--- Fov Changer script start
+--[[ Fov Changer script start
 -- helper clamp in case WindUI or environment doesn't have one
 local function clamp(val, min, max)
     if val < min then return min end
@@ -435,7 +435,7 @@ local Input = Tab:Input({
             })
         end
     end,
-})
+}) --]]
 
 local Tab = Window:Tab({
     Title = "Fun Scripts",
