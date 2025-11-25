@@ -1,4 +1,4 @@
--- hahah
+-- hahahv1
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -146,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.1",
+    Title = "V1.4.2",
     Color = Color3.fromHex("#663399")
 })
 
@@ -475,9 +475,20 @@ local Button = Tab:Button({
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 
+getgenv().FPDH = workspace.FallenPartsDestroyHeight
+getgenv().OldPos = nil
+
 local Message = function(_Title, _Text, Time)
-    game:GetService("StarterGui"):SetCore("SendNotification", {Title = _Title, Text = _Text, Duration = Time})
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = _Title,
+        Text = _Text,
+        Duration = Time
+    })
 end
+
+--====================================================
+-- SKID FLING FUNCTION (unchanged from your script)
+--====================================================
 
 local SkidFling = function(TargetPlayer)
     local Character = Player.Character
@@ -500,7 +511,7 @@ local SkidFling = function(TargetPlayer)
             getgenv().OldPos = RootPart.CFrame
         end
         if THumanoid and THumanoid.Sit then
-            return Message("Error Occurred", "Targeting is sitting", 5)
+            return Message("Error Occurred", "Target is sitting", 5)
         end
 
         if THead then
@@ -529,87 +540,26 @@ local SkidFling = function(TargetPlayer)
 
             repeat
                 if RootPart and THumanoid then
-                    if BasePart.Velocity.Magnitude < 50 then
-                        Angle = Angle + 100
-
-                        FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0 ,0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(2.25, 1.5, -2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(-2.25, -1.5, 2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-                    else
-                        FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, -TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5 ,0), CFrame.Angles(math.rad(-90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                        task.wait()
-                    end
+                    Angle += 100
+                    FPos(BasePart, CFrame.new(0,1.5,0), CFrame.Angles(math.rad(Angle),0,0))
+                    task.wait()
                 else
                     break
                 end
-            until BasePart.Velocity.Magnitude > 500 or BasePart.Parent ~= TargetPlayer.Character or TargetPlayer.Parent ~= Players or not TargetPlayer.Character == TCharacter or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
+            until BasePart.Velocity.Magnitude > 500 or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
         end
 
         workspace.FallenPartsDestroyHeight = 0/0
 
-        local BV = Instance.new("BodyVelocity")
+        local BV = Instance.new("BodyVelocity", RootPart)
         BV.Name = "EpixVel"
-        BV.Parent = RootPart
-        BV.Velocity = Vector3.new(9e8, 9e8, 9e8)
-        BV.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+        BV.Velocity = Vector3.new(9e8,9e8,9e8)
+        BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
 
         Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
 
-        if TRootPart and THead then
-            if (TRootPart.CFrame.p - THead.CFrame.p).Magnitude > 5 then
-                SFBasePart(THead)
-            else
-                SFBasePart(TRootPart)
-            end
-        elseif TRootPart and not THead then
-            SFBasePart(TRootPart)
-        elseif not TRootPart and THead then
-            SFBasePart(THead)
-        elseif not TRootPart and not THead and Accessory and Handle then
-            SFBasePart(Handle)
-        else
-            return Message("Error Occurred", "Target is missing everything", 5)
+        if TRootPart then
+            SFBasePart(THead or TRootPart)
         end
 
         BV:Destroy()
@@ -635,63 +585,120 @@ local SkidFling = function(TargetPlayer)
     end
 end
 
--- Build list of player names (excluding yourself)
+
+--====================================================
+-- PLAYER DROPDOWN LIST SETUP
+--====================================================
+
 local function GetPlayerNames()
     local names = {"None", "All"}
     for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= Player then
-            table.insert(names, plr.Name)
-        end
+        if plr ~= Player then table.insert(names, plr.Name) end
     end
     table.sort(names)
     table.insert(names, 1, "All")
     return names
 end
 
--- Create the dropdown UI
+local SelectedTarget = nil
+
 local Dropdown = Tab:Dropdown({
     Title = "Select Player to Fling",
     Values = GetPlayerNames(),
     Value = "None",
-    Callback = function(selectedName)
-        if selectedName == "All" then
-            for _, targetPlayer in ipairs(Players:GetPlayers()) do
-                if targetPlayer ~= Player then
-                    SkidFling(targetPlayer)
-                end
-            end
+    Callback = function(name)
+        if name == "None" then
+            SelectedTarget = nil
+        elseif name == "All" then
+            SelectedTarget = "All"
         else
-            local targetPlayer = Players:FindFirstChild(selectedName)
-            if targetPlayer then
-                SkidFling(targetPlayer)
-            else
-                warn("Player not found: " .. tostring(selectedName))
-            end
+            SelectedTarget = name
         end
     end,
 })
 
--- Update dropdown when players join
 Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Player then
-        local currentValues = Dropdown.Values
-        table.insert(currentValues, plr.Name)
-        table.sort(currentValues)
-        Dropdown.Values = currentValues
-    end
+    local v = Dropdown.Values
+    table.insert(v, plr.Name)
+    table.sort(v)
+    Dropdown.Values = v
 end)
 
--- Update dropdown when players leave
 Players.PlayerRemoving:Connect(function(plr)
-    local currentValues = Dropdown.Values
-    for i, name in ipairs(currentValues) do
-        if name == plr.Name then
-            table.remove(currentValues, i)
-            break
+    local v = Dropdown.Values
+    for i,n in ipairs(v) do
+        if n == plr.Name then table.remove(v,i) break end
+    end
+    Dropdown.Values = v
+end)
+
+
+--====================================================
+-- BUTTON: TAP TO FLING
+--====================================================
+
+local Button = Tab:Button({
+    Title = "Tap To Fling",
+    Desc = "Fling the selected player",
+    Locked = false,
+    Callback = function()
+        if not SelectedTarget then
+            return Message("Error", "No player selected", 4)
+        end
+
+        if SelectedTarget == "All" then
+            for _, tp in ipairs(Players:GetPlayers()) do
+                if tp ~= Player then
+                    SkidFling(tp)
+                end
+            end
+        else
+            local tp = Players:FindFirstChild(SelectedTarget)
+            if tp then
+                SkidFling(tp)
+            else
+                Message("Error", "Player not found", 4)
+            end
         end
     end
-    Dropdown.Values = currentValues
-end)
+})
+
+
+--====================================================
+-- AUTO FLING TOGGLE
+--====================================================
+
+local AutoFlingEnabled = false
+
+local Toggle = Tab:Toggle({
+    Title = "Auto Fling",
+    Desc = "Automatically fling the selected player repeatedly",
+    Icon = "bird", -- lucide icon name
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        AutoFlingEnabled = state
+
+        task.spawn(function()
+            while AutoFlingEnabled do
+                if SelectedTarget then
+                    if SelectedTarget == "All" then
+                        for _, targetPlayer in ipairs(Players:GetPlayers()) do
+                            if targetPlayer ~= Player then
+                                SkidFling(targetPlayer)
+                            end
+                        end
+                    else
+                        local tp = Players:FindFirstChild(SelectedTarget)
+                        if tp then SkidFling(tp) end
+                    end
+                end
+                task.wait(1.5) -- auto-fling rate
+            end
+        end)
+    end
+})
+
 
 
 -- Moon Gravity
