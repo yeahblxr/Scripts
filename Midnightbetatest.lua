@@ -146,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.2",
+    Title = "V1.4.3",
     Color = Color3.fromHex("#663399")
 })
 
@@ -472,6 +472,8 @@ local Button = Tab:Button({
 })
 
 -- Fling Player
+Tab:Divider()
+
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 
@@ -591,30 +593,36 @@ end
 --====================================================
 
 local function GetPlayerNames()
-    local names = {"None", "All"}
+    local names = {}
+
+    -- add all players except you
     for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= Player then table.insert(names, plr.Name) end
+        if plr ~= Player then
+            table.insert(names, plr.Name)
+        end
     end
-    table.sort(names)
-    table.insert(names, 1, "All")
+
+    table.sort(names)  -- sort only the player names
+
+    table.insert(names, 1, "All") -- put All at top
+
     return names
 end
+
 
 local SelectedTarget = nil
 
 local Dropdown = Tab:Dropdown({
     Title = "Select Player to Fling",
     Values = GetPlayerNames(),
-    Value = "None",
-    Callback = function(name)
-        if name == "None" then
-            SelectedTarget = nil
-        elseif name == "All" then
-            SelectedTarget = "All"
-        else
-            SelectedTarget = name
-        end
-    end,
+    Value = "All",
+Callback = function(selectedName)
+    if selectedName == "All" then
+        SelectedTarget = "All"
+    else
+        SelectedTarget = selectedName
+    end
+end
 })
 
 Players.PlayerAdded:Connect(function(plr)
@@ -673,7 +681,7 @@ local AutoFlingEnabled = false
 local Toggle = Tab:Toggle({
     Title = "Auto Fling",
     Desc = "Automatically fling the selected player repeatedly",
-    Icon = "bird", -- lucide icon name
+    Icon = "refresh-ccw", -- lucide icon name
     Type = "Checkbox",
     Value = false,
     Callback = function(state)
@@ -699,6 +707,7 @@ local Toggle = Tab:Toggle({
     end
 })
 
+Tab:Divider()
 
 
 -- Moon Gravity
