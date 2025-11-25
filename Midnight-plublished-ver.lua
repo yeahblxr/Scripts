@@ -1,4 +1,4 @@
--- hahah
+-- hahahv3
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -60,7 +60,6 @@ Window:EditOpenButton({
     Enabled = false
 })
 
--- Make sure the button is created after the Window is fully initialized
 local gui = Instance.new("ScreenGui")
 gui.Name = "StrikeXMenuGUI"
 gui.IgnoreGuiInset = true
@@ -93,7 +92,6 @@ gradient.Color = ColorSequence.new{
 gradient.Rotation = 45
 gradient.Parent = stroke
 
--- Dragging setup
 local dragging, dragInput, dragStart, startPos
 button.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -125,7 +123,6 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
     end
 end)
 
--- Make sure the window is ready before toggling
 local opened = true
 button.MouseButton1Click:Connect(function()
     opened = not opened
@@ -140,13 +137,12 @@ button.MouseButton1Click:Connect(function()
     end
 end)
 
--- Cleanup if WindUI window is destroyed
 Window:OnDestroy(function()
     gui:Destroy()
 end)
 
 Window:Tag({
-    Title = "V1.4.1",
+    Title = "V1.4.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -160,7 +156,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Fix script not loading fully, Removed free private server (Patched), Fixed flinging all upon execute",
+    Content = "Added buttons to fling and tp to people.",
     Buttons = {
         {
             Title = "Continue",
@@ -180,7 +176,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "UNC test results",
     Content = "Type /console in chat or press F9 to view results.",
-    Duration = 5, -- 3 seconds
+    Duration = 5, 
     Icon = "list-checks",
 })
     end
@@ -195,7 +191,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "Copied!",
     Content = "Discord link copied to clipboard",
-    Duration = 2, -- 3 seconds
+    Duration = 2, 
     Icon = "check",
 })
     end
@@ -210,7 +206,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "Copied!",
     Content = "Tiktok link copied to clipboard",
-    Duration = 2, -- 3 seconds
+    Duration = 2, 
     Icon = "check",
 })
     end
@@ -225,7 +221,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "Copied!",
     Content = "Github link copied to clipboard",
-    Duration = 2, -- 3 seconds
+    Duration = 2,
     Icon = "check",
 })
     end
@@ -240,10 +236,6 @@ local Tab = Window:Tab({
 
 local Slider = Tab:Slider({
     Title = "Walkspeed",
-    
-    -- To make float number supported, 
-    -- make the Step a float number.
-    -- example: Step = 0.1
     Step = 2,
     
     Value = {
@@ -258,10 +250,6 @@ local Slider = Tab:Slider({
 
 local Slider = Tab:Slider({
     Title = "Jumppower",
-    
-    -- To make float number supported, 
-    -- make the Step a float number.
-    -- example: Step = 0.1
     Step = 10,
     
     Value = {
@@ -278,7 +266,6 @@ local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
--- keep track of the connection so we can disconnect it
 local infiniteJumpConnection
 
 local Toggle = Tab:Toggle({
@@ -289,7 +276,6 @@ local Toggle = Tab:Toggle({
     Default = false,
     Callback = function(enabled) 
         if enabled then
-            -- if already connected, avoid double-connecting
             if infiniteJumpConnection then return end
 
             infiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
@@ -301,7 +287,6 @@ local Toggle = Tab:Toggle({
                 end
             end)
         else
-            -- disable: disconnect the listener
             if infiniteJumpConnection then
                 infiniteJumpConnection:Disconnect()
                 infiniteJumpConnection = nil
@@ -316,7 +301,7 @@ local player = Players.LocalPlayer
 
 local deathPosition = nil
 local characterAddedConnection = nil
-local deathConnections = {} -- track humanoid.Died connections per character
+local deathConnections = {} 
 
 local function onCharacterDied(character)
     if not character then return end
@@ -334,25 +319,20 @@ local function cleanupCharacterConnections(character)
 end
 
 local function onCharacterAdded(character)
-    -- ensure previous connections for this character are cleaned (safety)
     cleanupCharacterConnections(character)
 
     local humanoid = character:WaitForChild("Humanoid")
-    -- connect death listener and store it
     deathConnections[character] = humanoid.Died:Connect(function()
         onCharacterDied(character)
     end)
 
-    -- if we have a stored deathPosition (and toggle is still on), teleport
     if deathPosition then
         local hrp = character:WaitForChild("HumanoidRootPart")
         if hrp then
-            -- small upward offset so they don't get stuck
             hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
         end
     end
 
-    -- clean up when character is removed/replaced
     character.AncestryChanged:Connect(function(_, parent)
         if not parent then
             cleanupCharacterConnections(character)
@@ -360,7 +340,6 @@ local function onCharacterAdded(character)
     end)
 end
 
--- Toggle
 local Toggle = Tab:Toggle({
     Title = "Respawn At death point",
     Desc = "Respawns you at the area where you died",
@@ -369,20 +348,17 @@ local Toggle = Tab:Toggle({
     Default = false,
     Callback = function(enabled) 
         if enabled then
-            -- start tracking
-            deathPosition = nil -- reset any old death position
+            deathPosition = nil 
             characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
             if player.Character then
                 onCharacterAdded(player.Character)
             end
         else
-            -- stop tracking and clear state
             if characterAddedConnection then
                 characterAddedConnection:Disconnect()
                 characterAddedConnection = nil
             end
             deathPosition = nil
-            -- clean up any existing per-character death listeners
             for character, conn in pairs(deathConnections) do
                 if conn then
                     conn:Disconnect()
@@ -472,12 +448,22 @@ local Button = Tab:Button({
 })
 
 -- Fling Player
+Tab:Divider()
+
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 
+getgenv().FPDH = workspace.FallenPartsDestroyHeight
+getgenv().OldPos = nil
+
 local Message = function(_Title, _Text, Time)
-    game:GetService("StarterGui"):SetCore("SendNotification", {Title = _Title, Text = _Text, Duration = Time})
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = _Title,
+        Text = _Text,
+        Duration = Time
+    })
 end
+
 
 local SkidFling = function(TargetPlayer)
     local Character = Player.Character
@@ -500,7 +486,7 @@ local SkidFling = function(TargetPlayer)
             getgenv().OldPos = RootPart.CFrame
         end
         if THumanoid and THumanoid.Sit then
-            return Message("Error Occurred", "Targeting is sitting", 5)
+            return Message("Error Occurred", "Target is sitting", 5)
         end
 
         if THead then
@@ -529,87 +515,26 @@ local SkidFling = function(TargetPlayer)
 
             repeat
                 if RootPart and THumanoid then
-                    if BasePart.Velocity.Magnitude < 50 then
-                        Angle = Angle + 100
-
-                        FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0 ,0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(2.25, 1.5, -2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(-2.25, -1.5, 2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection, CFrame.Angles(math.rad(Angle), 0, 0))
-                        task.wait()
-                    else
-                        FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, -TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5 ,0), CFrame.Angles(math.rad(-90), 0, 0))
-                        task.wait()
-
-                        FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
-                        task.wait()
-                    end
+                    Angle += 100
+                    FPos(BasePart, CFrame.new(0,1.5,0), CFrame.Angles(math.rad(Angle),0,0))
+                    task.wait()
                 else
                     break
                 end
-            until BasePart.Velocity.Magnitude > 500 or BasePart.Parent ~= TargetPlayer.Character or TargetPlayer.Parent ~= Players or not TargetPlayer.Character == TCharacter or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
+            until BasePart.Velocity.Magnitude > 500 or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
         end
 
         workspace.FallenPartsDestroyHeight = 0/0
 
-        local BV = Instance.new("BodyVelocity")
+        local BV = Instance.new("BodyVelocity", RootPart)
         BV.Name = "EpixVel"
-        BV.Parent = RootPart
-        BV.Velocity = Vector3.new(9e8, 9e8, 9e8)
-        BV.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+        BV.Velocity = Vector3.new(9e8,9e8,9e8)
+        BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
 
         Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
 
-        if TRootPart and THead then
-            if (TRootPart.CFrame.p - THead.CFrame.p).Magnitude > 5 then
-                SFBasePart(THead)
-            else
-                SFBasePart(TRootPart)
-            end
-        elseif TRootPart and not THead then
-            SFBasePart(TRootPart)
-        elseif not TRootPart and THead then
-            SFBasePart(THead)
-        elseif not TRootPart and not THead and Accessory and Handle then
-            SFBasePart(Handle)
-        else
-            return Message("Error Occurred", "Target is missing everything", 5)
+        if TRootPart then
+            SFBasePart(THead or TRootPart)
         end
 
         BV:Destroy()
@@ -635,63 +560,116 @@ local SkidFling = function(TargetPlayer)
     end
 end
 
--- Build list of player names (excluding yourself)
+
 local function GetPlayerNames()
-    local names = {"None", "All"}
+    local names = {}
+
+    -- add all players except you
     for _, plr in ipairs(Players:GetPlayers()) do
         if plr ~= Player then
             table.insert(names, plr.Name)
         end
     end
+
     table.sort(names)
-    table.insert(names, 1, "All")
+
+    table.insert(names, 1, "All") 
+
     return names
 end
 
--- Create the dropdown UI
+
+local SelectedTarget = nil
+
 local Dropdown = Tab:Dropdown({
     Title = "Select Player to Fling",
     Values = GetPlayerNames(),
-    Value = "None",
-    Callback = function(selectedName)
-        if selectedName == "All" then
-            for _, targetPlayer in ipairs(Players:GetPlayers()) do
-                if targetPlayer ~= Player then
-                    SkidFling(targetPlayer)
+    Value = "All",
+Callback = function(selectedName)
+    if selectedName == "All" then
+        SelectedTarget = "All"
+    else
+        SelectedTarget = selectedName
+    end
+end
+})
+
+Players.PlayerAdded:Connect(function(plr)
+    local v = Dropdown.Values
+    table.insert(v, plr.Name)
+    table.sort(v)
+    Dropdown.Values = v
+end)
+
+Players.PlayerRemoving:Connect(function(plr)
+    local v = Dropdown.Values
+    for i,n in ipairs(v) do
+        if n == plr.Name then table.remove(v,i) break end
+    end
+    Dropdown.Values = v
+end)
+
+
+
+local Button = Tab:Button({
+    Title = "Tap To Fling",
+    Desc = "Fling the selected player",
+    Locked = false,
+    Callback = function()
+        if not SelectedTarget then
+            return Message("Error", "No player selected", 4)
+        end
+
+        if SelectedTarget == "All" then
+            for _, tp in ipairs(Players:GetPlayers()) do
+                if tp ~= Player then
+                    SkidFling(tp)
                 end
             end
         else
-            local targetPlayer = Players:FindFirstChild(selectedName)
-            if targetPlayer then
-                SkidFling(targetPlayer)
+            local tp = Players:FindFirstChild(SelectedTarget)
+            if tp then
+                SkidFling(tp)
             else
-                warn("Player not found: " .. tostring(selectedName))
+                Message("Error", "Player not found", 4)
             end
         end
-    end,
+    end
 })
 
--- Update dropdown when players join
-Players.PlayerAdded:Connect(function(plr)
-    if plr ~= Player then
-        local currentValues = Dropdown.Values
-        table.insert(currentValues, plr.Name)
-        table.sort(currentValues)
-        Dropdown.Values = currentValues
-    end
-end)
 
--- Update dropdown when players leave
-Players.PlayerRemoving:Connect(function(plr)
-    local currentValues = Dropdown.Values
-    for i, name in ipairs(currentValues) do
-        if name == plr.Name then
-            table.remove(currentValues, i)
-            break
-        end
+local AutoFlingEnabled = false
+
+local Toggle = Tab:Toggle({
+    Title = "Auto Fling",
+    Desc = "Automatically fling the selected player repeatedly",
+    Icon = "refresh-ccw", 
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        AutoFlingEnabled = state
+
+        task.spawn(function()
+            while AutoFlingEnabled do
+                if SelectedTarget then
+                    if SelectedTarget == "All" then
+                        for _, targetPlayer in ipairs(Players:GetPlayers()) do
+                            if targetPlayer ~= Player then
+                                SkidFling(targetPlayer)
+                            end
+                        end
+                    else
+                        local tp = Players:FindFirstChild(SelectedTarget)
+                        if tp then SkidFling(tp) end
+                    end
+                end
+                task.wait(1.5)
+            end
+        end)
     end
-    Dropdown.Values = currentValues
-end)
+})
+
+Tab:Divider()
 
 
 -- Moon Gravity
@@ -736,7 +714,6 @@ local Button = Tab:Button({
 
 
 -- Spectate Player script start
--- Get all player names except yourself
 Tab:Divider()
 
 local function getPlayerNames()
@@ -749,7 +726,6 @@ local function getPlayerNames()
         end
     end
     
-    -- Return at least one value to prevent empty dropdown
     if #playerNames == 0 then
         return {"No Players Available"}
     end
@@ -757,13 +733,11 @@ local function getPlayerNames()
     return playerNames
 end
 
--- Variables to track spectating state
 local isSpectating = false
 local spectateConnection = nil
 local originalCFrame = nil
 local currentSpectateTarget = nil
 
--- Function to start spectating a player
 local function spectatePlayer(playerName)
     if playerName == "No Players Available" then
         print("No players available to spectate")
@@ -774,17 +748,14 @@ local function spectatePlayer(playerName)
     local localPlayer = game.Players.LocalPlayer
     
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        -- Stop current spectating if active
         if isSpectating then
             stopSpectating()
         end
         
-        -- Store original camera position
         if not originalCFrame then
             originalCFrame = workspace.CurrentCamera.CFrame
         end
         
-        -- Set camera to follow target player
         workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
         workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
         
@@ -797,17 +768,14 @@ local function spectatePlayer(playerName)
     end
 end
 
--- Function to stop spectating
 local function stopSpectating()
     local localPlayer = game.Players.LocalPlayer
     
     if isSpectating then
-        -- Reset camera to local player
         if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
             workspace.CurrentCamera.CameraSubject = localPlayer.Character.Humanoid
         end
         
-        -- Restore original camera position if available
         if originalCFrame then
             workspace.CurrentCamera.CFrame = originalCFrame
             originalCFrame = nil
@@ -822,7 +790,6 @@ local function stopSpectating()
     end
 end
 
--- Create dropdown for player selection
 local playerNames = getPlayerNames()
 local defaultValue = "Select a Player"
 
@@ -836,7 +803,6 @@ local SpectateDropdown = Tab:Dropdown({
     end
 })
 
--- Create button to stop spectating
 local StopSpectateButton = Tab:Button({
     Title = "Stop Spectating",
     Desc = "Return camera to your character",
@@ -846,14 +812,11 @@ local StopSpectateButton = Tab:Button({
     end
 })
 
--- Function to update dropdown with new player list
 local function updatePlayerDropdown()
     local newPlayerNames = getPlayerNames()
     
-    -- Update the dropdown values using WindUI's SetValues method
     SpectateDropdown:SetValues(newPlayerNames)
     
-    -- If currently spectating someone who left, stop spectating
     if isSpectating and currentSpectateTarget then
         local targetStillExists = false
         for _, name in pairs(newPlayerNames) do
@@ -872,9 +835,9 @@ local function updatePlayerDropdown()
     print("Updated player list")
 end
 
--- Connect to player events to update the dropdown
+
 game.Players.PlayerAdded:Connect(function(player)
-    wait(1) -- Small delay to ensure player is fully loaded
+    wait(1) 
     updatePlayerDropdown()
 end)
 
@@ -882,7 +845,7 @@ game.Players.PlayerRemoving:Connect(function(player)
     updatePlayerDropdown()
 end)
 
--- Optional: Add a refresh button to manually update the player list
+
 local RefreshButton = Tab:Button({
     Title = "Refresh Player List",
     Desc = "Update the spectate dropdown with current players",
@@ -919,7 +882,7 @@ local Button = Tab:Button({
     end
 })
 
-local floatName = nil -- or set to a string to exclude that part, e.g. "FloatPart"
+local floatName = nil 
 
 local Toggle = Tab:Toggle({
     Title = "Noclip",
@@ -928,11 +891,9 @@ local Toggle = Tab:Toggle({
     Type = "Checkbox",
     Default = false,
     Callback = function(Value) 
-        -- persistent connection for this toggle
         if not _G._noclipConnection then _G._noclipConnection = nil end
 
         local function enableNoclip()
-            -- disconnect existing if any
             if _G._noclipConnection then
                 _G._noclipConnection:Disconnect()
                 _G._noclipConnection = nil
@@ -981,9 +942,6 @@ local Button = Tab:Button({
 local Slider = Tab:Slider({
     Title = "Hitbox Size",
     
-    -- To make float number supported, 
-    -- make the Step a float number.
-    -- example: Step = 0.1
     Step = 1,
     
     Value = {
@@ -996,15 +954,13 @@ local Slider = Tab:Slider({
 _G.Disabled = true
  
 
---Don't Touch
 game:GetService('RunService').RenderStepped:connect(function()
 if _G.Disabled then
 for i,v in next, game:GetService('Players'):GetPlayers() do
 if v.Name ~= game:GetService('Players').LocalPlayer.Name then
 pcall(function()
 v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
---TRANSPARENCY of the HITBOX
-v.Character.HumanoidRootPart.Transparency = 0.5
+v.Character.HumanoidRootPart.Transparency = 0.7
 v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
 v.Character.HumanoidRootPart.Material = "Neon"
 v.Character.HumanoidRootPart.CanCollide = false
@@ -1031,7 +987,6 @@ local function setInvisibility(state)
         end
     end
 
-    -- Hide or show name tag (optional)
     local head = char:FindFirstChild("Head")
     if head then
         local nameTag = head:FindFirstChildWhichIsA("BillboardGui")
@@ -1049,14 +1004,17 @@ local Button = Tab:Button({
         loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
     end
 })
--- tp to players script
+
+--[[ -------------------------------------------------------------------------------------------------------------------------------------------------
+TP to players script
+]]----------------------------------------------------------------------------------------------------------------------------------------------------------
+Tab:Divider()
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Debounce to prevent rapid teleports
 local teleporting = false
+local SelectedTPPlayer = nil
 
--- Get all other player names for the dropdown
 local function getOtherPlayerNames()
     local names = {}
     for _, plr in pairs(Players:GetPlayers()) do
@@ -1067,7 +1025,6 @@ local function getOtherPlayerNames()
     return names
 end
 
--- Teleport function: move LocalPlayer near target player
 local function teleportToPlayer(targetName)
     if teleporting then return end
     teleporting = true
@@ -1082,7 +1039,7 @@ local function teleportToPlayer(targetName)
     local targetChar = target.Character or target.CharacterAdded:Wait()
     local targetHRP = targetChar:WaitForChild("HumanoidRootPart", 5)
     if not targetHRP then
-        warn("[Teleport] Target HumanoidRootPart missing")
+        warn("[Teleport] Target HRP missing")
         teleporting = false
         return
     end
@@ -1090,44 +1047,56 @@ local function teleportToPlayer(targetName)
     local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local myHRP = myChar:WaitForChild("HumanoidRootPart", 5)
     if not myHRP then
-        warn("[Teleport] My HumanoidRootPart missing")
+        warn("[Teleport] My HRP missing")
         teleporting = false
         return
     end
 
-    -- Teleport above the target player to avoid collisions
     myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
     print("[Teleport] Teleported to:", targetName)
 
-    task.delay(0.5, function()
+    task.delay(0.4, function()
         teleporting = false
     end)
 end
 
--- Create the dropdown in your Tab (assumes you already have a Tab variable)
+
 local Dropdown = Tab:Dropdown({
     Title = "Teleport to Player",
     Values = getOtherPlayerNames(),
-    Value = "",  -- default no selection
+    Value = "None",
     Callback = function(selection)
-        if selection and selection ~= "" then
-            teleportToPlayer(selection)
+        if selection == "None" or selection == "" then
+            SelectedTPPlayer = nil
+        else
+            SelectedTPPlayer = selection
         end
     end,
 })
 
--- Refresh dropdown values when players join or leave
 local function refreshDropdown()
-    local names = getOtherPlayerNames()
     if Dropdown.Refresh then
-        Dropdown:Refresh(names)
-    else
-        -- If no Refresh method, you could recreate dropdown here if needed
+        Dropdown:Refresh(getOtherPlayerNames())
     end
 end
 
 Players.PlayerAdded:Connect(refreshDropdown)
 Players.PlayerRemoving:Connect(refreshDropdown)
+
+local Button = Tab:Button({
+    Title = "Tap To Teleport",
+    Desc = "Teleport to the selected player",
+    Locked = false,
+    Callback = function()
+        if not SelectedTPPlayer then
+            warn("[Teleport] No player selected")
+            return
+        end
+
+        teleportToPlayer(SelectedTPPlayer)
+    end,
+})
+Window:Divider()
 
 
 local Tab = Window:Tab({
