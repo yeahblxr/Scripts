@@ -1,4 +1,4 @@
--- hahahv2
+-- hahahv3
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -60,7 +60,6 @@ Window:EditOpenButton({
     Enabled = false
 })
 
--- Make sure the button is created after the Window is fully initialized
 local gui = Instance.new("ScreenGui")
 gui.Name = "StrikeXMenuGUI"
 gui.IgnoreGuiInset = true
@@ -93,7 +92,6 @@ gradient.Color = ColorSequence.new{
 gradient.Rotation = 45
 gradient.Parent = stroke
 
--- Dragging setup
 local dragging, dragInput, dragStart, startPos
 button.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -125,7 +123,6 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
     end
 end)
 
--- Make sure the window is ready before toggling
 local opened = true
 button.MouseButton1Click:Connect(function()
     opened = not opened
@@ -140,13 +137,12 @@ button.MouseButton1Click:Connect(function()
     end
 end)
 
--- Cleanup if WindUI window is destroyed
 Window:OnDestroy(function()
     gui:Destroy()
 end)
 
 Window:Tag({
-    Title = "V1.4.4",
+    Title = "V1.4.5",
     Color = Color3.fromHex("#663399")
 })
 
@@ -180,7 +176,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "UNC test results",
     Content = "Type /console in chat or press F9 to view results.",
-    Duration = 5, -- 3 seconds
+    Duration = 5, 
     Icon = "list-checks",
 })
     end
@@ -195,7 +191,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "Copied!",
     Content = "Discord link copied to clipboard",
-    Duration = 2, -- 3 seconds
+    Duration = 2, 
     Icon = "check",
 })
     end
@@ -210,7 +206,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "Copied!",
     Content = "Tiktok link copied to clipboard",
-    Duration = 2, -- 3 seconds
+    Duration = 2, 
     Icon = "check",
 })
     end
@@ -225,7 +221,7 @@ local Button = Tab:Button({
             WindUI:Notify({
     Title = "Copied!",
     Content = "Github link copied to clipboard",
-    Duration = 2, -- 3 seconds
+    Duration = 2,
     Icon = "check",
 })
     end
@@ -240,10 +236,6 @@ local Tab = Window:Tab({
 
 local Slider = Tab:Slider({
     Title = "Walkspeed",
-    
-    -- To make float number supported, 
-    -- make the Step a float number.
-    -- example: Step = 0.1
     Step = 2,
     
     Value = {
@@ -258,10 +250,6 @@ local Slider = Tab:Slider({
 
 local Slider = Tab:Slider({
     Title = "Jumppower",
-    
-    -- To make float number supported, 
-    -- make the Step a float number.
-    -- example: Step = 0.1
     Step = 10,
     
     Value = {
@@ -278,7 +266,6 @@ local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 
--- keep track of the connection so we can disconnect it
 local infiniteJumpConnection
 
 local Toggle = Tab:Toggle({
@@ -289,7 +276,6 @@ local Toggle = Tab:Toggle({
     Default = false,
     Callback = function(enabled) 
         if enabled then
-            -- if already connected, avoid double-connecting
             if infiniteJumpConnection then return end
 
             infiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
@@ -301,7 +287,6 @@ local Toggle = Tab:Toggle({
                 end
             end)
         else
-            -- disable: disconnect the listener
             if infiniteJumpConnection then
                 infiniteJumpConnection:Disconnect()
                 infiniteJumpConnection = nil
@@ -316,7 +301,7 @@ local player = Players.LocalPlayer
 
 local deathPosition = nil
 local characterAddedConnection = nil
-local deathConnections = {} -- track humanoid.Died connections per character
+local deathConnections = {} 
 
 local function onCharacterDied(character)
     if not character then return end
@@ -334,25 +319,20 @@ local function cleanupCharacterConnections(character)
 end
 
 local function onCharacterAdded(character)
-    -- ensure previous connections for this character are cleaned (safety)
     cleanupCharacterConnections(character)
 
     local humanoid = character:WaitForChild("Humanoid")
-    -- connect death listener and store it
     deathConnections[character] = humanoid.Died:Connect(function()
         onCharacterDied(character)
     end)
 
-    -- if we have a stored deathPosition (and toggle is still on), teleport
     if deathPosition then
         local hrp = character:WaitForChild("HumanoidRootPart")
         if hrp then
-            -- small upward offset so they don't get stuck
             hrp.CFrame = CFrame.new(deathPosition + Vector3.new(0, 5, 0))
         end
     end
 
-    -- clean up when character is removed/replaced
     character.AncestryChanged:Connect(function(_, parent)
         if not parent then
             cleanupCharacterConnections(character)
@@ -360,7 +340,6 @@ local function onCharacterAdded(character)
     end)
 end
 
--- Toggle
 local Toggle = Tab:Toggle({
     Title = "Respawn At death point",
     Desc = "Respawns you at the area where you died",
@@ -369,20 +348,17 @@ local Toggle = Tab:Toggle({
     Default = false,
     Callback = function(enabled) 
         if enabled then
-            -- start tracking
-            deathPosition = nil -- reset any old death position
+            deathPosition = nil 
             characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
             if player.Character then
                 onCharacterAdded(player.Character)
             end
         else
-            -- stop tracking and clear state
             if characterAddedConnection then
                 characterAddedConnection:Disconnect()
                 characterAddedConnection = nil
             end
             deathPosition = nil
-            -- clean up any existing per-character death listeners
             for character, conn in pairs(deathConnections) do
                 if conn then
                     conn:Disconnect()
@@ -488,9 +464,6 @@ local Message = function(_Title, _Text, Time)
     })
 end
 
---====================================================
--- SKID FLING FUNCTION (unchanged from your script)
---====================================================
 
 local SkidFling = function(TargetPlayer)
     local Character = Player.Character
@@ -588,10 +561,6 @@ local SkidFling = function(TargetPlayer)
 end
 
 
---====================================================
--- PLAYER DROPDOWN LIST SETUP
---====================================================
-
 local function GetPlayerNames()
     local names = {}
 
@@ -602,9 +571,9 @@ local function GetPlayerNames()
         end
     end
 
-    table.sort(names)  -- sort only the player names
+    table.sort(names)
 
-    table.insert(names, 1, "All") -- put All at top
+    table.insert(names, 1, "All") 
 
     return names
 end
@@ -641,9 +610,6 @@ Players.PlayerRemoving:Connect(function(plr)
 end)
 
 
---====================================================
--- BUTTON: TAP TO FLING
---====================================================
 
 local Button = Tab:Button({
     Title = "Tap To Fling",
@@ -672,16 +638,12 @@ local Button = Tab:Button({
 })
 
 
---====================================================
--- AUTO FLING TOGGLE
---====================================================
-
 local AutoFlingEnabled = false
 
 local Toggle = Tab:Toggle({
     Title = "Auto Fling",
     Desc = "Automatically fling the selected player repeatedly",
-    Icon = "refresh-ccw", -- lucide icon name
+    Icon = "refresh-ccw", 
     Type = "Checkbox",
     Value = false,
     Callback = function(state)
@@ -701,7 +663,7 @@ local Toggle = Tab:Toggle({
                         if tp then SkidFling(tp) end
                     end
                 end
-                task.wait(1.5) -- auto-fling rate
+                task.wait(1.5)
             end
         end)
     end
@@ -752,7 +714,6 @@ local Button = Tab:Button({
 
 
 -- Spectate Player script start
--- Get all player names except yourself
 Tab:Divider()
 
 local function getPlayerNames()
@@ -765,7 +726,6 @@ local function getPlayerNames()
         end
     end
     
-    -- Return at least one value to prevent empty dropdown
     if #playerNames == 0 then
         return {"No Players Available"}
     end
@@ -773,13 +733,11 @@ local function getPlayerNames()
     return playerNames
 end
 
--- Variables to track spectating state
 local isSpectating = false
 local spectateConnection = nil
 local originalCFrame = nil
 local currentSpectateTarget = nil
 
--- Function to start spectating a player
 local function spectatePlayer(playerName)
     if playerName == "No Players Available" then
         print("No players available to spectate")
@@ -790,17 +748,14 @@ local function spectatePlayer(playerName)
     local localPlayer = game.Players.LocalPlayer
     
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        -- Stop current spectating if active
         if isSpectating then
             stopSpectating()
         end
         
-        -- Store original camera position
         if not originalCFrame then
             originalCFrame = workspace.CurrentCamera.CFrame
         end
         
-        -- Set camera to follow target player
         workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
         workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
         
@@ -813,17 +768,14 @@ local function spectatePlayer(playerName)
     end
 end
 
--- Function to stop spectating
 local function stopSpectating()
     local localPlayer = game.Players.LocalPlayer
     
     if isSpectating then
-        -- Reset camera to local player
         if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") then
             workspace.CurrentCamera.CameraSubject = localPlayer.Character.Humanoid
         end
         
-        -- Restore original camera position if available
         if originalCFrame then
             workspace.CurrentCamera.CFrame = originalCFrame
             originalCFrame = nil
@@ -838,7 +790,6 @@ local function stopSpectating()
     end
 end
 
--- Create dropdown for player selection
 local playerNames = getPlayerNames()
 local defaultValue = "Select a Player"
 
@@ -852,7 +803,6 @@ local SpectateDropdown = Tab:Dropdown({
     end
 })
 
--- Create button to stop spectating
 local StopSpectateButton = Tab:Button({
     Title = "Stop Spectating",
     Desc = "Return camera to your character",
@@ -862,14 +812,11 @@ local StopSpectateButton = Tab:Button({
     end
 })
 
--- Function to update dropdown with new player list
 local function updatePlayerDropdown()
     local newPlayerNames = getPlayerNames()
     
-    -- Update the dropdown values using WindUI's SetValues method
     SpectateDropdown:SetValues(newPlayerNames)
     
-    -- If currently spectating someone who left, stop spectating
     if isSpectating and currentSpectateTarget then
         local targetStillExists = false
         for _, name in pairs(newPlayerNames) do
@@ -888,9 +835,9 @@ local function updatePlayerDropdown()
     print("Updated player list")
 end
 
--- Connect to player events to update the dropdown
+
 game.Players.PlayerAdded:Connect(function(player)
-    wait(1) -- Small delay to ensure player is fully loaded
+    wait(1) 
     updatePlayerDropdown()
 end)
 
@@ -898,7 +845,7 @@ game.Players.PlayerRemoving:Connect(function(player)
     updatePlayerDropdown()
 end)
 
--- Optional: Add a refresh button to manually update the player list
+
 local RefreshButton = Tab:Button({
     Title = "Refresh Player List",
     Desc = "Update the spectate dropdown with current players",
@@ -935,7 +882,7 @@ local Button = Tab:Button({
     end
 })
 
-local floatName = nil -- or set to a string to exclude that part, e.g. "FloatPart"
+local floatName = nil 
 
 local Toggle = Tab:Toggle({
     Title = "Noclip",
@@ -944,11 +891,9 @@ local Toggle = Tab:Toggle({
     Type = "Checkbox",
     Default = false,
     Callback = function(Value) 
-        -- persistent connection for this toggle
         if not _G._noclipConnection then _G._noclipConnection = nil end
 
         local function enableNoclip()
-            -- disconnect existing if any
             if _G._noclipConnection then
                 _G._noclipConnection:Disconnect()
                 _G._noclipConnection = nil
@@ -997,9 +942,6 @@ local Button = Tab:Button({
 local Slider = Tab:Slider({
     Title = "Hitbox Size",
     
-    -- To make float number supported, 
-    -- make the Step a float number.
-    -- example: Step = 0.1
     Step = 1,
     
     Value = {
@@ -1012,15 +954,13 @@ local Slider = Tab:Slider({
 _G.Disabled = true
  
 
---Don't Touch
 game:GetService('RunService').RenderStepped:connect(function()
 if _G.Disabled then
 for i,v in next, game:GetService('Players'):GetPlayers() do
 if v.Name ~= game:GetService('Players').LocalPlayer.Name then
 pcall(function()
 v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
---TRANSPARENCY of the HITBOX
-v.Character.HumanoidRootPart.Transparency = 0.5
+v.Character.HumanoidRootPart.Transparency = 0.7
 v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
 v.Character.HumanoidRootPart.Material = "Neon"
 v.Character.HumanoidRootPart.CanCollide = false
@@ -1047,7 +987,6 @@ local function setInvisibility(state)
         end
     end
 
-    -- Hide or show name tag (optional)
     local head = char:FindFirstChild("Head")
     if head then
         local nameTag = head:FindFirstChildWhichIsA("BillboardGui")
@@ -1065,14 +1004,17 @@ local Button = Tab:Button({
         loadstring(game:HttpGet('https://pastebin.com/raw/3Rnd9rHf'))()
     end
 })
--- tp to players script
+
+--[[ -------------------------------------------------------------------------------------------------------------------------------------------------
+TP to players script
+]]----------------------------------------------------------------------------------------------------------------------------------------------------------
+Tab:Divider()
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local teleporting = false
 local SelectedTPPlayer = nil
 
--- Get all other player names
 local function getOtherPlayerNames()
     local names = {}
     for _, plr in pairs(Players:GetPlayers()) do
@@ -1083,7 +1025,6 @@ local function getOtherPlayerNames()
     return names
 end
 
--- Teleport function
 local function teleportToPlayer(targetName)
     if teleporting then return end
     teleporting = true
@@ -1111,7 +1052,6 @@ local function teleportToPlayer(targetName)
         return
     end
 
-    -- Teleport above to avoid collision
     myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
     print("[Teleport] Teleported to:", targetName)
 
@@ -1120,9 +1060,6 @@ local function teleportToPlayer(targetName)
     end)
 end
 
--- ======================================================
--- DROPDOWN (select player ONLY, does NOT teleport yet)
--- ======================================================
 
 local Dropdown = Tab:Dropdown({
     Title = "Teleport to Player",
@@ -1137,7 +1074,6 @@ local Dropdown = Tab:Dropdown({
     end,
 })
 
--- Refresh dropdown list when players join/leave
 local function refreshDropdown()
     if Dropdown.Refresh then
         Dropdown:Refresh(getOtherPlayerNames())
@@ -1146,10 +1082,6 @@ end
 
 Players.PlayerAdded:Connect(refreshDropdown)
 Players.PlayerRemoving:Connect(refreshDropdown)
-
--- ======================================================
--- BUTTON (Tap to Teleport)
--- ======================================================
 
 local Button = Tab:Button({
     Title = "Tap To Teleport",
@@ -1164,7 +1096,7 @@ local Button = Tab:Button({
         teleportToPlayer(SelectedTPPlayer)
     end,
 })
-
+Window:Divider()
 
 
 local Tab = Window:Tab({
