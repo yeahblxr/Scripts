@@ -156,7 +156,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Fix script not loading fully, Removed free private server (Patched), Fixed flinging all upon execute",
+    Content = "Added buttons to fling and tp to people.",
     Buttons = {
         {
             Title = "Continue",
