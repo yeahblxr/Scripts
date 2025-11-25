@@ -1,4 +1,4 @@
--- hahahv1
+-- hahahv2
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -146,7 +146,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.3",
+    Title = "V1.4.4",
     Color = Color3.fromHex("#663399")
 })
 
@@ -1069,10 +1069,10 @@ local Button = Tab:Button({
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Debounce to prevent rapid teleports
 local teleporting = false
+local SelectedTPPlayer = nil
 
--- Get all other player names for the dropdown
+-- Get all other player names
 local function getOtherPlayerNames()
     local names = {}
     for _, plr in pairs(Players:GetPlayers()) do
@@ -1083,7 +1083,7 @@ local function getOtherPlayerNames()
     return names
 end
 
--- Teleport function: move LocalPlayer near target player
+-- Teleport function
 local function teleportToPlayer(targetName)
     if teleporting then return end
     teleporting = true
@@ -1098,7 +1098,7 @@ local function teleportToPlayer(targetName)
     local targetChar = target.Character or target.CharacterAdded:Wait()
     local targetHRP = targetChar:WaitForChild("HumanoidRootPart", 5)
     if not targetHRP then
-        warn("[Teleport] Target HumanoidRootPart missing")
+        warn("[Teleport] Target HRP missing")
         teleporting = false
         return
     end
@@ -1106,44 +1106,65 @@ local function teleportToPlayer(targetName)
     local myChar = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local myHRP = myChar:WaitForChild("HumanoidRootPart", 5)
     if not myHRP then
-        warn("[Teleport] My HumanoidRootPart missing")
+        warn("[Teleport] My HRP missing")
         teleporting = false
         return
     end
 
-    -- Teleport above the target player to avoid collisions
+    -- Teleport above to avoid collision
     myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 5, 0)
     print("[Teleport] Teleported to:", targetName)
 
-    task.delay(0.5, function()
+    task.delay(0.4, function()
         teleporting = false
     end)
 end
 
--- Create the dropdown in your Tab (assumes you already have a Tab variable)
+-- ======================================================
+-- DROPDOWN (select player ONLY, does NOT teleport yet)
+-- ======================================================
+
 local Dropdown = Tab:Dropdown({
     Title = "Teleport to Player",
     Values = getOtherPlayerNames(),
-    Value = "",  -- default no selection
+    Value = "None",
     Callback = function(selection)
-        if selection and selection ~= "" then
-            teleportToPlayer(selection)
+        if selection == "None" or selection == "" then
+            SelectedTPPlayer = nil
+        else
+            SelectedTPPlayer = selection
         end
     end,
 })
 
--- Refresh dropdown values when players join or leave
+-- Refresh dropdown list when players join/leave
 local function refreshDropdown()
-    local names = getOtherPlayerNames()
     if Dropdown.Refresh then
-        Dropdown:Refresh(names)
-    else
-        -- If no Refresh method, you could recreate dropdown here if needed
+        Dropdown:Refresh(getOtherPlayerNames())
     end
 end
 
 Players.PlayerAdded:Connect(refreshDropdown)
 Players.PlayerRemoving:Connect(refreshDropdown)
+
+-- ======================================================
+-- BUTTON (Tap to Teleport)
+-- ======================================================
+
+local Button = Tab:Button({
+    Title = "Tap To Teleport",
+    Desc = "Teleport to the selected player",
+    Locked = false,
+    Callback = function()
+        if not SelectedTPPlayer then
+            warn("[Teleport] No player selected")
+            return
+        end
+
+        teleportToPlayer(SelectedTPPlayer)
+    end,
+})
+
 
 
 local Tab = Window:Tab({
