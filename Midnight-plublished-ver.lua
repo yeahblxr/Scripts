@@ -37,13 +37,16 @@ local Window = WindUI:CreateWindow({
     BackgroundImageTransparency = 0.42,
     HideSearchBar = true,
     ScrollBarEnabled = false,
+
     User = {
-    Enabled = true,
-    Anonymous = false,
-    Callback = function()
-        User.Anonymous = not User.Anonymous
-    end,
-}
+        Enabled = true,
+        Anonymous = false,
+        Callback = function(user)
+            user.Anonymous = not user.Anonymous
+        end
+    }
+})
+
 
     },
     KeySystem = {
