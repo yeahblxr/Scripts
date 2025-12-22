@@ -38,11 +38,13 @@ local Window = WindUI:CreateWindow({
     HideSearchBar = true,
     ScrollBarEnabled = false,
     User = {
-        Enabled = true,
-        Anonymous = false,
-        Callback = function()
-            print("clicked")
-        end,
+    Enabled = true,
+    Anonymous = false,
+    Callback = function()
+        User.Anonymous = not User.Anonymous
+    end,
+    }
+
     },
     KeySystem = {
         Key = { "Midnight" },
