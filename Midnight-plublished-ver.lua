@@ -44,8 +44,6 @@ local Window = WindUI:CreateWindow({
             print("clicked")
         end,
     },
-        
-    },
     KeySystem = {
         Key = { "Midnight" },
         Note = "Join Discord for the key",
