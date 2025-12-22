@@ -142,7 +142,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.8",
+    Title = "V1.5.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -156,7 +156,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Added buttons to fling and tp to people.",
+    Content = "Added Aimbot build into script. (enable aimbot, Show FOV, FOV Color, Unnlock FOV, Team Check, Wall Check, Aim Body Part",
     Buttons = {
         {
             Title = "Continue",
@@ -930,14 +930,6 @@ local Toggle = Tab:Toggle({
     end,
 })
 
-local Button = Tab:Button({
-    Title = "Aimbot",
-    Desc = "Enables an Aimbot Gui",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
-    end
-})
 Tab:Divider()
 
 --// Services
