@@ -1,4 +1,4 @@
--- hahahv3
+-- hahahv67
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -142,7 +142,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.5",
+    Title = "V1.4.6",
     Color = Color3.fromHex("#663399")
 })
 
@@ -938,6 +938,195 @@ local Button = Tab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Cat558-uz/Aina-Aimbot-UNIVERSAL/refs/heads/main/obfuscated_script-1752536242297.lua.txt"))()
     end
 })
+Tab:Divider()
+
+--// Services
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+local Workspace = game:GetService("Workspace")
+
+local LocalPlayer = Players.LocalPlayer
+
+--// Aimbot State
+local AimbotEnabled = false
+local ShowFOV = false
+local TeamCheckEnabled = false
+local WallCheckEnabled = false
+
+local FOVRadius = 150
+local AimPart = "Head"
+
+--// FOV Circle
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Visible = false
+FOVCircle.Filled = false
+FOVCircle.Thickness = 2
+FOVCircle.Color = Color3.fromRGB(255, 255, 0) -- #FFFF00
+
+--// Wall Check Function
+local function IsVisible(targetPart, character)
+    if not WallCheckEnabled then
+        return true
+    end
+
+    local rayParams = RaycastParams.new()
+    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+    rayParams.FilterDescendantsInstances = {
+        LocalPlayer.Character,
+        character,
+        Camera
+    }
+
+    local origin = Camera.CFrame.Position
+    local direction = (targetPart.Position - origin)
+
+    local result = Workspace:Raycast(origin, direction, rayParams)
+
+    return result == nil
+end
+
+--// Target Finder
+local function GetClosestTarget()
+    local closestPart = nil
+    local shortestDistance = math.huge
+    local mousePos = UserInputService:GetMouseLocation()
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer
+        and player.Character
+        and player.Character:FindFirstChild(AimPart) then
+
+            -- Team Check
+            if TeamCheckEnabled and player.Team == LocalPlayer.Team then
+                continue
+            end
+
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.Health > 0 then
+                local part = player.Character[AimPart]
+                local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+
+                if onScreen then
+                    local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                    if distance <= FOVRadius and distance < shortestDistance then
+                        if IsVisible(part, player.Character) then
+                            shortestDistance = distance
+                            closestPart = part
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return closestPart
+end
+
+--// Main Loop
+RunService.RenderStepped:Connect(function()
+    local mousePos = UserInputService:GetMouseLocation()
+
+    -- Update FOV Circle
+    FOVCircle.Position = mousePos
+    FOVCircle.Radius = FOVRadius
+    FOVCircle.Visible = ShowFOV
+
+    if not AimbotEnabled then return end
+
+    local target = GetClosestTarget()
+    if target then
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position, target.Position)
+    end
+end)
+
+--// UI ELEMENTS
+
+-- Enable Aimbot
+Tab:Toggle({
+    Title = "Enable Aimbot",
+    Desc = "Toggle aimlock",
+    Icon = "target",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        AimbotEnabled = state
+    end
+})
+
+-- Show FOV
+Tab:Toggle({
+    Title = "Show FOV",
+    Desc = "Toggle FOV circle",
+    Icon = "circle",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        ShowFOV = state
+    end
+})
+
+-- Team Check Toggle
+Tab:Toggle({
+    Title = "Team Check",
+    Desc = "Ignore teammates",
+    Icon = "users",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        TeamCheckEnabled = state
+    end
+})
+
+-- Wall Check Toggle
+Tab:Toggle({
+    Title = "Wall Check",
+    Desc = "Only visible targets",
+    Icon = "eye",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        WallCheckEnabled = state
+    end
+})
+
+-- FOV Size Input
+Tab:Input({
+    Title = "FOV Size",
+    Desc = "Change FOV radius",
+    Value = tostring(FOVRadius),
+    InputIcon = "ruler",
+    Type = "Input",
+    Placeholder = "Enter number...",
+    Callback = function(input)
+        local num = tonumber(input)
+        if num then
+            FOVRadius = math.clamp(num, 10, 1000)
+        end
+    end
+})
+
+-- Aim Part Dropdown
+Tab:Dropdown({
+    Title = "Aim Part",
+    Desc = "Select body part",
+    Values = {
+        "Head",
+        "Torso",
+        "LeftArm",
+        "RightArm",
+        "LeftLeg",
+        "RightLeg"
+    },
+    Value = "Head",
+    Callback = function(option)
+        AimPart = option
+    end
+})
+
+Tab:Divider()
+
 
 local Slider = Tab:Slider({
     Title = "Hitbox Size",
