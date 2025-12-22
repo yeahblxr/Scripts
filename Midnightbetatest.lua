@@ -142,7 +142,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.7",
+    Title = "V1.4.8",
     Color = Color3.fromHex("#663399")
 })
 
@@ -949,7 +949,7 @@ local Workspace = game:GetService("Workspace")
 
 local LocalPlayer = Players.LocalPlayer
 
---// Aimbot State
+--// State
 local AimbotEnabled = false
 local ShowFOV = false
 local UnlockFOV = false
@@ -959,7 +959,7 @@ local WallCheckEnabled = false
 local FOVRadius = 150
 local AimPart = "Head"
 
---// FOV Center
+--// FOV Position
 local FOVPosition = Vector2.new(
     Camera.ViewportSize.X / 2,
     Camera.ViewportSize.Y / 2
@@ -971,7 +971,46 @@ FOVCircle.Visible = false
 FOVCircle.Filled = false
 FOVCircle.Thickness = 2
 FOVCircle.Radius = FOVRadius
-FOVCircle.Color = Color3.fromRGB(255, 255, 0) -- default #FFFF00
+FOVCircle.Color = Color3.fromRGB(255, 255, 0)
+
+--// Aim Part Mapping (R6 + R15 SAFE)
+local AimPartMap = {
+    Head = { "Head" },
+
+    Torso = {
+        "UpperTorso",
+        "LowerTorso",
+        "Torso"
+    },
+
+    Arms = {
+        "LeftUpperArm",
+        "RightUpperArm",
+        "LeftArm",
+        "RightArm"
+    },
+
+    Legs = {
+        "LeftUpperLeg",
+        "RightUpperLeg",
+        "LeftLeg",
+        "RightLeg"
+    }
+}
+
+local function GetAimPartFromCharacter(character)
+    local parts = AimPartMap[AimPart]
+    if not parts then return nil end
+
+    for _, partName in ipairs(parts) do
+        local part = character:FindFirstChild(partName)
+        if part then
+            return part
+        end
+    end
+
+    return nil
+end
 
 --// Wall Check
 local function IsVisible(targetPart, character)
@@ -994,26 +1033,24 @@ local function IsVisible(targetPart, character)
     return result == nil
 end
 
---// Target Finder (USES FOV POSITION)
+--// Target Finder
 local function GetClosestTarget()
     local closestPart = nil
     local shortestDistance = math.huge
 
     for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer
-        and player.Character
-        and player.Character:FindFirstChild(AimPart) then
+        if player ~= LocalPlayer and player.Character then
 
-            -- Team Check
             if TeamCheckEnabled and player.Team == LocalPlayer.Team then
                 continue
             end
 
             local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
             if humanoid and humanoid.Health > 0 then
-                local part = player.Character[AimPart]
-                local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+                local part = GetAimPartFromCharacter(player.Character)
+                if not part then continue end
 
+                local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local distance = (Vector2.new(screenPos.X, screenPos.Y) - FOVPosition).Magnitude
                     if distance <= FOVRadius and distance < shortestDistance then
@@ -1035,14 +1072,12 @@ RunService.RenderStepped:Connect(function()
     local viewport = Camera.ViewportSize
     local mousePos = UserInputService:GetMouseLocation()
 
-    -- FOV Position Logic
     if UnlockFOV then
         FOVPosition = mousePos
     else
         FOVPosition = Vector2.new(viewport.X / 2, viewport.Y / 2)
     end
 
-    -- Update FOV Circle
     FOVCircle.Position = FOVPosition
     FOVCircle.Radius = FOVRadius
     FOVCircle.Visible = ShowFOV
@@ -1055,9 +1090,8 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
---// UI ELEMENTS
+--// UI
 
--- Enable Aimbot
 Tab:Toggle({
     Title = "Enable Aimbot",
     Desc = "Toggle aimlock",
@@ -1069,7 +1103,6 @@ Tab:Toggle({
     end
 })
 
--- Show FOV
 Tab:Toggle({
     Title = "Show FOV",
     Desc = "Toggle FOV circle",
@@ -1081,7 +1114,6 @@ Tab:Toggle({
     end
 })
 
--- FOV Color Input (RGB)
 Tab:Input({
     Title = "FOV Color (RGB)",
     Desc = "Example: 255, 255, 0",
@@ -1102,7 +1134,6 @@ Tab:Input({
     end
 })
 
--- Unlock FOV Toggle
 Tab:Toggle({
     Title = "Unlock FOV",
     Desc = "Move FOV with mouse/finger",
@@ -1114,7 +1145,6 @@ Tab:Toggle({
     end
 })
 
--- Team Check
 Tab:Toggle({
     Title = "Team Check",
     Desc = "Ignore teammates",
@@ -1126,7 +1156,6 @@ Tab:Toggle({
     end
 })
 
--- Wall Check
 Tab:Toggle({
     Title = "Wall Check",
     Desc = "Only visible targets",
@@ -1138,7 +1167,6 @@ Tab:Toggle({
     end
 })
 
--- FOV Size
 Tab:Input({
     Title = "FOV Size",
     Desc = "Change FOV radius",
@@ -1154,23 +1182,16 @@ Tab:Input({
     end
 })
 
--- Aim Part
 Tab:Dropdown({
     Title = "Aim Part",
-    Desc = "Select body part",
-    Values = {
-        "Head",
-        "Torso",
-        "LeftArm",
-        "RightArm",
-        "LeftLeg",
-        "RightLeg"
-    },
+    Desc = "Select body group",
+    Values = { "Head", "Torso", "Arms", "Legs" },
     Value = "Head",
     Callback = function(option)
         AimPart = option
     end
 })
+
 
 
 Tab:Divider()
