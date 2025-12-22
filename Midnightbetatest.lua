@@ -1,4 +1,4 @@
--- hahahv67
+-- hahahv68
 loadstring(game:HttpGet("https://raw.githubusercontent.com/yeahblxr/Scripts/refs/heads/main/Midnight-intro.lua"))()
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
@@ -142,7 +142,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.4.6",
+    Title = "V1.4.7",
     Color = Color3.fromHex("#663399")
 })
 
@@ -952,20 +952,28 @@ local LocalPlayer = Players.LocalPlayer
 --// Aimbot State
 local AimbotEnabled = false
 local ShowFOV = false
+local UnlockFOV = false
 local TeamCheckEnabled = false
 local WallCheckEnabled = false
 
 local FOVRadius = 150
 local AimPart = "Head"
 
+--// FOV Center
+local FOVPosition = Vector2.new(
+    Camera.ViewportSize.X / 2,
+    Camera.ViewportSize.Y / 2
+)
+
 --// FOV Circle
 local FOVCircle = Drawing.new("Circle")
 FOVCircle.Visible = false
 FOVCircle.Filled = false
 FOVCircle.Thickness = 2
-FOVCircle.Color = Color3.fromRGB(255, 255, 0) -- #FFFF00
+FOVCircle.Radius = FOVRadius
+FOVCircle.Color = Color3.fromRGB(255, 255, 0) -- default #FFFF00
 
---// Wall Check Function
+--// Wall Check
 local function IsVisible(targetPart, character)
     if not WallCheckEnabled then
         return true
@@ -983,15 +991,13 @@ local function IsVisible(targetPart, character)
     local direction = (targetPart.Position - origin)
 
     local result = Workspace:Raycast(origin, direction, rayParams)
-
     return result == nil
 end
 
---// Target Finder
+--// Target Finder (USES FOV POSITION)
 local function GetClosestTarget()
     local closestPart = nil
     local shortestDistance = math.huge
-    local mousePos = UserInputService:GetMouseLocation()
 
     for _, player in ipairs(Players:GetPlayers()) do
         if player ~= LocalPlayer
@@ -1009,7 +1015,7 @@ local function GetClosestTarget()
                 local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
 
                 if onScreen then
-                    local distance = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                    local distance = (Vector2.new(screenPos.X, screenPos.Y) - FOVPosition).Magnitude
                     if distance <= FOVRadius and distance < shortestDistance then
                         if IsVisible(part, player.Character) then
                             shortestDistance = distance
@@ -1026,10 +1032,18 @@ end
 
 --// Main Loop
 RunService.RenderStepped:Connect(function()
+    local viewport = Camera.ViewportSize
     local mousePos = UserInputService:GetMouseLocation()
 
+    -- FOV Position Logic
+    if UnlockFOV then
+        FOVPosition = mousePos
+    else
+        FOVPosition = Vector2.new(viewport.X / 2, viewport.Y / 2)
+    end
+
     -- Update FOV Circle
-    FOVCircle.Position = mousePos
+    FOVCircle.Position = FOVPosition
     FOVCircle.Radius = FOVRadius
     FOVCircle.Visible = ShowFOV
 
@@ -1067,7 +1081,40 @@ Tab:Toggle({
     end
 })
 
--- Team Check Toggle
+-- FOV Color Input (RGB)
+Tab:Input({
+    Title = "FOV Color (RGB)",
+    Desc = "Example: 255, 255, 0",
+    Value = "255, 255, 0",
+    InputIcon = "palette",
+    Type = "Input",
+    Placeholder = "R, G, B",
+    Callback = function(input)
+        local r, g, b = input:match("(%d+)%s*,%s*(%d+)%s*,%s*(%d+)")
+        r, g, b = tonumber(r), tonumber(g), tonumber(b)
+        if r and g and b then
+            FOVCircle.Color = Color3.fromRGB(
+                math.clamp(r, 0, 255),
+                math.clamp(g, 0, 255),
+                math.clamp(b, 0, 255)
+            )
+        end
+    end
+})
+
+-- Unlock FOV Toggle
+Tab:Toggle({
+    Title = "Unlock FOV",
+    Desc = "Move FOV with mouse/finger",
+    Icon = "move",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        UnlockFOV = state
+    end
+})
+
+-- Team Check
 Tab:Toggle({
     Title = "Team Check",
     Desc = "Ignore teammates",
@@ -1079,7 +1126,7 @@ Tab:Toggle({
     end
 })
 
--- Wall Check Toggle
+-- Wall Check
 Tab:Toggle({
     Title = "Wall Check",
     Desc = "Only visible targets",
@@ -1091,7 +1138,7 @@ Tab:Toggle({
     end
 })
 
--- FOV Size Input
+-- FOV Size
 Tab:Input({
     Title = "FOV Size",
     Desc = "Change FOV radius",
@@ -1107,7 +1154,7 @@ Tab:Input({
     end
 })
 
--- Aim Part Dropdown
+-- Aim Part
 Tab:Dropdown({
     Title = "Aim Part",
     Desc = "Select body part",
@@ -1124,6 +1171,7 @@ Tab:Dropdown({
         AimPart = option
     end
 })
+
 
 Tab:Divider()
 
