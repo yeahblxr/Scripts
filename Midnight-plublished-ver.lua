@@ -43,7 +43,7 @@ local Window = WindUI:CreateWindow({
     Callback = function()
         User.Anonymous = not User.Anonymous
     end,
-    }
+}
 
     },
     KeySystem = {
