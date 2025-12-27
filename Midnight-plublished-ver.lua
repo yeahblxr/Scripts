@@ -864,14 +864,98 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
-local Button = Tab:Button({
-    Title = "Esp",
-    Desc = "Lets you see other players through walls",
-    Locked = false,
-    Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/Lucasfin000/SpaceHub/main/UESP'))()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local DEFAULT_COLOR = Color3.fromRGB(255, 255, 255)
+local FILL_TRANSPARENCY = 0.5
+local OUTLINE_TRANSPARENCY = 0
+
+local CHAMS_ENABLED = false
+local highlights = {}
+
+local function getTeamColor(player)
+	if player.Team and player.Team.TeamColor then
+		return player.Team.TeamColor.Color
+	end
+	return DEFAULT_COLOR
+end
+
+local function applyChams(player)
+	if not CHAMS_ENABLED then return end
+	if player == LocalPlayer then return end
+	if not player.Character then return end
+
+	if highlights[player] then
+		highlights[player]:Destroy()
+	end
+
+	local h = Instance.new("Highlight")
+	h.Name = "TeamChams"
+	h.FillColor = getTeamColor(player)
+	h.OutlineColor = Color3.new(1, 1, 1)
+	h.FillTransparency = FILL_TRANSPARENCY
+	h.OutlineTransparency = OUTLINE_TRANSPARENCY
+	h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	h.Adornee = player.Character
+	h.Parent = player.Character
+
+	highlights[player] = h
+end
+
+local function removeChams(player)
+	if highlights[player] then
+		highlights[player]:Destroy()
+		highlights[player] = nil
+	end
+end
+
+local function setupPlayer(player)
+	player.CharacterAdded:Connect(function()
+		task.wait(1)
+		applyChams(player)
+	end)
+
+	player:GetPropertyChangedSignal("Team"):Connect(function()
+		if CHAMS_ENABLED then
+			applyChams(player)
+		end
+	end)
+end
+
+for _, p in ipairs(Players:GetPlayers()) do
+	setupPlayer(p)
+	if p.Character then
+		applyChams(p)
+	end
+end
+
+Players.PlayerAdded:Connect(setupPlayer)
+
+local Toggle = Tab:Toggle({
+    Title = "Team Chams",
+    Desc = "Highlights players using their team color",
+    Icon = "eye",
+    Type = "Checkbox",
+    Value = false,
+    Callback = function(state)
+        CHAMS_ENABLED = state
+
+        if state then
+            for _, p in ipairs(game:GetService("Players"):GetPlayers()) do
+                if p.Character then
+                    applyChams(p)
+                end
+            end
+        else
+            for p in pairs(highlights) do
+                removeChams(p)
+            end
+        end
     end
 })
+
+
 
 local Button = Tab:Button({
     Title = "Fly Gui",
@@ -1189,62 +1273,198 @@ Tab:Dropdown({
 Tab:Divider()
 
 
-local Slider = Tab:Slider({
-    Title = "Hitbox Size",
-    
-    Step = 1,
-    
-    Value = {
-        Min = 1,
-        Max = 250,
-        Default = 1,
-    },
-    Callback = function(Value)
-        _G.HeadSize = Value
-_G.Disabled = true
- 
+--// SERVICES
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
-game:GetService('RunService').RenderStepped:connect(function()
-if _G.Disabled then
-for i,v in next, game:GetService('Players'):GetPlayers() do
-if v.Name ~= game:GetService('Players').LocalPlayer.Name then
-pcall(function()
-v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
-v.Character.HumanoidRootPart.Transparency = 0.7
-v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
-v.Character.HumanoidRootPart.Material = "Neon"
-v.Character.HumanoidRootPart.CanCollide = false
+--// HITBOX STATE
+local HITBOX_ENABLED = false
+local HITBOX_SIZE = 10
+local HITBOX_TRANSPARENCY = 0.5
+local HITBOX_COLOR = Color3.fromRGB(255, 0, 0)
+local HITBOX_PART = "Body" -- "Body" or "Head"
+
+local modified = {}
+
+--// GET TARGET PART
+local function getTargetPart(character)
+	if HITBOX_PART == "Head" then
+		return character:FindFirstChild("Head")
+	else
+		return character:FindFirstChild("HumanoidRootPart")
+	end
+end
+
+--// APPLY HITBOX
+local function applyHitbox(player)
+	if player == LocalPlayer then return end
+	if not player.Character then return end
+
+	local part = getTargetPart(player.Character)
+	if not part then return end
+
+	if not modified[player] then
+		modified[player] = {}
+	end
+
+	if not modified[player][part] then
+		modified[player][part] = {
+			Size = part.Size,
+			Transparency = part.Transparency,
+			Color = part.Color,
+			Material = part.Material,
+			CanCollide = part.CanCollide
+		}
+	end
+
+	part.Size = Vector3.new(HITBOX_SIZE, HITBOX_SIZE, HITBOX_SIZE)
+	part.Transparency = HITBOX_TRANSPARENCY
+	part.Color = HITBOX_COLOR
+	part.Material = Enum.Material.Neon
+	part.CanCollide = false
+end
+
+--// REMOVE HITBOX
+local function removeHitbox(player)
+	if not modified[player] then return end
+	if not player.Character then return end
+
+	for part, old in pairs(modified[player]) do
+		if part and part.Parent then
+			part.Size = old.Size
+			part.Transparency = old.Transparency
+			part.Color = old.Color
+			part.Material = old.Material
+			part.CanCollide = old.CanCollide
+		end
+	end
+
+	modified[player] = nil
+end
+
+--// UPDATE ALL
+local function updateAll()
+	for _, player in ipairs(Players:GetPlayers()) do
+		if HITBOX_ENABLED then
+			removeHitbox(player)
+			applyHitbox(player)
+		else
+			removeHitbox(player)
+		end
+	end
+end
+
+--// PLAYER HANDLING
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(function()
+		task.wait(1)
+		if HITBOX_ENABLED then
+			applyHitbox(player)
+		end
+	end)
 end)
+
+for _, player in ipairs(Players:GetPlayers()) do
+	player.CharacterAdded:Connect(function()
+		task.wait(1)
+		if HITBOX_ENABLED then
+			applyHitbox(player)
+		end
+	end)
 end
-end
-end
-end)
-   end,
+
+--// ======================
+--// UI CONTROLS
+--// ======================
+
+-- ENABLE HITBOX
+Tab:Toggle({
+	Title = "Hitbox Expander",
+	Desc = "Enable expanded hitboxes",
+	Icon = "target",
+	Type = "Checkbox",
+	Value = false,
+	Callback = function(state)
+		HITBOX_ENABLED = state
+		updateAll()
+	end
 })
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- HITBOX SIZE
+Tab:Input({
+	Title = "Hitbox Size",
+	Desc = "Recommended: 8 - 20",
+	Value = tostring(HITBOX_SIZE),
+	InputIcon = "maximize",
+	Type = "Input",
+	Placeholder = "Enter number",
+	Callback = function(input)
+		local size = tonumber(input)
+		if size then
+			HITBOX_SIZE = math.clamp(size, 2, 50)
+			if HITBOX_ENABLED then
+				updateAll()
+			end
+		end
+	end
+})
 
-local function setInvisibility(state)
-    local char = player.Character or player.CharacterAdded:Wait()
+-- HITBOX PART DROPDOWN (BODY / HEAD)
+Tab:Dropdown({
+	Title = "Hitbox Target",
+	Desc = "Choose which part to expand",
+	Values = { "Body", "Head" },
+	Value = "Body",
+	Callback = function(option)
+		HITBOX_PART = option
+		if HITBOX_ENABLED then
+			updateAll()
+		end
+	end
+})
 
-    for _, part in ipairs(char:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.Transparency = state and 1 or 0
-            part.CanCollide = not state
-        elseif part:IsA("Decal") then
-            part.Transparency = state and 1 or 0
-        end
-    end
+-- HITBOX TRANSPARENCY
+Tab:Slider({
+	Title = "Hitbox Transparency",
+	Desc = "0 = visible | 1 = invisible",
+	Step = 0.05,
+	Value = {
+		Min = 0,
+		Max = 1,
+		Default = HITBOX_TRANSPARENCY
+	},
+	Callback = function(value)
+		HITBOX_TRANSPARENCY = value
+		if HITBOX_ENABLED then
+			updateAll()
+		end
+	end
+})
 
-    local head = char:FindFirstChild("Head")
-    if head then
-        local nameTag = head:FindFirstChildWhichIsA("BillboardGui")
-        if nameTag then
-            nameTag.Enabled = not state
-        end
-    end
-end
+-- HITBOX COLOR (RGB)
+Tab:Input({
+	Title = "Hitbox Color (RGB)",
+	Desc = "Format: R,G,B  (example: 255,0,0)",
+	Value = "255,0,0",
+	InputIcon = "palette",
+	Type = "Input",
+	Placeholder = "R,G,B",
+	Callback = function(input)
+		local r, g, b = input:match("(%d+),(%d+),(%d+)")
+		if r and g and b then
+			HITBOX_COLOR = Color3.fromRGB(
+				math.clamp(tonumber(r), 0, 255),
+				math.clamp(tonumber(g), 0, 255),
+				math.clamp(tonumber(b), 0, 255)
+			)
+			if HITBOX_ENABLED then
+				updateAll()
+			end
+		end
+	end
+})
+
+Tab:Divider()
 
 local Button = Tab:Button({
     Title = "Invisibility",
