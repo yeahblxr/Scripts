@@ -142,7 +142,7 @@ Window:OnDestroy(function()
 end)
 
 Window:Tag({
-    Title = "V1.5.0",
+    Title = "V1.6.0",
     Color = Color3.fromHex("#663399")
 })
 
@@ -156,7 +156,7 @@ local Tab = Window:Tab({
 local Dialog = Window:Dialog({
     Icon = "upload",
     Title = "Update Log",
-    Content = "Added Aimbot build into script. (enable aimbot, Show FOV, FOV Color, Unnlock FOV, Team Check, Wall Check, Aim Body Part",
+    Content = "Fixed esp script (now called chams), Added more features to hitbox expander script",
     Buttons = {
         {
             Title = "Continue",
