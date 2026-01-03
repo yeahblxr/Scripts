@@ -212,21 +212,6 @@ local Button = Tab:Button({
     end
 })
 
-local Button = Tab:Button({
-    Title = "Github",
-    Desc = "Copy Github Link",
-    Locked = false,
-    Callback = function()
-         setclipboard("https://github.com/yeahblxr/-Midnight-hub/blob/main/Midnight%20Hub")
-            WindUI:Notify({
-    Title = "Copied!",
-    Content = "Github link copied to clipboard",
-    Duration = 2,
-    Icon = "check",
-})
-    end
-})
-
 
 local Tab = Window:Tab({
     Title = "Player",
